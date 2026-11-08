@@ -144,18 +144,44 @@ add_action( 'woocommerce_single_product_summary', 'pm_single_pay_info', 11 );
  * Link do guia de medidas acima do formulário de compra.
  */
 function pm_size_guide_link() {
+	global $product;
 	$page = get_page_by_path( 'guia-de-medidas' );
-	if ( ! $page ) {
-		return;
+	echo '<div class="pm-size-links">';
+	if ( $product && $product->is_type( 'variable' ) ) {
+		printf(
+			'<button type="button" class="pm-size-guide pm-fit-open">%s %s</button>',
+			pm_icon( 'user' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			esc_html__( 'Descubra seu tamanho', 'palestra-mantos' )
+		);
 	}
-	printf(
-		'<a class="pm-size-guide" href="%s" target="_blank" rel="noopener">%s %s</a>',
-		esc_url( get_permalink( $page ) ),
-		pm_icon( 'ruler' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		esc_html__( 'Guia de medidas', 'palestra-mantos' )
-	);
+	if ( $page ) {
+		printf(
+			'<a class="pm-size-guide" href="%s" target="_blank" rel="noopener">%s %s</a>',
+			esc_url( get_permalink( $page ) ),
+			pm_icon( 'ruler' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			esc_html__( 'Tabela de medidas', 'palestra-mantos' )
+		);
+	}
+	echo '</div>';
 }
 add_action( 'woocommerce_before_add_to_cart_form', 'pm_size_guide_link', 5 );
+
+/**
+ * Janela do provador na página do produto.
+ */
+function pm_size_finder_dialog() {
+	global $product;
+	if ( ! $product || ! $product->is_type( 'variable' ) || ! function_exists( 'pm_size_finder_html' ) ) {
+		return;
+	}
+	?>
+	<dialog class="pm-fit-dialog" aria-label="<?php esc_attr_e( 'Descubra seu tamanho', 'palestra-mantos' ); ?>">
+		<button type="button" class="pm-fit-dialog__close" aria-label="<?php esc_attr_e( 'Fechar', 'palestra-mantos' ); ?>"><?php pm_the_icon( 'close' ); ?></button>
+		<?php echo pm_size_finder_html( pm_product_fit_type( $product->get_id() ), true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	</dialog>
+	<?php
+}
+add_action( 'woocommerce_after_single_product', 'pm_size_finder_dialog' );
 
 /**
  * Botão "comprar pelo WhatsApp".

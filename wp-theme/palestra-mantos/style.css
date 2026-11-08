@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.1.1
+Version: 1.2.0
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -451,6 +451,59 @@ button, input, select, textarea { font: inherit; color: inherit; }
 @media (max-width: 860px) {
 	.woocommerce div.product { grid-template-columns: minmax(0, 1fr); gap: 24px; }
 	.woocommerce div.product form.cart .button { min-width: 0; }
+}
+
+/* Provador — Descubra seu tamanho */
+.pm-size-links { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 4px; }
+button.pm-size-guide { background: none; border: 0; padding: 0; cursor: pointer; color: var(--pm-green-600); font: inherit; font-size: .88rem; font-weight: 700; }
+.pm-size-guide svg { width: 18px; height: 18px; }
+.pm-fit { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 24px; align-items: center; background: var(--pm-bg-soft); border-radius: 20px; padding: 24px; margin: 0 0 32px; }
+.pm-fit__stage { position: relative; background: radial-gradient(circle at 50% 35%, #fff, var(--pm-green-100)); border-radius: 16px; padding: 12px; }
+.pm-fit__svg { width: 100%; height: auto; max-height: 420px; display: block; overflow: visible; }
+.pm-fit__body { transform-box: view-box; transform-origin: 100px 362px; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.pm-fit__top, .pm-fit__pants, .pm-fit__pants-cuff, .pm-fit__pants-waist { transform-box: fill-box; transform-origin: center; transition: transform .35s cubic-bezier(.2,.8,.2,1), fill .2s; }
+.pm-fit__skin { fill: #d9c3ae; }
+.pm-fit__shoe { fill: #fff; stroke: #c9d2cd; stroke-width: 1.5; }
+.pm-fit__floor { stroke: #b9cbbf; stroke-width: 2; stroke-dasharray: 4 5; }
+.pm-fit__top { fill: #e9eeeb; stroke: #c9d2cd; stroke-width: 1.5; }
+.pm-fit__pants, .pm-fit__pants-cuff, .pm-fit__pants-waist { fill: #e9eeeb; stroke: #c9d2cd; stroke-width: 1.5; }
+.pm-fit__collar { fill: none; stroke: #c9d2cd; stroke-width: 2; }
+.pm-fit__logo { font-family: var(--pm-font-display); font-size: 22px; fill: transparent; }
+.pm-fit[data-type="top"] .pm-fit__top, .pm-fit[data-type="both"] .pm-fit__top { fill: #fff; stroke: var(--pm-green-600); }
+.pm-fit[data-type="top"] .pm-fit__logo, .pm-fit[data-type="both"] .pm-fit__logo { fill: var(--pm-green-600); }
+.pm-fit[data-type="bottom"] .pm-fit__pants, .pm-fit[data-type="both"] .pm-fit__pants { fill: var(--pm-green-500); stroke: var(--pm-green-700); }
+.pm-fit[data-type="bottom"] .pm-fit__pants-cuff, .pm-fit[data-type="both"] .pm-fit__pants-cuff,
+.pm-fit[data-type="bottom"] .pm-fit__pants-waist, .pm-fit[data-type="both"] .pm-fit__pants-waist { fill: var(--pm-green-700); stroke: var(--pm-green-700); }
+.pm-fit__height-tag { position: absolute; top: 12px; left: 12px; background: #fff; border-radius: 999px; padding: 4px 12px; font-weight: 800; font-size: .85rem; color: var(--pm-green-700); box-shadow: 0 4px 12px rgba(6,50,29,.08); }
+.pm-fit__title { font-family: var(--pm-font-display); font-size: 2rem; color: var(--pm-ink); margin: 0 0 14px; letter-spacing: .03em; line-height: 1; }
+.pm-fit__field { margin-bottom: 16px; }
+.pm-fit__field label { display: flex; justify-content: space-between; font-weight: 700; color: var(--pm-ink); font-size: .92rem; margin-bottom: 6px; }
+.pm-fit__field output { color: var(--pm-green-700); font-weight: 800; }
+.pm-fit input[type="range"] { width: 100%; accent-color: var(--pm-green-600); height: 28px; }
+.pm-fit__pref { border: 0; padding: 0; margin: 0 0 16px; }
+.pm-fit__pref legend { font-weight: 700; color: var(--pm-ink); font-size: .92rem; margin-bottom: 8px; padding: 0; }
+.pm-fit__pref label { display: inline-flex; align-items: center; gap: 6px; margin: 0 14px 6px 0; font-size: .9rem; cursor: pointer; }
+.pm-fit__pref input { accent-color: var(--pm-green-600); }
+.pm-fit__result { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 12px; background: var(--pm-green-800); color: #fff; border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; }
+.pm-fit__result span { font-weight: 600; }
+.pm-fit__result strong { grid-row: span 2; font-family: var(--pm-font-display); font-weight: 400; font-size: 3.2rem; line-height: 1; color: #b9f0cf; min-width: 64px; text-align: center; }
+.pm-fit__result small { font-size: .8rem; color: rgba(255,255,255,.85); }
+.pm-fit__result small:empty { display: none; }
+.pm-fit__apply { width: 100%; margin-bottom: 10px; }
+.pm-fit__disclaimer { font-size: .78rem; color: var(--pm-muted); margin: 0; }
+.pm-fit-dialog { width: min(860px, calc(100vw - 24px)); max-height: calc(100vh - 24px); border: 0; border-radius: 22px; padding: 0; box-shadow: 0 30px 80px rgba(0,0,0,.3); overflow: auto; }
+.pm-fit-dialog::backdrop { background: rgba(6, 30, 18, .55); }
+.pm-fit-dialog .pm-fit { margin: 0; border-radius: 0; padding: 28px; }
+.pm-fit-dialog__close { position: absolute; top: 10px; right: 10px; z-index: 2; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #fff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+.pm-fit-dialog__close svg { width: 20px; height: 20px; }
+@media (max-width: 680px) {
+	.pm-fit { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+	.pm-fit__stage { max-width: 200px; margin: 0 auto; width: 100%; padding: 8px; }
+	.pm-fit__svg { max-height: 210px; }
+	.pm-fit__height-tag { top: 6px; left: 6px; font-size: .75rem; padding: 3px 9px; }
+	.pm-fit__title { font-size: 1.6rem; margin-bottom: 10px; }
+	.pm-fit__field { margin-bottom: 10px; }
+	.pm-fit-dialog .pm-fit { padding: 52px 16px 20px; }
 }
 
 /* Calculadora de frete (página do produto) */

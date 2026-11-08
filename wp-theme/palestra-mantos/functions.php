@@ -7,13 +7,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_VERSION', '1.1.1' );
+define( 'PM_VERSION', '1.2.0' );
 define( 'PM_DIR', get_template_directory() );
 define( 'PM_URI', get_template_directory_uri() );
 
 require PM_DIR . '/inc/helpers.php';
 require PM_DIR . '/inc/customizer.php';
 require PM_DIR . '/inc/setup-content.php';
+require PM_DIR . '/inc/size-finder.php';
 
 if ( class_exists( 'WooCommerce' ) ) {
 	require PM_DIR . '/inc/woocommerce.php';
