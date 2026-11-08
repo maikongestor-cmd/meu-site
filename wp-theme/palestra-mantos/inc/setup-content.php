@@ -29,7 +29,11 @@ add_action( 'admin_menu', 'pm_setup_admin_menu' );
  * Aviso depois de ativar o tema.
  */
 function pm_setup_admin_notice() {
-	if ( ! current_user_can( 'manage_options' ) || get_option( 'pm_setup_done' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$missing_products = class_exists( 'WooCommerce' ) && ! get_option( 'pm_products_done' );
+	if ( get_option( 'pm_setup_done' ) && ! $missing_products ) {
 		return;
 	}
 	$screen = get_current_screen();
@@ -38,7 +42,9 @@ function pm_setup_admin_notice() {
 	}
 	printf(
 		'<div class="notice notice-success"><p><strong>Palestra Mantos:</strong> %s <a class="button button-primary" href="%s">%s</a></p></div>',
-		esc_html__( 'Tema ativado! Clique para criar as páginas, os produtos e os menus da loja automaticamente.', 'palestra-mantos' ),
+		get_option( 'pm_setup_done' )
+			? esc_html__( 'O WooCommerce está ativo, mas os produtos e as categorias ainda não foram criados. Rode a configuração de novo.', 'palestra-mantos' )
+			: esc_html__( 'Tema ativado! Clique para criar as páginas, os produtos e os menus da loja automaticamente.', 'palestra-mantos' ),
 		esc_url( admin_url( 'themes.php?page=pm-setup' ) ),
 		esc_html__( 'Configurar agora', 'palestra-mantos' )
 	);
@@ -614,6 +620,7 @@ function pm_setup_products() {
 		/* translators: %s: produto. */
 		$log[] = sprintf( __( 'Produto criado: %s (P, M, G, GG)', 'palestra-mantos' ), $item['name'] );
 	}
+	update_option( 'pm_products_done', 1 );
 
 	return $log;
 }
@@ -623,7 +630,9 @@ function pm_setup_products() {
  * ---------------------------------------------------------------------- */
 
 /**
- * Cria os menus e atribui às posições do tema.
+ * Cria (ou completa) os menus e atribui às posições do tema.
+ * Se rodar de novo depois de ativar o WooCommerce, acrescenta as categorias
+ * e a loja que faltarem, sem duplicar itens.
  *
  * @return array
  */
@@ -631,63 +640,147 @@ function pm_setup_menus() {
 	$log       = array();
 	$locations = get_theme_mod( 'nav_menu_locations', array() );
 
-	// Menu principal.
-	if ( empty( $locations['primary'] ) ) {
-		$menu_id = wp_create_nav_menu( 'Menu Principal' );
-		if ( is_wp_error( $menu_id ) ) {
-			$menu    = wp_get_nav_menu_object( 'Menu Principal' );
-			$menu_id = $menu ? (int) $menu->term_id : 0;
-		}
-		if ( $menu_id ) {
-			pm_menu_add_custom( $menu_id, 'Início', home_url( '/' ) );
-			if ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 ) {
-				$shop_item = pm_menu_add_page( $menu_id, wc_get_page_id( 'shop' ), 'Produtos' );
-				foreach ( pm_category_slugs() as $slug => $name ) {
-					$term = get_term_by( 'slug', $slug, 'product_cat' );
-					if ( $term ) {
-						wp_update_nav_menu_item(
-							$menu_id,
-							0,
-							array(
-								'menu-item-title'     => $name,
-								'menu-item-object'    => 'product_cat',
-								'menu-item-object-id' => $term->term_id,
-								'menu-item-type'      => 'taxonomy',
-								'menu-item-status'    => 'publish',
-								'menu-item-parent-id' => $shop_item,
-							)
-						);
-					}
+	// Menu principal: Início, categorias, todos os produtos e páginas.
+	$menu_id = ! empty( $locations['primary'] ) ? (int) $locations['primary'] : pm_get_or_create_menu( 'Menu Principal' );
+	if ( $menu_id ) {
+		$added = 0;
+		$added += pm_menu_ensure_custom( $menu_id, 'Início', home_url( '/' ) );
+		if ( taxonomy_exists( 'product_cat' ) ) {
+			foreach ( pm_category_slugs() as $slug => $name ) {
+				$term = get_term_by( 'slug', $slug, 'product_cat' );
+				if ( $term ) {
+					$added += pm_menu_ensure_object( $menu_id, 'taxonomy', 'product_cat', (int) $term->term_id, $name );
 				}
 			}
-			foreach ( array( 'guia-de-medidas', 'trocas-e-devolucoes', 'quem-somos', 'contato' ) as $slug ) {
-				$page = get_page_by_path( $slug );
-				if ( $page ) {
-					pm_menu_add_page( $menu_id, $page->ID );
-				}
-			}
-			$locations['primary'] = $menu_id;
-			$log[]                = __( 'Menu principal criado.', 'palestra-mantos' );
 		}
+		if ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 ) {
+			$added += pm_menu_ensure_object( $menu_id, 'post_type', 'page', wc_get_page_id( 'shop' ), 'Todos os produtos' );
+		}
+		foreach ( array( 'guia-de-medidas', 'trocas-e-devolucoes', 'quem-somos', 'contato' ) as $slug ) {
+			$page = get_page_by_path( $slug );
+			if ( $page ) {
+				$added += pm_menu_ensure_object( $menu_id, 'post_type', 'page', (int) $page->ID, get_the_title( $page ) );
+			}
+		}
+		pm_menu_sort( $menu_id );
+		$locations['primary'] = $menu_id;
+		/* translators: %d: quantidade. */
+		$log[] = sprintf( __( 'Menu principal pronto (%d itens adicionados).', 'palestra-mantos' ), $added );
 	}
 
 	// Menu do rodapé.
-	if ( empty( $locations['footer'] ) ) {
-		$menu_id = wp_create_nav_menu( 'Rodapé Institucional' );
-		if ( ! is_wp_error( $menu_id ) ) {
-			foreach ( array( 'quem-somos', 'trocas-e-devolucoes', 'guia-de-medidas', 'politica-de-privacidade', 'contato' ) as $slug ) {
-				$page = get_page_by_path( $slug );
-				if ( $page ) {
-					pm_menu_add_page( $menu_id, $page->ID );
-				}
+	$footer_id = ! empty( $locations['footer'] ) ? (int) $locations['footer'] : pm_get_or_create_menu( 'Rodapé Institucional' );
+	if ( $footer_id ) {
+		foreach ( array( 'quem-somos', 'trocas-e-devolucoes', 'guia-de-medidas', 'politica-de-privacidade', 'contato' ) as $slug ) {
+			$page = get_page_by_path( $slug );
+			if ( $page ) {
+				pm_menu_ensure_object( $footer_id, 'post_type', 'page', (int) $page->ID, get_the_title( $page ) );
 			}
-			$locations['footer'] = $menu_id;
-			$log[]               = __( 'Menu do rodapé criado.', 'palestra-mantos' );
 		}
+		$locations['footer'] = $footer_id;
+		$log[]               = __( 'Menu do rodapé pronto.', 'palestra-mantos' );
 	}
 
 	set_theme_mod( 'nav_menu_locations', $locations );
 	return $log;
+}
+
+/**
+ * Ordena o menu: Início, categorias, todos os produtos, páginas.
+ *
+ * @param int $menu_id Menu.
+ */
+function pm_menu_sort( $menu_id ) {
+	$cats  = array_keys( pm_category_slugs() );
+	$pages = array( 'guia-de-medidas', 'trocas-e-devolucoes', 'quem-somos', 'contato' );
+	$shop  = function_exists( 'wc_get_page_id' ) ? (int) wc_get_page_id( 'shop' ) : 0;
+	foreach ( (array) wp_get_nav_menu_items( $menu_id, array( 'post_status' => 'any' ) ) as $item ) {
+		if ( (int) $item->menu_item_parent ) {
+			continue;
+		}
+		$rank = 100 + (int) $item->menu_order;
+		if ( 'custom' === $item->type && untrailingslashit( $item->url ) === untrailingslashit( home_url( '/' ) ) ) {
+			$rank = 1;
+		} elseif ( 'product_cat' === $item->object ) {
+			$term = get_term( (int) $item->object_id, 'product_cat' );
+			$pos  = $term && ! is_wp_error( $term ) ? array_search( $term->slug, $cats, true ) : false;
+			$rank = 10 + ( false === $pos ? 9 : (int) $pos );
+		} elseif ( 'page' === $item->object && $shop && (int) $item->object_id === $shop ) {
+			$rank = 30;
+		} elseif ( 'page' === $item->object ) {
+			$pos  = array_search( get_post_field( 'post_name', (int) $item->object_id ), $pages, true );
+			$rank = 40 + ( false === $pos ? 9 : (int) $pos );
+		}
+		wp_update_post(
+			array(
+				'ID'         => $item->ID,
+				'menu_order' => $rank,
+			)
+		);
+	}
+}
+
+/**
+ * Busca um menu pelo nome ou cria.
+ *
+ * @param string $name Nome.
+ * @return int
+ */
+function pm_get_or_create_menu( $name ) {
+	$menu = wp_get_nav_menu_object( $name );
+	if ( $menu ) {
+		return (int) $menu->term_id;
+	}
+	$id = wp_create_nav_menu( $name );
+	return is_wp_error( $id ) ? 0 : (int) $id;
+}
+
+/**
+ * Adiciona página/categoria ao menu se ainda não estiver nele.
+ *
+ * @param int    $menu_id   Menu.
+ * @param string $type      post_type ou taxonomy.
+ * @param string $object    page, product_cat...
+ * @param int    $object_id ID.
+ * @param string $title     Título.
+ * @return int 1 se adicionou.
+ */
+function pm_menu_ensure_object( $menu_id, $type, $object, $object_id, $title ) {
+	foreach ( (array) wp_get_nav_menu_items( $menu_id, array( 'post_status' => 'any' ) ) as $item ) {
+		if ( $item->type === $type && $item->object === $object && (int) $item->object_id === (int) $object_id ) {
+			return 0;
+		}
+	}
+	wp_update_nav_menu_item(
+		$menu_id,
+		0,
+		array(
+			'menu-item-title'     => $title,
+			'menu-item-object'    => $object,
+			'menu-item-object-id' => $object_id,
+			'menu-item-type'      => $type,
+			'menu-item-status'    => 'publish',
+		)
+	);
+	return 1;
+}
+
+/**
+ * Adiciona link personalizado se ainda não estiver no menu.
+ *
+ * @param int    $menu_id Menu.
+ * @param string $title   Título.
+ * @param string $url     URL.
+ * @return int 1 se adicionou.
+ */
+function pm_menu_ensure_custom( $menu_id, $title, $url ) {
+	foreach ( (array) wp_get_nav_menu_items( $menu_id, array( 'post_status' => 'any' ) ) as $item ) {
+		if ( 'custom' === $item->type && untrailingslashit( $item->url ) === untrailingslashit( $url ) ) {
+			return 0;
+		}
+	}
+	pm_menu_add_custom( $menu_id, $title, $url );
+	return 1;
 }
 
 /**

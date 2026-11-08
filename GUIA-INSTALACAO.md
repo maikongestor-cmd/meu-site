@@ -28,7 +28,7 @@ Isso cria:
 - **Loja em reais**, com frete fixo de R$ 19,90 *(exemplo)* e **frete grátis acima de R$ 249**.
 - **Carrinho e checkout no modelo clássico**, que é o mais compatível com Appmax e Mercado Pago.
 
-Pode rodar de novo sem medo: o que já existe não é duplicado.
+Pode rodar de novo sem medo: o que já existe não é duplicado. Se você criou o conteúdo antes de ativar o WooCommerce, rode de novo: ele cria as categorias e os produtos e coloca Calças, Camisetas e Conjuntos no menu.
 
 ## 4. Seus dados
 Em **Aparência → Personalizar → Palestra Mantos** você muda:
