@@ -472,8 +472,8 @@ function pm_products_catalog() {
 			'sku'     => 'PM-CALCA-BRANCA',
 			'name'    => 'Calça Moletom Palestra Branca – Logo Verde e Vermelho',
 			'cat'     => 'calcas',
-			'regular' => '177.00',
-			'sale'    => '127.00',
+			'regular' => '147.00',
+			'sale'    => '',
 			'images'  => array( 'calca-branca-feminina.jpg' ),
 			'short'   => 'Calça jogger em moletom flanelado, cós com elástico e punhos nas barras. Logo P bordado em verde e vermelho.',
 		),
@@ -481,8 +481,8 @@ function pm_products_catalog() {
 			'sku'     => 'PM-CALCA-VERDE',
 			'name'    => 'Calça Moletom Palestra Verde – Logo Branco',
 			'cat'     => 'calcas',
-			'regular' => '177.00',
-			'sale'    => '127.00',
+			'regular' => '147.00',
+			'sale'    => '',
 			'images'  => array( 'calca-verde.jpg' ),
 			'short'   => 'Calça jogger verde em moletom flanelado, com cordão de ajuste, bolsos laterais e logo P em branco.',
 		),
@@ -499,8 +499,8 @@ function pm_products_catalog() {
 			'sku'     => 'PM-CAMISETA-P',
 			'name'    => 'Camiseta Palestra Branca – Logo P',
 			'cat'     => 'camisetas',
-			'regular' => '129.90',
-			'sale'    => '89.90',
+			'regular' => '127.00',
+			'sale'    => '',
 			'images'  => array( 'camiseta-logo-p.jpg' ),
 			'short'   => 'Camiseta oversized em algodão, logo P no peito e bandeira italiana na barra.',
 		),
@@ -508,8 +508,8 @@ function pm_products_catalog() {
 			'sku'     => 'PM-CAMISETA-ESCUDO',
 			'name'    => 'Camiseta Palestra Branca – Escudo',
 			'cat'     => 'camisetas',
-			'regular' => '129.90',
-			'sale'    => '89.90',
+			'regular' => '127.00',
+			'sale'    => '',
 			'images'  => array( 'camiseta-escudo.jpg' ),
 			'short'   => 'Camiseta oversized em algodão com o escudo histórico no peito e bandeira italiana na barra.',
 		),
@@ -599,7 +599,9 @@ function pm_setup_products() {
 			$variation->set_parent_id( $product_id );
 			$variation->set_attributes( array( $taxonomy => $size_slug ) );
 			$variation->set_regular_price( $item['regular'] );
-			$variation->set_sale_price( $item['sale'] );
+			if ( '' !== $item['sale'] ) {
+				$variation->set_sale_price( $item['sale'] );
+			}
 			$variation->set_sku( $item['sku'] . '-' . strtoupper( $size_slug ) );
 			$variation->set_manage_stock( false );
 			$variation->set_stock_status( 'instock' );
