@@ -178,3 +178,32 @@ function pm_logo() {
 		esc_html( get_bloginfo( 'name' ) )
 	);
 }
+
+/**
+ * Aviso no site (só para administradores) quando a loja ainda não está pronta.
+ */
+function pm_admin_store_warning() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$msg  = '';
+	$link = admin_url( 'themes.php?page=pm-setup' );
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		$msg  = __( 'O plugin WooCommerce não está ativo, então ainda não existem produtos, categorias nem carrinho. Ative em Plugins e depois rode a configuração da loja.', 'palestra-mantos' );
+		$link = admin_url( 'plugins.php' );
+	} else {
+		$count = wp_count_posts( 'product' );
+		if ( empty( $count->publish ) ) {
+			$msg = __( 'O WooCommerce está ativo, mas ainda não há produtos publicados. Clique aqui e depois em "Criar conteúdo da loja".', 'palestra-mantos' );
+		}
+	}
+	if ( $msg ) {
+		printf(
+			'<div class="pm-admin-warning"><a href="%s">⚠️ %s</a> <small>%s</small></div>',
+			esc_url( $link ),
+			esc_html( $msg ),
+			esc_html__( '(aviso visível só para administradores)', 'palestra-mantos' )
+		);
+	}
+}
+add_action( 'wp_body_open', 'pm_admin_store_warning', 5 );
