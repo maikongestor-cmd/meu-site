@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.2.1
+Version: 1.2.2
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -436,7 +436,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .woocommerce .quantity .qty { width: 72px; height: 50px; border: 1.5px solid var(--pm-line); border-radius: 999px; text-align: center; }
 .woocommerce div.product form.cart .button { min-height: 52px; flex: 1; min-width: 200px; font-size: 1rem; text-transform: uppercase; letter-spacing: .08em; }
 .woocommerce div.product form.cart .woocommerce-variation-add-to-cart, .woocommerce div.product form.cart:not(.variations_form) { display: flex; flex-wrap: wrap; gap: 10px; }
-.pm-size-guide { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 700; margin-bottom: 4px; }
+.pm-size-guide { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-size: .88rem; font-weight: 700; margin-bottom: 4px; }
 .pm-buy-whats { margin: -8px 0 20px; }
 .pm-buy-whats .pm-btn { width: 100%; }
 .woocommerce div.product .product_meta { font-size: .85rem; color: var(--pm-muted); border-top: 1px solid var(--pm-line); padding-top: 16px; }

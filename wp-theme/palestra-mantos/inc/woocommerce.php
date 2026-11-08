@@ -145,24 +145,14 @@ add_action( 'woocommerce_single_product_summary', 'pm_single_pay_info', 11 );
  */
 function pm_size_guide_link() {
 	global $product;
-	$page = get_page_by_path( 'guia-de-medidas' );
-	echo '<div class="pm-size-links">';
-	if ( $product && $product->is_type( 'variable' ) ) {
-		printf(
-			'<a class="pm-size-guide" href="#descubra-seu-tamanho">%s %s</a>',
-			pm_icon( 'user' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			esc_html__( 'Descubra seu tamanho', 'palestra-mantos' )
-		);
+	if ( ! $product || ! $product->is_type( 'variable' ) ) {
+		return;
 	}
-	if ( $page ) {
-		printf(
-			'<a class="pm-size-guide" href="%s" target="_blank" rel="noopener">%s %s</a>',
-			esc_url( get_permalink( $page ) ),
-			pm_icon( 'ruler' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			esc_html__( 'Tabela de medidas', 'palestra-mantos' )
-		);
-	}
-	echo '</div>';
+	printf(
+		'<div class="pm-size-links"><a class="pm-size-guide" href="#descubra-seu-tamanho">%s %s</a></div>',
+		pm_icon( 'user' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		esc_html__( 'Descubra seu tamanho', 'palestra-mantos' )
+	);
 }
 add_action( 'woocommerce_before_add_to_cart_form', 'pm_size_guide_link', 5 );
 
