@@ -155,24 +155,16 @@
 						if (window.jQuery) { window.jQuery(sel).trigger('change'); }
 					}
 				}
-				var dlg = root.closest('dialog');
-				if (dlg && dlg.close) { dlg.close(); }
+				var cart = document.querySelector('form.cart');
+				if (cart) {
+					cart.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					cart.classList.add('pm-flash');
+					setTimeout(function () { cart.classList.remove('pm-flash'); }, 1600);
+				}
 			});
 		}
 	}
 	document.querySelectorAll('.pm-fit').forEach(initFit);
-
-	var fitDialog = document.querySelector('.pm-fit-dialog');
-	if (fitDialog) {
-		document.querySelectorAll('.pm-fit-open').forEach(function (b) {
-			b.addEventListener('click', function () {
-				if (fitDialog.showModal) { fitDialog.showModal(); } else { fitDialog.setAttribute('open', ''); }
-			});
-		});
-		var fitClose = fitDialog.querySelector('.pm-fit-dialog__close');
-		if (fitClose) { fitClose.addEventListener('click', function () { fitDialog.close ? fitDialog.close() : fitDialog.removeAttribute('open'); }); }
-		fitDialog.addEventListener('click', function (e) { if (e.target === fitDialog && fitDialog.close) { fitDialog.close(); } });
-	}
 
 	// Calculadora de frete por CEP na página do produto.
 	var ship = document.querySelector('.pm-ship');

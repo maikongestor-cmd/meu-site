@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.2.0
+Version: 1.2.1
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -491,11 +491,11 @@ button.pm-size-guide { background: none; border: 0; padding: 0; cursor: pointer;
 .pm-fit__result small:empty { display: none; }
 .pm-fit__apply { width: 100%; margin-bottom: 10px; }
 .pm-fit__disclaimer { font-size: .78rem; color: var(--pm-muted); margin: 0; }
-.pm-fit-dialog { width: min(860px, calc(100vw - 24px)); max-height: calc(100vh - 24px); border: 0; border-radius: 22px; padding: 0; box-shadow: 0 30px 80px rgba(0,0,0,.3); overflow: auto; }
-.pm-fit-dialog::backdrop { background: rgba(6, 30, 18, .55); }
-.pm-fit-dialog .pm-fit { margin: 0; border-radius: 0; padding: 28px; }
-.pm-fit-dialog__close { position: absolute; top: 10px; right: 10px; z-index: 2; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #fff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.1); }
-.pm-fit-dialog__close svg { width: 20px; height: 20px; }
+.woocommerce div.product > .pm-fit-section { grid-column: 1 / -1; scroll-margin-top: 150px; }
+.pm-fit-section .pm-fit { margin: 8px 0 0; }
+a.pm-size-guide { color: var(--pm-green-600); }
+@keyframes pm-flash { 0%, 100% { box-shadow: 0 0 0 0 rgba(25,160,88,0); } 30% { box-shadow: 0 0 0 6px rgba(25,160,88,.35); } }
+form.cart.pm-flash { animation: pm-flash 1.6s ease; border-radius: 14px; }
 @media (max-width: 680px) {
 	.pm-fit { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
 	.pm-fit__stage { max-width: 200px; margin: 0 auto; width: 100%; padding: 8px; }
@@ -503,7 +503,6 @@ button.pm-size-guide { background: none; border: 0; padding: 0; cursor: pointer;
 	.pm-fit__height-tag { top: 6px; left: 6px; font-size: .75rem; padding: 3px 9px; }
 	.pm-fit__title { font-size: 1.6rem; margin-bottom: 10px; }
 	.pm-fit__field { margin-bottom: 10px; }
-	.pm-fit-dialog .pm-fit { padding: 52px 16px 20px; }
 }
 
 /* Calculadora de frete (página do produto) */
