@@ -320,6 +320,11 @@ function pm_setup_store() {
 	}
 	update_option( 'woocommerce_weight_unit', 'kg' );
 	update_option( 'woocommerce_dimension_unit', 'cm' );
+	update_option( 'woocommerce_allowed_countries', 'specific' );
+	update_option( 'woocommerce_specific_allowed_countries', array( 'BR' ) );
+	update_option( 'woocommerce_ship_to_countries', '' );
+	update_option( 'woocommerce_enable_shipping_calc', 'yes' );
+	update_option( 'woocommerce_enable_ajax_add_to_cart', 'yes' );
 	update_option( 'woocommerce_enable_guest_checkout', 'yes' );
 	update_option( 'woocommerce_enable_signup_and_login_from_checkout', 'yes' );
 	$log[] = __( 'Loja configurada em reais (R$ 1.234,56) e Brasil.', 'palestra-mantos' );

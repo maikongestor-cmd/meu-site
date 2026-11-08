@@ -174,7 +174,7 @@ function pm_single_whatsapp() {
 		esc_html__( 'Tirar dúvidas no WhatsApp', 'palestra-mantos' )
 	);
 }
-add_action( 'woocommerce_single_product_summary', 'pm_single_whatsapp', 31 );
+add_action( 'woocommerce_single_product_summary', 'pm_single_whatsapp', 33 );
 
 /* -------------------------------------------------------------------------
  * Desconto no Pix no carrinho / checkout
@@ -240,3 +240,253 @@ add_filter(
 		return $fragments;
 	}
 );
+
+/* -------------------------------------------------------------------------
+ * Botão "Comprar" → adiciona e leva para o carrinho
+ * ---------------------------------------------------------------------- */
+
+add_filter(
+	'woocommerce_product_single_add_to_cart_text',
+	function () {
+		return __( 'Comprar', 'palestra-mantos' );
+	}
+);
+
+/**
+ * Depois de clicar em "Comprar" na página do produto, vai para o carrinho.
+ * Desligue com: add_filter( 'pm_redirect_to_cart', '__return_false' );
+ *
+ * @param string $url URL.
+ * @return string
+ */
+function pm_add_to_cart_redirect( $url ) {
+	if ( apply_filters( 'pm_redirect_to_cart', true ) && ! wp_doing_ajax() ) {
+		return wc_get_cart_url();
+	}
+	return $url;
+}
+add_filter( 'woocommerce_add_to_cart_redirect', 'pm_add_to_cart_redirect' );
+
+/* -------------------------------------------------------------------------
+ * Frete por CEP
+ * ---------------------------------------------------------------------- */
+
+/**
+ * UF a partir do CEP (faixas dos Correios).
+ *
+ * @param string $cep CEP.
+ * @return string Sigla ou ''.
+ */
+function pm_cep_to_uf( $cep ) {
+	$n = (int) substr( preg_replace( '/\D+/', '', (string) $cep ), 0, 5 );
+	$ranges = array(
+		array( 1000, 19999, 'SP' ), array( 20000, 28999, 'RJ' ), array( 29000, 29999, 'ES' ),
+		array( 30000, 39999, 'MG' ), array( 40000, 48999, 'BA' ), array( 49000, 49999, 'SE' ),
+		array( 50000, 56999, 'PE' ), array( 57000, 57999, 'AL' ), array( 58000, 58999, 'PB' ),
+		array( 59000, 59999, 'RN' ), array( 60000, 63999, 'CE' ), array( 64000, 64999, 'PI' ),
+		array( 65000, 65999, 'MA' ), array( 66000, 68899, 'PA' ), array( 68900, 68999, 'AP' ),
+		array( 69000, 69299, 'AM' ), array( 69300, 69399, 'RR' ), array( 69400, 69899, 'AM' ),
+		array( 69900, 69999, 'AC' ), array( 70000, 72799, 'DF' ), array( 72800, 72999, 'GO' ),
+		array( 73000, 73699, 'DF' ), array( 73700, 76799, 'GO' ), array( 76800, 76999, 'RO' ),
+		array( 77000, 77999, 'TO' ), array( 78000, 78899, 'MT' ), array( 79000, 79999, 'MS' ),
+		array( 80000, 87999, 'PR' ), array( 88000, 89999, 'SC' ), array( 90000, 99999, 'RS' ),
+	);
+	foreach ( $ranges as $r ) {
+		if ( $n >= $r[0] && $n <= $r[1] ) {
+			return $r[2];
+		}
+	}
+	return '';
+}
+
+/**
+ * Formulário de CEP na página do produto.
+ */
+function pm_single_shipping_calc() {
+	global $product;
+	if ( ! $product || ! $product->needs_shipping() || ! wc_shipping_enabled() ) {
+		return;
+	}
+	?>
+	<form class="pm-ship" data-product="<?php echo esc_attr( $product->get_id() ); ?>" novalidate>
+		<label for="pm-ship-cep"><?php pm_the_icon( 'truck' ); ?> <?php esc_html_e( 'Calcular frete e prazo', 'palestra-mantos' ); ?></label>
+		<div class="pm-ship__row">
+			<input id="pm-ship-cep" name="cep" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9" required>
+			<button type="submit" class="pm-btn pm-btn--outline"><?php esc_html_e( 'Calcular', 'palestra-mantos' ); ?></button>
+		</div>
+		<a class="pm-ship__help" href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" rel="noopener"><?php esc_html_e( 'Não sei meu CEP', 'palestra-mantos' ); ?></a>
+		<div class="pm-ship__result" aria-live="polite"></div>
+	</form>
+	<?php
+}
+add_action( 'woocommerce_single_product_summary', 'pm_single_shipping_calc', 32 );
+
+/**
+ * Dados para o JavaScript da calculadora.
+ */
+function pm_shipping_script_data() {
+	if ( ! is_product() ) {
+		return;
+	}
+	wp_localize_script(
+		'pm-theme',
+		'pmShip',
+		array(
+			'url'      => WC_AJAX::get_endpoint( 'pm_calc_shipping' ),
+			'msgCep'   => __( 'Digite um CEP válido com 8 números.', 'palestra-mantos' ),
+			'msgError' => __( 'Não foi possível calcular agora. Tente de novo.', 'palestra-mantos' ),
+			'loading'  => __( 'Calculando…', 'palestra-mantos' ),
+		)
+	);
+}
+add_action( 'wp_enqueue_scripts', 'pm_shipping_script_data', 20 );
+
+/**
+ * AJAX: calcula as opções de frete para um produto e CEP.
+ */
+function pm_ajax_calc_shipping() {
+	// Sem nonce de propósito: é uma simulação pública (só leitura) e nonces quebram
+	// com cache de página e com a sessão de visitantes do WooCommerce.
+	// phpcs:disable WordPress.Security.NonceVerification.Missing
+	$cep          = preg_replace( '/\D+/', '', isset( $_POST['cep'] ) ? sanitize_text_field( wp_unslash( $_POST['cep'] ) ) : '' );
+	$product_id   = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
+	$variation_id = isset( $_POST['variation_id'] ) ? absint( $_POST['variation_id'] ) : 0;
+	$qty          = isset( $_POST['qty'] ) ? max( 1, absint( $_POST['qty'] ) ) : 1;
+	// phpcs:enable
+
+	if ( 8 !== strlen( $cep ) ) {
+		wp_send_json_error( array( 'message' => __( 'Digite um CEP válido com 8 números.', 'palestra-mantos' ) ) );
+	}
+
+	$product = wc_get_product( $variation_id ? $variation_id : $product_id );
+	if ( $product && $product->is_type( 'variable' ) ) {
+		// Sem tamanho escolhido: usa a primeira variação disponível (preço/peso aproximados).
+		$children = $product->get_visible_children();
+		$product  = $children ? wc_get_product( $children[0] ) : $product;
+	}
+	if ( ! $product || ! $product->needs_shipping() ) {
+		wp_send_json_error( array( 'message' => __( 'Produto inválido.', 'palestra-mantos' ) ) );
+	}
+
+	if ( function_exists( 'wc_load_cart' ) && null === WC()->cart ) {
+		wc_load_cart();
+	}
+
+	$price    = (float) wc_get_price_to_display( $product );
+	$line     = $price * $qty;
+	$uf       = pm_cep_to_uf( $cep );
+	$postcode = substr( $cep, 0, 5 ) . '-' . substr( $cep, 5 );
+	$parent   = $product->get_parent_id() ? $product->get_parent_id() : $product->get_id();
+
+	$package = array(
+		'contents'        => array(
+			'pm_estimate' => array(
+				'key'               => 'pm_estimate',
+				'product_id'        => $parent,
+				'variation_id'      => $product->get_parent_id() ? $product->get_id() : 0,
+				'variation'         => array(),
+				'quantity'          => $qty,
+				'data'              => $product,
+				'data_hash'         => '',
+				'line_total'        => $line,
+				'line_tax'          => 0,
+				'line_subtotal'     => $line,
+				'line_subtotal_tax' => 0,
+			),
+		),
+		'contents_cost'   => $line,
+		'applied_coupons' => array(),
+		'user'            => array( 'ID' => get_current_user_id() ),
+		'destination'     => array(
+			'country'   => 'BR',
+			'state'     => $uf,
+			'postcode'  => $postcode,
+			'city'      => '',
+			'address'   => '',
+			'address_1' => '',
+			'address_2' => '',
+		),
+		'cart_subtotal'   => $line,
+	);
+
+	$result = WC()->shipping()->calculate_shipping_for_package( $package, 'pm_estimate' );
+	$rates  = ( is_array( $result ) && ! empty( $result['rates'] ) ) ? $result['rates'] : array();
+
+	// O frete grátis do WooCommerce olha o carrinho inteiro; aqui avaliamos só este produto.
+	$free_min = null;
+	$zone     = WC_Shipping_Zones::get_zone_matching_package( $package );
+	foreach ( $zone->get_shipping_methods( true ) as $method ) {
+		if ( 'free_shipping' === $method->id ) {
+			$requires = $method->get_option( 'requires' );
+			$free_min = in_array( $requires, array( 'min_amount', 'either' ), true ) ? (float) wc_format_decimal( $method->get_option( 'min_amount' ) ) : 0.0;
+		}
+	}
+
+	$options = array();
+	if ( null !== $free_min && $line >= $free_min ) {
+		$options[] = array(
+			'label' => __( 'Frete grátis', 'palestra-mantos' ),
+			'cost'  => __( 'Grátis', 'palestra-mantos' ),
+			'free'  => true,
+		);
+	}
+	foreach ( $rates as $rate ) {
+		if ( 'free_shipping' === $rate->get_method_id() ) {
+			continue;
+		}
+		$cost      = (float) $rate->get_cost() + array_sum( (array) $rate->get_taxes() );
+		$options[] = array(
+			'label' => wp_strip_all_tags( $rate->get_label() ),
+			'cost'  => $cost > 0 ? wp_strip_all_tags( wc_price( $cost ) ) : __( 'Grátis', 'palestra-mantos' ),
+			'free'  => $cost <= 0,
+		);
+	}
+
+	if ( ! $options ) {
+		wp_send_json_error( array( 'message' => __( 'Não encontramos opções de entrega para este CEP. Fale com a gente no WhatsApp.', 'palestra-mantos' ) ) );
+	}
+
+	$note = '';
+	if ( null !== $free_min && $free_min > 0 && $line < $free_min ) {
+		/* translators: %s: valor que falta. */
+		$note = sprintf( __( 'Faltam %s para ganhar frete grátis.', 'palestra-mantos' ), wp_strip_all_tags( wc_price( $free_min - $line ) ) );
+	}
+
+	// Guarda o CEP para já vir preenchido no carrinho e no checkout.
+	if ( WC()->customer ) {
+		WC()->customer->set_shipping_location( 'BR', $uf, $postcode );
+		WC()->customer->set_calculated_shipping( true );
+		WC()->customer->save();
+	}
+
+	wp_send_json_success(
+		array(
+			'options' => $options,
+			'note'    => $note,
+			'uf'      => $uf,
+		)
+	);
+}
+add_action( 'wc_ajax_pm_calc_shipping', 'pm_ajax_calc_shipping' );
+
+/* Calculadora do carrinho: só o CEP (o estado sai do CEP). */
+add_filter( 'woocommerce_shipping_calculator_enable_state', '__return_false' );
+add_filter( 'woocommerce_shipping_calculator_enable_city', '__return_false' );
+
+/**
+ * Preenche o estado pelo CEP depois de calcular no carrinho.
+ */
+function pm_cart_calc_set_state() {
+	$customer = WC()->customer;
+	if ( $customer && 'BR' === $customer->get_shipping_country() ) {
+		$uf = pm_cep_to_uf( $customer->get_shipping_postcode() );
+		if ( $uf ) {
+			$customer->set_shipping_state( $uf );
+			if ( ! $customer->get_billing_state() ) {
+				$customer->set_billing_state( $uf );
+			}
+			$customer->save();
+		}
+	}
+}
+add_action( 'woocommerce_calculated_shipping', 'pm_cart_calc_set_state' );

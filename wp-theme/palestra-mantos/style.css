@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.0.1
+Version: 1.1.0
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -396,7 +396,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* ==========================================================================
    8. WooCommerce — single product
    ========================================================================== */
-.woocommerce div.product { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: start; }
+.woocommerce div.product { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.woocommerce div.product > * { min-width: 0; }
 .woocommerce div.product > .woocommerce-product-gallery,
 .woocommerce div.product > .summary { width: auto !important; float: none !important; margin: 0 !important; }
 .woocommerce div.product > .woocommerce-tabs, .woocommerce div.product > .related, .woocommerce div.product > .up-sells { grid-column: 1 / -1; }
@@ -445,9 +446,31 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .woocommerce div.product .woocommerce-tabs .panel h2:first-child { display: none; }
 .related.products > h2, .up-sells > h2 { margin: 40px 0 24px; }
 @media (max-width: 860px) {
-	.woocommerce div.product { grid-template-columns: 1fr; gap: 24px; }
+	.woocommerce div.product { grid-template-columns: minmax(0, 1fr); gap: 24px; }
 	.woocommerce div.product form.cart .button { min-width: 0; }
 }
+
+/* Calculadora de frete (página do produto) */
+.pm-ship { border: 1px solid var(--pm-line); border-radius: var(--pm-radius); padding: 16px 18px; margin: 0 0 22px; }
+.pm-ship label { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--pm-ink); font-size: .92rem; margin-bottom: 10px; }
+.pm-ship label svg { width: 20px; height: 20px; color: var(--pm-green-600); }
+.pm-ship__row { display: flex; gap: 8px; }
+.pm-ship__row input { flex: 1; min-width: 0; height: 46px; border: 1.5px solid var(--pm-line); border-radius: 999px; padding: 0 18px; font-size: 1rem; letter-spacing: .04em; }
+.pm-ship__row input:focus { outline: none; border-color: var(--pm-green-500); }
+.pm-ship__row .pm-btn { min-height: 46px; padding: 10px 20px; }
+.pm-ship__help { display: inline-block; font-size: .8rem; margin-top: 8px; color: var(--pm-muted); text-decoration: underline; }
+.pm-ship__list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; }
+.pm-ship__list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; background: var(--pm-bg-soft); border-radius: 10px; font-size: .9rem; }
+.pm-ship__list li b { color: var(--pm-ink); white-space: nowrap; }
+.pm-ship__list li.is-free b { color: var(--pm-green-600); }
+.pm-ship__note { margin: 10px 0 0; font-size: .85rem; color: var(--pm-green-700); font-weight: 600; }
+.pm-ship__error { margin: 10px 0 0; font-size: .88rem; color: var(--pm-red); }
+.pm-ship__loading { margin: 10px 0 0; font-size: .88rem; color: var(--pm-muted); }
+
+/* Calculadora do carrinho: só CEP, sempre aberta */
+.woocommerce-cart .shipping-calculator-form { display: block !important; }
+.woocommerce-cart .shipping-calculator-button { display: none; }
+.woocommerce-cart #calc_shipping_country_field { display: none; }
 
 /* ==========================================================================
    9. WooCommerce — cart, checkout, account, notices
