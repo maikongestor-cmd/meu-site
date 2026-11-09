@@ -29,8 +29,8 @@ $pm_times    = (int) pm_opt( 'installments' );
 			</div>
 		</div>
 		<div class="pm-hero__media">
-			<img src="<?php echo esc_url( pm_opt_img( 'hero_image_1', 'conjunto-branco-feminino.jpg' ) ); ?>" alt="<?php esc_attr_e( 'Conjunto moletom branco Palestra', 'palestra-mantos' ); ?>" width="500" height="625" fetchpriority="high">
-			<img src="<?php echo esc_url( pm_opt_img( 'hero_image_2', 'calca-verde.jpg' ) ); ?>" alt="<?php esc_attr_e( 'Calça moletom verde Palestra', 'palestra-mantos' ); ?>" width="400" height="500">
+			<img src="<?php echo esc_url( pm_opt_img( 'hero_image_1', 'conjunto-branco-feminino.webp' ) ); ?>" alt="<?php esc_attr_e( 'Conjunto moletom branco Palestra', 'palestra-mantos' ); ?>" width="500" height="625" fetchpriority="high">
+			<img src="<?php echo esc_url( pm_opt_img( 'hero_image_2', 'calca-verde.webp' ) ); ?>" alt="<?php esc_attr_e( 'Calça moletom verde Palestra', 'palestra-mantos' ); ?>" width="400" height="500">
 			<?php if ( $pm_pix > 0 ) : ?>
 				<div class="pm-hero__badge"><small><?php esc_html_e( 'pagando no Pix', 'palestra-mantos' ); ?></small><strong><?php echo esc_html( $pm_pix ); ?>% OFF</strong></div>
 			<?php endif; ?>
@@ -55,9 +55,9 @@ $pm_times    = (int) pm_opt( 'installments' );
 		<div class="pm-cats">
 			<?php
 			$pm_cat_imgs = array(
-				'calcas'    => 'calca-verde.jpg',
-				'camisetas' => 'camiseta-logo-p.jpg',
-				'conjuntos' => 'conjunto-branco-masculino.jpg',
+				'calcas'    => 'calca-verde.webp',
+				'camisetas' => 'camiseta-logo-p.webp',
+				'conjuntos' => 'conjunto-branco-masculino.webp',
 			);
 			foreach ( pm_category_slugs() as $pm_slug => $pm_label ) :
 				?>
@@ -85,7 +85,7 @@ $pm_times    = (int) pm_opt( 'installments' );
 <section class="pm-section">
 	<div class="pm-container">
 		<div class="pm-split">
-			<div class="pm-split__img"><img src="<?php echo esc_url( pm_img( 'conjunto-branco-masculino.jpg' ) ); ?>" alt="<?php esc_attr_e( 'Conjunto moletom Palestra masculino', 'palestra-mantos' ); ?>" loading="lazy" width="600" height="750"></div>
+			<div class="pm-split__img"><img src="<?php echo esc_url( pm_img( 'conjunto-branco-masculino.webp' ) ); ?>" alt="<?php esc_attr_e( 'Conjunto moletom Palestra masculino', 'palestra-mantos' ); ?>" loading="lazy" width="600" height="750"></div>
 			<div class="pm-split__body">
 				<span class="pm-eyebrow"><?php esc_html_e( 'Qualidade Palestra', 'palestra-mantos' ); ?></span>
 				<h2><?php echo esc_html( pm_opt( 'split_title' ) ); ?></h2>

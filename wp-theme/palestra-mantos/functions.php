@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_VERSION', '1.2.2' );
+define( 'PM_VERSION', '1.3.0' );
 define( 'PM_DIR', get_template_directory() );
 define( 'PM_URI', get_template_directory_uri() );
 
@@ -69,38 +69,22 @@ function pm_setup() {
 add_action( 'after_setup_theme', 'pm_setup' );
 
 /**
- * CSS e JS.
+ * CSS e JS (fontes locais; JS com defer no rodapé).
  */
 function pm_assets() {
-	wp_enqueue_style(
-		'pm-fonts',
-		'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap',
-		array(),
-		null
-	);
 	wp_enqueue_style( 'pm-style', get_stylesheet_uri(), array(), PM_VERSION );
-	wp_enqueue_script( 'pm-theme', PM_URI . '/assets/js/theme.js', array(), PM_VERSION, true );
+	wp_enqueue_script(
+		'pm-theme',
+		PM_URI . '/assets/js/theme.js',
+		array(),
+		PM_VERSION,
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 }
 add_action( 'wp_enqueue_scripts', 'pm_assets' );
-
-/**
- * Pré-conexão com o Google Fonts.
- *
- * @param array  $urls          URLs.
- * @param string $relation_type Tipo.
- * @return array
- */
-function pm_resource_hints( $urls, $relation_type ) {
-	if ( 'preconnect' === $relation_type ) {
-		$urls[] = 'https://fonts.googleapis.com';
-		$urls[] = array(
-			'href' => 'https://fonts.gstatic.com',
-			'crossorigin',
-		);
-	}
-	return $urls;
-}
-add_filter( 'wp_resource_hints', 'pm_resource_hints', 10, 2 );
 
 /**
  * Menu padrão quando nenhum menu foi atribuído.

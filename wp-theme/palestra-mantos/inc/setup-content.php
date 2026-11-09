@@ -485,7 +485,7 @@ function pm_products_catalog() {
 			'cat'     => 'calcas',
 			'regular' => '147.00',
 			'sale'    => '',
-			'images'  => array( 'calca-branca-feminina.jpg' ),
+			'images'  => array( 'calca-branca-feminina.webp' ),
 			'short'   => 'Calça jogger em moletom flanelado, cós com elástico e punhos nas barras. Logo P bordado em verde e vermelho.',
 		),
 		array(
@@ -494,7 +494,7 @@ function pm_products_catalog() {
 			'cat'     => 'calcas',
 			'regular' => '147.00',
 			'sale'    => '',
-			'images'  => array( 'calca-verde.jpg' ),
+			'images'  => array( 'calca-verde.webp' ),
 			'short'   => 'Calça jogger verde em moletom flanelado, com cordão de ajuste, bolsos laterais e logo P em branco.',
 		),
 		array(
@@ -503,7 +503,7 @@ function pm_products_catalog() {
 			'cat'     => 'conjuntos',
 			'regular' => '349.90',
 			'sale'    => '279.90',
-			'images'  => array( 'conjunto-branco-feminino.jpg', 'conjunto-branco-masculino.jpg' ),
+			'images'  => array( 'conjunto-branco-feminino.webp', 'conjunto-branco-masculino.webp' ),
 			'short'   => 'Blusão com capuz e bolso canguru + calça jogger. Logo P bordado em verde e vermelho e detalhe da bandeira italiana.',
 		),
 		array(
@@ -512,7 +512,7 @@ function pm_products_catalog() {
 			'cat'     => 'camisetas',
 			'regular' => '127.00',
 			'sale'    => '',
-			'images'  => array( 'camiseta-logo-p.jpg' ),
+			'images'  => array( 'camiseta-logo-p.webp' ),
 			'short'   => 'Camiseta oversized em algodão, logo P no peito e bandeira italiana na barra.',
 		),
 		array(
@@ -521,7 +521,7 @@ function pm_products_catalog() {
 			'cat'     => 'camisetas',
 			'regular' => '127.00',
 			'sale'    => '',
-			'images'  => array( 'camiseta-escudo.jpg' ),
+			'images'  => array( 'camiseta-escudo.webp' ),
 			'short'   => 'Camiseta oversized em algodão com o escudo histórico no peito e bandeira italiana na barra.',
 		),
 	);
