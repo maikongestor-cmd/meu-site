@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_VERSION', '1.8.6' );
+define( 'PM_VERSION', '1.8.7' );
 define( 'PM_DIR', get_template_directory() );
 define( 'PM_URI', get_template_directory_uri() );
 

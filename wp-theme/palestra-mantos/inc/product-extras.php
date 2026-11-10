@@ -134,7 +134,10 @@ function pm_product_rating_line() {
 	}
 	list( $avg, $total ) = pm_reviews_summary( $product->get_id() );
 	if ( ! $total ) {
-		printf( '<div class="pm-rating-line"><a href="#avaliacoes">%s</a></div>', esc_html__( 'Seja o primeiro a avaliar', 'palestra-mantos' ) );
+		// Sem avaliações deste produto: mostra a nota real da loja (as mesmas exibidas lá embaixo).
+		list( $avg, $total ) = pm_reviews_summary( 0 );
+	}
+	if ( ! $total ) {
 		return;
 	}
 	printf(
