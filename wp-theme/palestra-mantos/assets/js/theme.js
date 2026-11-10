@@ -345,6 +345,25 @@
 		if (m === 'cep' && onlyDigits(after).length === 8 && e.target.id !== 'calc_shipping_postcode') { fillCep(e.target); }
 	});
 
+	// Preenchimento automático do navegador e CEP que já vem preenchido.
+	document.addEventListener('change', function (e) {
+		var id = e.target.id;
+		if ((id === 'billing_postcode' || id === 'shipping_postcode') && onlyDigits(e.target.value).length === 8) {
+			e.target.value = masks.cep(e.target.value);
+			fillCep(e.target);
+		}
+	});
+	function autoFillOnLoad() {
+		['billing', 'shipping'].forEach(function (prefix) {
+			var cep = document.getElementById(prefix + '_postcode');
+			var street = document.getElementById(prefix + '_address_1');
+			if (cep && street && !street.value && onlyDigits(cep.value).length === 8) {
+				cep.value = masks.cep(cep.value);
+				fillCep(cep);
+			}
+		});
+	}
+
 	// CEP → endereço (ViaCEP).
 	function setField(id, value) {
 		var el = document.getElementById(id);
@@ -378,6 +397,8 @@
 				if (msg) { msg.className = 'pm-cep-msg is-error'; msg.textContent = window.pmCheckout.msgCep; }
 			});
 	}
+
+	if (window.pmCheckout) { setTimeout(autoFillOnLoad, 300); }
 
 	// Recalcula o checkout ao trocar a forma de pagamento (desconto no Pix).
 	if (window.jQuery) {

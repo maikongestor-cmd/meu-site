@@ -470,6 +470,13 @@ function pm_ajax_calc_shipping() {
 	// Guarda o CEP para já vir preenchido no carrinho e no checkout.
 	if ( WC()->customer ) {
 		WC()->customer->set_shipping_location( 'BR', $uf, $postcode );
+		if ( ! WC()->customer->get_billing_postcode() ) {
+			WC()->customer->set_billing_country( 'BR' );
+			WC()->customer->set_billing_postcode( $postcode );
+			if ( $uf ) {
+				WC()->customer->set_billing_state( $uf );
+			}
+		}
 		WC()->customer->set_calculated_shipping( true );
 		WC()->customer->save();
 	}
@@ -500,8 +507,13 @@ function pm_cart_calc_set_state() {
 			if ( ! $customer->get_billing_state() ) {
 				$customer->set_billing_state( $uf );
 			}
-			$customer->save();
 		}
+		// Leva o CEP para o checkout, que completa o endereço sozinho.
+		if ( ! $customer->get_billing_postcode() ) {
+			$customer->set_billing_postcode( $customer->get_shipping_postcode() );
+			$customer->set_billing_country( 'BR' );
+		}
+		$customer->save();
 	}
 }
 add_action( 'woocommerce_calculated_shipping', 'pm_cart_calc_set_state' );

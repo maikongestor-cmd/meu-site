@@ -526,7 +526,7 @@ add_action( 'woocommerce_thankyou', 'pm_thankyou_extra', 5 );
  * Dados para o JavaScript do checkout.
  */
 function pm_checkout_script_data() {
-	if ( ! ( is_checkout() || is_cart() ) ) {
+	if ( ! ( is_checkout() || is_cart() || ( function_exists( 'is_account_page' ) && is_account_page() ) ) ) {
 		return;
 	}
 	wp_localize_script(
