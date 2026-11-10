@@ -40,12 +40,26 @@ Em **Aparência → Personalizar → Palestra Mantos** você muda:
 
 Para trocar o logo por uma imagem, use **Aparência → Personalizar → Identidade do site → Logo**.
 
-## 5. Pagamentos
-1. **Mercado Pago:** em Plugins → Adicionar novo, busque *"Mercado Pago payments for WooCommerce"*. Instale, ative e coloque as credenciais em **WooCommerce → Configurações → Pagamentos**.
-2. **Appmax:** instale o plugin da Appmax (pelo painel da Appmax ou pelo repositório de plugins) e coloque as credenciais.
+## 5. Pagamentos (o que só você pode fazer)
+O carrinho e o checkout já estão prontos no tema. Para o cliente conseguir pagar, falta **ligar os meios de pagamento** com as suas contas:
 
-**Desconto no Pix:** o tema já aplica os **5%** quando o cliente escolhe Pix no checkout. Funciona com qualquer forma de pagamento que tenha "pix" no nome interno, como o Pix do Mercado Pago e o da Appmax.
-> ⚠️ Se você ativar um desconto de Pix **dentro** do plugin do Mercado Pago ou da Appmax, coloque **0** no desconto do tema. Assim o cliente não recebe o desconto duas vezes.
+**Mercado Pago**
+1. Em **Plugins → Adicionar novo**, busque **"Mercado Pago payments for WooCommerce"**. Instale e ative.
+2. No site do Mercado Pago, entre em **Seu negócio → Configurações → Credenciais** (ou developers.mercadopago.com.br → Suas integrações) e copie a **Public Key** e o **Access Token** de **produção**.
+3. No WordPress, vá em **Mercado Pago → Configurações**, cole as credenciais e ative **Pix**, **Cartão de crédito** e, se quiser, **Boleto**.
+4. Teste com a opção **modo de teste** antes de liberar.
+
+**Appmax**
+1. No painel da Appmax, procure **Integrações → WooCommerce** e baixe ou instale o plugin oficial. Pegue também a **chave de API**.
+2. Em **Plugins**, ative o plugin da Appmax e cole a chave em **WooCommerce → Configurações → Pagamentos → Appmax**.
+3. Se o plugin da Appmax pedir o **"Brazilian Market on WooCommerce"**, pode instalar: o tema detecta e passa a usar os campos dele (CPF, número e bairro) sem duplicar.
+
+**Escolha qual cobra o quê:** dá para deixar os dois ativos, por exemplo Pix e cartão no Mercado Pago e cartão também na Appmax. A ordem aparece em **WooCommerce → Configurações → Pagamentos**, onde você arrasta para ordenar.
+
+**Desconto no Pix:** o tema aplica os **5%** quando o cliente escolhe Pix no checkout.
+> ⚠️ Se você ativar um desconto de Pix **dentro** do plugin do Mercado Pago ou da Appmax, coloque **0** no desconto do tema (Aparência → Personalizar → Palestra Mantos → Loja). Assim o cliente não recebe o desconto duas vezes.
+
+**Teste final:** faça um pedido de verdade com um Pix de valor baixo (crie um produto de teste de R$ 1,00), confira se chega o e-mail do pedido e depois estorne.
 
 ## 6. Frete
 O frete fixo de R$ 19,90 é só um exemplo. Para calcular o frete pelos Correios ou por transportadoras, instale o **Melhor Envio** ou o **Frenet**. Depois remova o "Entrega padrão" em **WooCommerce → Configurações → Entrega → Brasil**.

@@ -82,7 +82,7 @@ function pm_defaults() {
 		'whatsapp_msg'   => 'Olá! Vim pelo site da Palestra Mantos e gostaria de mais informações.',
 		'phone'          => '(11) 98995-8223',
 		'email'          => 'contato@palestraa.com.br',
-		'instagram'      => 'https://instagram.com/palestramantos',
+		'instagram'      => 'https://www.instagram.com/palestra_mantos/',
 		'facebook'       => 'https://facebook.com/palestramantos',
 		'tiktok'         => '',
 		'address'        => 'São Paulo — SP',

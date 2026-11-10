@@ -329,6 +329,7 @@ function pm_setup_store() {
 	update_option( 'woocommerce_specific_allowed_countries', array( 'BR' ) );
 	update_option( 'woocommerce_ship_to_countries', '' );
 	update_option( 'woocommerce_enable_shipping_calc', 'yes' );
+	update_option( 'woocommerce_shipping_cost_requires_address', 'yes' );
 	update_option( 'woocommerce_enable_ajax_add_to_cart', 'yes' );
 	update_option( 'woocommerce_enable_guest_checkout', 'yes' );
 	update_option( 'woocommerce_enable_signup_and_login_from_checkout', 'yes' );

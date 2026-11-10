@@ -277,6 +277,108 @@
 		});
 	}
 
+	// ---------- Fluxo de compra ----------
+	var $ = window.jQuery;
+
+	// Quantidade com botões + e –.
+	function addQtyButtons(scope) {
+		(scope || document).querySelectorAll('.quantity input.qty:not([type="hidden"])').forEach(function (input) {
+			if (input.closest('.pm-qty') || input.readOnly) { return; }
+			var wrap = document.createElement('span');
+			wrap.className = 'pm-qty';
+			input.parentNode.insertBefore(wrap, input);
+			var minus = document.createElement('button');
+			minus.type = 'button'; minus.textContent = '−'; minus.setAttribute('aria-label', 'Diminuir quantidade');
+			var plus = document.createElement('button');
+			plus.type = 'button'; plus.textContent = '+'; plus.setAttribute('aria-label', 'Aumentar quantidade');
+			wrap.appendChild(minus); wrap.appendChild(input); wrap.appendChild(plus);
+			function step(d) {
+				var min = parseFloat(input.min) || 0;
+				var max = parseFloat(input.max) || Infinity;
+				var v = (parseFloat(input.value) || 0) + d;
+				if (v < Math.max(min, input.closest('.woocommerce-cart-form') ? 0 : 1)) { return; }
+				if (v > max) { return; }
+				input.value = v;
+				input.dispatchEvent(new Event('change', { bubbles: true }));
+				if ($) { $(input).trigger('change'); }
+			}
+			minus.addEventListener('click', function () { step(-1); });
+			plus.addEventListener('click', function () { step(1); });
+		});
+	}
+	addQtyButtons();
+
+	// Carrinho: atualiza sozinho ao mudar a quantidade.
+	var qtyTimer;
+	document.addEventListener('change', function (e) {
+		if (!e.target.matches || !e.target.matches('.woocommerce-cart-form input.qty')) { return; }
+		clearTimeout(qtyTimer);
+		qtyTimer = setTimeout(function () {
+			var btn = document.querySelector('.woocommerce-cart-form [name="update_cart"]');
+			if (btn) { btn.disabled = false; btn.removeAttribute('aria-disabled'); btn.click(); }
+		}, 500);
+	});
+	if ($) {
+		$(document.body).on('updated_wc_div updated_cart_totals', function () { addQtyButtons(); });
+	}
+
+	// Máscaras.
+	function onlyDigits(v) { return (v || '').replace(/\D/g, ''); }
+	var masks = {
+		cpf: function (v) { v = onlyDigits(v).slice(0, 11); return v.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2'); },
+		cep: function (v) { v = onlyDigits(v).slice(0, 8); return v.length > 5 ? v.slice(0, 5) + '-' + v.slice(5) : v; },
+		phone: function (v) {
+			v = onlyDigits(v).slice(0, 11);
+			if (v.length <= 2) { return v.length ? '(' + v : v; }
+			if (v.length <= 6) { return '(' + v.slice(0, 2) + ') ' + v.slice(2); }
+			if (v.length <= 10) { return '(' + v.slice(0, 2) + ') ' + v.slice(2, 6) + '-' + v.slice(6); }
+			return '(' + v.slice(0, 2) + ') ' + v.slice(2, 7) + '-' + v.slice(7);
+		}
+	};
+	var maskMap = { billing_cpf: 'cpf', billing_postcode: 'cep', shipping_postcode: 'cep', calc_shipping_postcode: 'cep', billing_phone: 'phone' };
+	document.addEventListener('input', function (e) {
+		var m = maskMap[e.target.id];
+		if (!m) { return; }
+		var before = e.target.value;
+		var after = masks[m](before);
+		if (after !== before) { e.target.value = after; }
+		if (m === 'cep' && onlyDigits(after).length === 8 && e.target.id !== 'calc_shipping_postcode') { fillCep(e.target); }
+	});
+
+	// CEP → endereço (ViaCEP).
+	function setField(id, value) {
+		var el = document.getElementById(id);
+		if (!el || !value) { return; }
+		el.value = value;
+		if ($) { $(el).trigger('change'); } else { el.dispatchEvent(new Event('change', { bubbles: true })); }
+	}
+	function fillCep(input) {
+		if (!window.pmCheckout || input.dataset.pmCep === onlyDigits(input.value)) { return; }
+		var cep = onlyDigits(input.value);
+		input.dataset.pmCep = cep;
+		var prefix = input.id.indexOf('shipping') === 0 ? 'shipping' : 'billing';
+		var row = input.closest('.form-row');
+		var msg = row && row.querySelector('.pm-cep-msg');
+		if (row && !msg) { msg = document.createElement('span'); msg.className = 'pm-cep-msg'; row.appendChild(msg); }
+		if (msg) { msg.className = 'pm-cep-msg'; msg.textContent = 'Buscando endereço…'; }
+		fetch(window.pmCheckout.viacep.replace('%s', cep))
+			.then(function (r) { return r.json(); })
+			.then(function (d) {
+				if (!d || d.erro) { throw new Error('cep'); }
+				setField(prefix + '_address_1', d.logradouro);
+				setField(prefix + '_neighborhood', d.bairro);
+				setField(prefix + '_city', d.localidade);
+				setField(prefix + '_state', d.uf);
+				if (msg) { msg.textContent = [d.logradouro, d.bairro, d.localidade + '/' + d.uf].filter(Boolean).join(' · '); }
+				var num = document.getElementById(prefix + '_number');
+				if (num && !num.value) { num.focus(); }
+				if ($) { $(document.body).trigger('update_checkout'); }
+			})
+			.catch(function () {
+				if (msg) { msg.className = 'pm-cep-msg is-error'; msg.textContent = window.pmCheckout.msgCep; }
+			});
+	}
+
 	// Recalcula o checkout ao trocar a forma de pagamento (desconto no Pix).
 	if (window.jQuery) {
 		window.jQuery(function ($) {
