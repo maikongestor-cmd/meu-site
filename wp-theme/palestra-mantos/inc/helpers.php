@@ -71,6 +71,16 @@ function pm_opt( $key ) {
 }
 
 /**
+ * Corrige o CNPJ antigo caso tenha sido salvo no Personalizar.
+ */
+function pm_fix_old_cnpj() {
+	if ( '30.105.559/0001-47' === get_theme_mod( 'pm_cnpj' ) ) {
+		set_theme_mod( 'pm_cnpj', '30.105.559/0001-76' );
+	}
+}
+add_action( 'after_setup_theme', 'pm_fix_old_cnpj', 20 );
+
+/**
  * Valores padrão (rascunho — editar em Aparência → Personalizar → Palestra Mantos).
  *
  * @return array
@@ -86,7 +96,7 @@ function pm_defaults() {
 		'facebook'       => 'https://facebook.com/palestramantos',
 		'tiktok'         => '',
 		'address'        => 'São Paulo — SP',
-		'cnpj'           => '30.105.559/0001-47',
+		'cnpj'           => '30.105.559/0001-76',
 		'company'        => 'Palestra Mantos',
 		'pix_discount'   => 5,
 		'free_shipping'  => 249,
