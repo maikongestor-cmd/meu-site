@@ -67,6 +67,7 @@ function pm_setup_admin_page() {
 			'store'    => ! empty( $_POST['pm_store'] ),
 			'prices'   => ! empty( $_POST['pm_prices'] ),
 			'clean'    => ! empty( $_POST['pm_clean'] ),
+			'desc'     => ! empty( $_POST['pm_desc'] ),
 		);
 		$log = pm_run_setup( $opts );
 		update_option( 'pm_setup_done', 1 );
@@ -96,6 +97,7 @@ function pm_setup_admin_page() {
 			<p><label><input type="checkbox" name="pm_pages" value="1" checked> <?php esc_html_e( 'Páginas: Início, Quem Somos, Trocas e Devoluções, Guia de Medidas, Política de Privacidade e Contato (textos de rascunho)', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_products" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Categorias e produtos com as fotos e tamanhos P, M, G e GG (preços de exemplo)', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_prices" value="1" <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Atualizar os preços dos produtos que já existem para a tabela atual (calças R$ 147, conjuntos R$ 267, camisetas R$ 127, kit R$ 187). Também marca conjunto, kit e calças como destaque. Isso substitui preços editados à mão.', 'palestra-mantos' ); ?></label></p>
+			<p><label><input type="checkbox" name="pm_desc" value="1" <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Atualizar as descrições de todos os produtos (conjuntos, calças e camisetas) com os textos da Palestra Mantos. Substitui a descrição atual.', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_clean" value="1"> <?php esc_html_e( 'Remover as menções a "licenciado/oficial" dos textos já salvos (Quem Somos, descrições dos produtos e banner).', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_menus" value="1" checked> <?php esc_html_e( 'Menus do topo e do rodapé', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_store" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Loja em reais (R$), endereço no Brasil, frete grátis acima de R$ 249 e checkout clássico (compatível com Appmax e Mercado Pago)', 'palestra-mantos' ); ?></label></p>
@@ -136,6 +138,9 @@ function pm_run_setup( $opts ) {
 	}
 	if ( ! empty( $opts['prices'] ) && class_exists( 'WooCommerce' ) ) {
 		$log = array_merge( $log, pm_update_prices() );
+	}
+	if ( ! empty( $opts['desc'] ) && class_exists( 'WooCommerce' ) ) {
+		$log = array_merge( $log, pm_apply_product_descriptions() );
 	}
 	if ( ! empty( $opts['clean'] ) ) {
 		$log = array_merge( $log, pm_clean_licensed_texts() );
@@ -632,7 +637,8 @@ function pm_setup_products() {
 		$product->set_catalog_visibility( 'visible' );
 		$product->set_featured( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-CONJUNTO-VERDE', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) );
 		$product->set_short_description( $item['short'] );
-		$product->set_description( $desc );
+		$descs = function_exists( 'pm_product_descriptions' ) ? pm_product_descriptions() : array();
+		$product->set_description( isset( $descs[ $item['cat'] ] ) ? $descs[ $item['cat'] ] : $desc );
 		if ( isset( $cat_ids[ $item['cat'] ] ) ) {
 			$product->set_category_ids( array( $cat_ids[ $item['cat'] ] ) );
 		}
