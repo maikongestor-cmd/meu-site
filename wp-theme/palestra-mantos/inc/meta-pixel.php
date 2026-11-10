@@ -17,11 +17,24 @@ defined( 'ABSPATH' ) || exit;
 define( 'PM_FB_DEFAULT_PIXEL', '1686861222371865' );
 
 /**
+ * O plugin oficial "Meta for WooCommerce" está ativo? Nesse caso ele cuida do
+ * pixel e da API de Conversões, e o tema fica quieto (senão cada evento conta 2x).
+ *
+ * @return bool
+ */
+function pm_fb_plugin_active() {
+	return class_exists( 'WC_Facebookcommerce' ) || function_exists( 'facebook_for_woocommerce' );
+}
+
+/**
  * ID do pixel.
  *
  * @return string
  */
 function pm_fb_pixel_id() {
+	if ( pm_fb_plugin_active() ) {
+		return '';
+	}
 	return preg_replace( '/\D+/', '', (string) get_option( 'pm_fb_pixel_id', PM_FB_DEFAULT_PIXEL ) );
 }
 
@@ -738,6 +751,9 @@ function pm_fb_admin_page() {
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Meta Pixel e API de Conversões', 'palestra-mantos' ); ?></h1>
+		<?php if ( pm_fb_plugin_active() ) : ?>
+			<div class="notice notice-info"><p><strong><?php esc_html_e( 'O plugin "Meta for WooCommerce" está ativo: ele está cuidando do pixel e da API de Conversões, e o pixel do tema foi desligado para não contar os eventos em dobro.', 'palestra-mantos' ); ?></strong></p></div>
+		<?php endif; ?>
 		<?php if ( isset( $notices[ $msg ] ) ) : ?>
 			<div class="notice notice-<?php echo esc_attr( $notices[ $msg ][0] ); ?>"><p><?php echo esc_html( $notices[ $msg ][1] ); ?></p></div>
 		<?php endif; ?>
@@ -749,7 +765,7 @@ function pm_fb_admin_page() {
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><label for="pm_fb_pixel_id"><?php esc_html_e( 'ID do pixel', 'palestra-mantos' ); ?></label></th>
-					<td><input name="pm_fb_pixel_id" id="pm_fb_pixel_id" type="text" class="regular-text" value="<?php echo esc_attr( pm_fb_pixel_id() ); ?>"></td>
+					<td><input name="pm_fb_pixel_id" id="pm_fb_pixel_id" type="text" class="regular-text" value="<?php echo esc_attr( preg_replace( '/\D+/', '', (string) get_option( 'pm_fb_pixel_id', PM_FB_DEFAULT_PIXEL ) ) ); ?>"></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="pm_fb_capi_token"><?php esc_html_e( 'Token da API de Conversões', 'palestra-mantos' ); ?></label></th>
