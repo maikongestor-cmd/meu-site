@@ -223,8 +223,7 @@ function pm_pages_content() {
 		'inicio'                  => array( 'Início', '<!-- A página inicial é montada pelo tema. Edite os textos em Aparência → Personalizar → Palestra Mantos. -->' ),
 		'quem-somos'              => array(
 			'Quem Somos',
-			$draft .
-			'<h2>Paixão que veste</h2>
+						'<h2>Paixão que veste</h2>
 <p>A <strong>Palestra Mantos</strong> nasceu da paixão pelo verde e branco e da vontade de levar essa história para o dia a dia. Criamos moletons, calças e camisetas que unem conforto, qualidade e o orgulho de carregar o Palestra no peito.</p>
 <h2>Nosso compromisso</h2>
 <ul>
@@ -236,26 +235,38 @@ function pm_pages_content() {
 		),
 		'trocas-e-devolucoes'     => array(
 			'Trocas e Devoluções',
-			$draft .
-			'<h2>Primeira troca grátis</h2>
-<p>Se o tamanho não serviu ou você mudou de ideia, a primeira troca é por nossa conta.</p>
-<h2>Prazos</h2>
+			'<p>A satisfação dos nossos clientes é prioridade. Caso seja necessário realizar uma troca ou devolução, seguimos as normas previstas no Código de Defesa do Consumidor.</p>
+<h2>Arrependimento da compra</h2>
+<p>Você poderá solicitar a devolução do produto em até <strong>7 dias corridos</strong> após o recebimento.</p>
+<p>O produto deverá estar:</p>
 <ul>
-<li><strong>Arrependimento:</strong> até 7 dias corridos após o recebimento, conforme o Código de Defesa do Consumidor (art. 49). Devolvemos 100% do valor pago.</li>
-<li><strong>Troca por tamanho ou modelo:</strong> até 30 dias após o recebimento.</li>
-<li><strong>Defeito de fabricação:</strong> até 90 dias após o recebimento.</li>
+<li>sem sinais de uso;</li>
+<li>com etiqueta original;</li>
+<li>na embalagem original;</li>
+<li>acompanhado de todos os acessórios enviados.</li>
 </ul>
-<h2>Condições</h2>
+<p>Após o recebimento e análise do produto, realizaremos o estorno conforme a forma de pagamento utilizada.</p>
+<h2>Troca por tamanho</h2>
+<p>Caso o tamanho escolhido não sirva, você poderá solicitar a troca em até <strong>30 dias corridos</strong> após o recebimento.</p>
+<p>O produto deverá estar:</p>
 <ul>
-<li>A peça deve estar sem uso, sem lavagem, com etiqueta e na embalagem original.</li>
-<li>Produtos com marcas de uso, perfume ou avarias causadas pelo cliente não serão aceitos.</li>
+<li>sem uso;</li>
+<li>limpo;</li>
+<li>sem odores;</li>
+<li>com etiquetas originais.</li>
 </ul>
+<p>Após a conferência, enviaremos as orientações para a troca.</p>
+<h2>Produtos com defeito</h2>
+<p>Caso o produto apresente defeito de fabricação, entre em contato conosco em até <strong>90 dias</strong> após o recebimento. Nossa equipe realizará uma análise para confirmar o defeito e providenciar a solução adequada.</p>
 <h2>Como solicitar</h2>
-<ol>
-<li>Fale com a gente pelo <a href="' . $whats . '" target="_blank" rel="noopener">WhatsApp</a> ou pelo e-mail ' . $email . ' informando o número do pedido.</li>
-<li>Enviaremos o código de postagem para você levar o produto a uma agência dos Correios.</li>
-<li>Assim que recebermos e conferirmos a peça, enviamos a troca ou fazemos o reembolso em até 10 dias úteis.</li>
-</ol>',
+<p>Entre em contato pelo <a href="' . $whats . '" target="_blank" rel="noopener">WhatsApp</a> ou pela nossa <a href="/contato/">página de contato</a>.</p>
+<p>Informe:</p>
+<ul>
+<li>número do pedido;</li>
+<li>nome completo;</li>
+<li>motivo da solicitação;</li>
+<li>fotos do produto (quando necessário).</li>
+</ul>',
 		),
 		'guia-de-medidas'         => array(
 			'Guia de Medidas',
@@ -286,33 +297,38 @@ function pm_pages_content() {
 		),
 		'politica-de-privacidade' => array(
 			'Política de Privacidade',
-			$draft .
-			'<p>A Palestra Mantos respeita a sua privacidade e trata os seus dados pessoais de acordo com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD).</p>
-<h2>Quais dados coletamos</h2>
-<p>Nome, CPF, e-mail, telefone e endereço informados na compra ou no cadastro, além de dados de navegação (cookies) para o funcionamento do site.</p>
-<h2>Para que usamos</h2>
+			'<p>Na Palestra Mantos valorizamos a sua privacidade. Todas as informações fornecidas durante a sua navegação e compra são tratadas com segurança e confidencialidade.</p>
+<h2>Como usamos os seus dados</h2>
+<p>Os dados coletados poderão ser utilizados para:</p>
 <ul>
-<li>Processar pedidos, pagamentos e entregas;</li>
-<li>Prestar atendimento e enviar informações sobre seus pedidos;</li>
-<li>Enviar novidades e promoções, somente com o seu consentimento;</li>
-<li>Cumprir obrigações legais e fiscais.</li>
+<li>processamento de pedidos;</li>
+<li>emissão de notas fiscais;</li>
+<li>atendimento ao cliente;</li>
+<li>comunicação sobre pedidos;</li>
+<li>envio de ofertas (quando autorizado);</li>
+<li>melhoria da experiência em nosso site.</li>
 </ul>
-<h2>Pagamentos</h2>
-<p>Os pagamentos são processados pelos parceiros Appmax e Mercado Pago, em ambiente seguro. Não armazenamos os dados do seu cartão.</p>
 <h2>Compartilhamento</h2>
-<p>Compartilhamos dados apenas com parceiros necessários para concluir a compra (meios de pagamento, transportadoras e emissão de nota fiscal).</p>
-<h2>Seus direitos</h2>
-<p>Você pode pedir acesso, correção ou exclusão dos seus dados a qualquer momento pelo e-mail ' . $email . '.</p>',
+<p>Não comercializamos nem compartilhamos seus dados pessoais com terceiros, exceto quando necessário para:</p>
+<ul>
+<li>processamento de pagamentos;</li>
+<li>empresas de transporte;</li>
+<li>cumprimento de obrigações legais.</li>
+</ul>
+<h2>Cookies</h2>
+<p>Nosso site utiliza cookies para melhorar a sua experiência de navegação. Ao utilizar nosso site, você concorda com esta Política de Privacidade.</p>
+<h2>Seus dados</h2>
+<p>Caso deseje solicitar alteração ou exclusão dos seus dados, entre em contato pelos nossos <a href="/contato/">canais oficiais</a>.</p>',
 		),
 		'contato'                 => array(
 			'Contato',
 			'<p>Fale com a gente! Respondemos de segunda a sexta, das 9h às 18h.</p>
 <p><a class="pm-btn pm-btn--whats" href="' . $whats . '" target="_blank" rel="noopener">Chamar no WhatsApp</a></p>
 <ul>
-<li><strong>WhatsApp:</strong> ' . esc_html( pm_opt( 'phone' ) ) . '</li>
-<li><strong>E-mail:</strong> <a href="mailto:' . $email . '">' . $email . '</a></li>
-<li><strong>Instagram:</strong> <a href="' . esc_url( pm_opt( 'instagram' ) ) . '" target="_blank" rel="noopener">' . esc_html( preg_replace( '#^https?://(www\.)?#', '', pm_opt( 'instagram' ) ) ) . '</a></li>
-</ul>',
+<li><strong>WhatsApp:</strong> (11) 98995-8223</li>
+<li><strong>Instagram:</strong> <a href="https://www.instagram.com/palestra_mantos/" target="_blank" rel="noopener">@palestra_mantos</a></li>
+</ul>
+<p>Se preferir, envie uma mensagem pelo formulário abaixo.</p>',
 		),
 	);
 }
