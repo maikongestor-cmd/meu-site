@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="pm-container pm-footer__grid">
 		<div>
 			<?php pm_logo(); ?>
-			<p><?php esc_html_e( 'Moda licenciada para quem carrega a história do Palestra no peito. Qualidade, conforto e paixão em cada peça.', 'palestra-mantos' ); ?></p>
+			<p><?php esc_html_e( 'Moletons, calças e camisetas para quem carrega o Palestra no peito. Qualidade, conforto e paixão em cada peça.', 'palestra-mantos' ); ?></p>
 			<div class="pm-social">
 				<?php
 				foreach ( array( 'instagram', 'facebook', 'tiktok' ) as $pm_net ) {
@@ -111,7 +111,6 @@ defined( 'ABSPATH' ) || exit;
 	<div class="pm-footer__bottom">
 		<div class="pm-container">
 			<span>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html( pm_opt( 'company' ) ); ?><?php echo pm_opt( 'cnpj' ) ? ' — CNPJ ' . esc_html( pm_opt( 'cnpj' ) ) : ''; ?>. <?php esc_html_e( 'Todos os direitos reservados.', 'palestra-mantos' ); ?></span>
-			<span><?php esc_html_e( 'Produtos licenciados.', 'palestra-mantos' ); ?></span>
 		</div>
 	</div>
 </footer>

@@ -66,6 +66,7 @@ function pm_setup_admin_page() {
 			'menus'    => ! empty( $_POST['pm_menus'] ),
 			'store'    => ! empty( $_POST['pm_store'] ),
 			'prices'   => ! empty( $_POST['pm_prices'] ),
+			'clean'    => ! empty( $_POST['pm_clean'] ),
 		);
 		$log = pm_run_setup( $opts );
 		update_option( 'pm_setup_done', 1 );
@@ -95,6 +96,7 @@ function pm_setup_admin_page() {
 			<p><label><input type="checkbox" name="pm_pages" value="1" checked> <?php esc_html_e( 'Páginas: Início, Quem Somos, Trocas e Devoluções, Guia de Medidas, Política de Privacidade e Contato (textos de rascunho)', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_products" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Categorias e produtos com as fotos e tamanhos P, M, G e GG (preços de exemplo)', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_prices" value="1" <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Atualizar os preços dos produtos que já existem para a tabela atual (calças R$ 147, conjuntos R$ 267, camisetas R$ 127, kit R$ 187). Também marca conjunto, kit e calças como destaque. Isso substitui preços editados à mão.', 'palestra-mantos' ); ?></label></p>
+			<p><label><input type="checkbox" name="pm_clean" value="1"> <?php esc_html_e( 'Remover as menções a "licenciado/oficial" dos textos já salvos (Quem Somos, descrições dos produtos e banner).', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_menus" value="1" checked> <?php esc_html_e( 'Menus do topo e do rodapé', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_store" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Loja em reais (R$), endereço no Brasil, frete grátis acima de R$ 249 e checkout clássico (compatível com Appmax e Mercado Pago)', 'palestra-mantos' ); ?></label></p>
 			<p><button class="button button-primary button-hero" name="pm_run_setup" value="1"><?php esc_html_e( 'Criar conteúdo da loja', 'palestra-mantos' ); ?></button></p>
@@ -134,6 +136,9 @@ function pm_run_setup( $opts ) {
 	}
 	if ( ! empty( $opts['prices'] ) && class_exists( 'WooCommerce' ) ) {
 		$log = array_merge( $log, pm_update_prices() );
+	}
+	if ( ! empty( $opts['clean'] ) ) {
+		$log = array_merge( $log, pm_clean_licensed_texts() );
 	}
 	if ( $opts['menus'] ) {
 		$log = array_merge( $log, pm_setup_menus() );
@@ -210,10 +215,9 @@ function pm_pages_content() {
 			'Quem Somos',
 			$draft .
 			'<h2>Paixão que veste</h2>
-<p>A <strong>Palestra Mantos</strong> nasceu da paixão pelo verde e branco e da vontade de levar essa história para o dia a dia. Criamos moletons, calças e camisetas licenciados que unem conforto, qualidade e o orgulho de carregar o Palestra no peito.</p>
+<p>A <strong>Palestra Mantos</strong> nasceu da paixão pelo verde e branco e da vontade de levar essa história para o dia a dia. Criamos moletons, calças e camisetas que unem conforto, qualidade e o orgulho de carregar o Palestra no peito.</p>
 <h2>Nosso compromisso</h2>
 <ul>
-<li><strong>Produtos licenciados:</strong> todas as peças são oficiais e autorizadas.</li>
 <li><strong>Qualidade:</strong> tecidos de alta gramatura, bordados e estampas que duram.</li>
 <li><strong>Atendimento humano:</strong> fale com a gente pelo WhatsApp sempre que precisar.</li>
 <li><strong>Entrega para todo o Brasil</strong>, com frete grátis acima de R$ 249.</li>
@@ -599,8 +603,7 @@ function pm_setup_products() {
 		return $log;
 	}
 
-	$desc = '<p>Peça oficial e licenciada <strong>Palestra Mantos</strong>.</p>
-<ul>
+	$desc = '<ul>
 <li>Tamanhos: P, M, G e GG — consulte o Guia de Medidas;</li>
 <li>Lavar do avesso, à mão ou em ciclo delicado;</li>
 <li>Não usar alvejante e não passar ferro sobre o bordado/estampa.</li>
@@ -714,6 +717,49 @@ function pm_update_prices() {
 		/* translators: 1: produto, 2: preço. */
 		$log[] = sprintf( __( 'Preço atualizado: %1$s → R$ %2$s', 'palestra-mantos' ), $item['name'], number_format( (float) ( '' !== $item['sale'] ? $item['sale'] : $item['regular'] ), 2, ',', '.' ) );
 	}
+	return $log;
+}
+
+/**
+ * Remove "licenciado/oficial" dos textos criados pelo tema que já estão salvos.
+ *
+ * @return array
+ */
+function pm_clean_licensed_texts() {
+	$pairs = array(
+		'<p>Peça oficial e licenciada <strong>Palestra Mantos</strong>.</p>' => '',
+		'<li><strong>Produtos licenciados:</strong> todas as peças são oficiais e autorizadas.</li>' => '',
+		'camisetas licenciados que unem' => 'camisetas que unem',
+		'camisetas licenciados para vestir' => 'camisetas para vestir',
+	);
+	$log   = array();
+	$ids   = array();
+	$about = get_page_by_path( 'quem-somos' );
+	if ( $about ) {
+		$ids[] = $about->ID;
+	}
+	if ( post_type_exists( 'product' ) ) {
+		$ids = array_merge( $ids, get_posts( array( 'post_type' => 'product', 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids' ) ) );
+	}
+	$count = 0;
+	foreach ( $ids as $id ) {
+		$post = get_post( $id );
+		$new  = str_replace( array_keys( $pairs ), array_values( $pairs ), $post->post_content );
+		$new  = preg_replace( "/\n{3,}/", "\n\n", $new );
+		if ( $new !== $post->post_content ) {
+			wp_update_post( array( 'ID' => $id, 'post_content' => $new ) );
+			$count++;
+		}
+	}
+	foreach ( array( 'pm_hero_text', 'pm_slide1_text' ) as $mod ) {
+		$val = get_theme_mod( $mod );
+		if ( is_string( $val ) && false !== stripos( $val, 'licenciad' ) ) {
+			set_theme_mod( $mod, trim( preg_replace( '/\s+licenciad[oa]s?/iu', '', $val ) ) );
+			$count++;
+		}
+	}
+	/* translators: %d: quantidade. */
+	$log[] = sprintf( __( 'Textos limpos: %d item(ns) sem "licenciado".', 'palestra-mantos' ), $count );
 	return $log;
 }
 

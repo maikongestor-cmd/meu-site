@@ -93,7 +93,7 @@ function pm_defaults() {
 		'installments'   => 12,
 		'hero_eyebrow'   => 'Coleção Palestra',
 		'hero_title'     => 'Paixão e <em>Estilo!</em>',
-		'hero_text'      => 'Moletons, calças e camisetas licenciados para vestir o manto no dia a dia — com conforto, qualidade e a nossa história no peito.',
+		'hero_text'      => 'Moletons, calças e camisetas para vestir o manto no dia a dia — com conforto, qualidade e a nossa história no peito.',
 		'hero_image_1'   => '',
 		'hero_image_2'   => '',
 		// Apresentação da marca.
@@ -106,7 +106,7 @@ function pm_defaults() {
 		'slide1_image'   => '',
 		'slide1_eyebrow' => 'Coleção Palestra',
 		'slide1_title'   => 'Paixão e <em>Estilo!</em>',
-		'slide1_text'    => 'Moletons, calças e camisetas licenciados para vestir o manto no dia a dia — com conforto, qualidade e a nossa história no peito.',
+		'slide1_text'    => 'Moletons, calças e camisetas para vestir o manto no dia a dia — com conforto, qualidade e a nossa história no peito.',
 		'slide1_button'  => 'Ver coleção',
 		'slide1_link'    => '',
 		'slide2_image'   => '',
