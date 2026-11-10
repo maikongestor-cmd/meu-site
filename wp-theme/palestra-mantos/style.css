@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.4.0
+Version: 1.5.0
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -386,6 +386,41 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pm-cta-band__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 44px 20px; flex-wrap: wrap; }
 .pm-cta-band h2 { color: #fff; margin: 0 0 4px; }
 .pm-cta-band p { margin: 0; color: rgba(255,255,255,.88); }
+
+/* Apresentação "Bem-vindo" */
+.pm-welcome__inner { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 56px; align-items: center; }
+.pm-welcome__media { display: flex; justify-content: center; }
+.pm-welcome__media img { max-height: 460px; width: auto; filter: drop-shadow(0 20px 30px rgba(6,50,29,.12)); }
+.pm-welcome__text h2 { margin-bottom: 18px; }
+.pm-welcome__text p { font-size: 1.08rem; color: var(--pm-text); }
+.pm-welcome__sign { font-family: var(--pm-font-display); font-size: 1.7rem !important; letter-spacing: .03em; color: var(--pm-green-700) !important; margin: 8px 0 26px; line-height: 1.15; }
+@media (max-width: 860px) {
+	.pm-welcome__inner { grid-template-columns: 1fr; gap: 24px; }
+	.pm-welcome__media img { max-height: 280px; }
+}
+
+/* Newsletter */
+#newsletter, #destaques, #lancamentos, #sobre { scroll-margin-top: 140px; }
+.pm-newsletter { background: radial-gradient(circle at 85% 20%, rgba(61,220,132,.28), transparent 55%), var(--pm-green-800); color: #fff; }
+.pm-newsletter__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 40px; align-items: center; padding-top: 64px; padding-bottom: 64px; }
+.pm-newsletter .pm-eyebrow { color: #b9f0cf; }
+.pm-newsletter h2 { color: #fff; margin-bottom: 10px; }
+.pm-newsletter__text p { color: rgba(255,255,255,.85); margin: 0; font-size: 1.05rem; }
+.pm-newsletter__row { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr) auto; gap: 10px; }
+.pm-newsletter__row input { height: 52px; min-width: 0; border: 0; border-radius: 999px; padding: 0 20px; background: #fff; color: var(--pm-ink); }
+.pm-newsletter__row input:focus { outline: 3px solid #3ddc84; outline-offset: 1px; }
+.pm-newsletter__row .pm-btn { min-height: 52px; }
+.pm-newsletter__consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; font-size: .84rem; color: rgba(255,255,255,.8); cursor: pointer; }
+.pm-newsletter__consent input { margin-top: 3px; accent-color: #3ddc84; width: 16px; height: 16px; flex: none; }
+.pm-newsletter__consent a { color: #b9f0cf; text-decoration: underline; }
+.pm-newsletter__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.pm-newsletter__msg { margin: 14px 0 0; padding: 10px 14px; border-radius: 10px; font-weight: 600; font-size: .92rem; }
+.pm-newsletter__msg.is-ok { background: rgba(61,220,132,.2); color: #d9ffe8; }
+.pm-newsletter__msg.is-erro { background: rgba(200,16,46,.25); color: #ffe1e6; }
+@media (max-width: 900px) {
+	.pm-newsletter__inner { grid-template-columns: 1fr; gap: 20px; padding-top: 48px; padding-bottom: 48px; }
+	.pm-newsletter__row { grid-template-columns: 1fr; }
+}
 
 /* ==========================================================================
    6. Content pages

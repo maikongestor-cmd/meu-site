@@ -55,7 +55,6 @@ function pm_customize_register( $wp_customize ) {
 		'address'       => array( 'pm_contact', 'Cidade / endereço', 'text', 'sanitize_text_field' ),
 		'company'       => array( 'pm_contact', 'Razão social / nome no rodapé', 'text', 'sanitize_text_field' ),
 		'cnpj'          => array( 'pm_contact', 'CNPJ', 'text', 'sanitize_text_field' ),
-		'split_title'   => array( 'pm_home', 'Seção "dia a dia" — título', 'text', 'sanitize_text_field' ),
 		'slide1_eyebrow' => array( 'pm_slides', 'Banner 1 — texto pequeno', 'text', 'sanitize_text_field' ),
 		'slide1_title'   => array( 'pm_slides', 'Banner 1 — título (use <em>destaque</em>)', 'text', 'wp_kses_post' ),
 		'slide1_text'    => array( 'pm_slides', 'Banner 1 — texto', 'textarea', 'sanitize_textarea_field' ),
@@ -71,7 +70,11 @@ function pm_customize_register( $wp_customize ) {
 		'slide3_text'    => array( 'pm_slides', 'Banner 3 — texto', 'textarea', 'sanitize_textarea_field' ),
 		'slide3_button'  => array( 'pm_slides', 'Banner 3 — texto do botão', 'text', 'sanitize_text_field' ),
 		'slide3_link'    => array( 'pm_slides', 'Banner 3 — link do botão (vazio = Kit de camisetas)', 'url', 'esc_url_raw' ),
-		'split_text'    => array( 'pm_home', 'Seção "dia a dia" — texto', 'textarea', 'sanitize_textarea_field' ),
+		'welcome_title' => array( 'pm_home', 'Apresentação — título', 'text', 'sanitize_text_field' ),
+		'welcome_text'  => array( 'pm_home', 'Apresentação — texto (linha em branco separa parágrafos)', 'textarea', 'sanitize_textarea_field' ),
+		'welcome_sign'  => array( 'pm_home', 'Apresentação — frase final', 'text', 'sanitize_text_field' ),
+		'news_title'    => array( 'pm_home', 'Newsletter — título', 'text', 'sanitize_text_field' ),
+		'news_text'     => array( 'pm_home', 'Newsletter — texto', 'text', 'sanitize_text_field' ),
 	);
 
 	foreach ( $fields as $key => $f ) {

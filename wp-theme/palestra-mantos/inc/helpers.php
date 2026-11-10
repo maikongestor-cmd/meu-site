@@ -96,6 +96,12 @@ function pm_defaults() {
 		'hero_text'      => 'Moletons, calças e camisetas licenciados para vestir o manto no dia a dia — com conforto, qualidade e a nossa história no peito.',
 		'hero_image_1'   => '',
 		'hero_image_2'   => '',
+		// Apresentação da marca.
+		'welcome_title'  => 'Bem-vindo ao Palestra Mantos',
+		'welcome_text'   => "Palestra Mantos nasceu da paixão de um torcedor que sempre acreditou que vestir uma camisa vai muito além da roupa. É carregar histórias, memórias e a identidade de quem vive o futebol todos os dias.\n\nCriamos esta marca para pessoas como você: torcedores que procuram qualidade, conforto e peças exclusivas para representar seu amor pelo clube dentro e fora dos estádios.",
+		'welcome_sign'   => 'De torcedor Palestrino para torcedor Palestrino 💚🤍',
+		'news_title'     => 'Receba as novidades da Palestra Mantos',
+		'news_text'      => 'Lançamentos, promoções e cupons exclusivos direto no seu e-mail.',
 		// Banner rotativo (3 slides).
 		'slide1_image'   => '',
 		'slide1_eyebrow' => 'Coleção Palestra',

@@ -50,35 +50,51 @@ $pm_times    = (int) pm_opt( 'installments' );
 </section>
 
 <?php if ( $pm_has_wc ) : ?>
-<section class="pm-section pm-section--soft">
+<section class="pm-section pm-section--soft" id="destaques">
 	<div class="pm-container">
 		<div class="pm-section__head">
-			<div><span class="pm-eyebrow"><?php esc_html_e( 'Destaques', 'palestra-mantos' ); ?></span><h2><?php esc_html_e( 'Mais vendidos', 'palestra-mantos' ); ?></h2></div>
+			<div><span class="pm-eyebrow"><?php esc_html_e( 'Os favoritos da torcida', 'palestra-mantos' ); ?></span><h2><?php esc_html_e( 'Produtos em destaque', 'palestra-mantos' ); ?></h2></div>
 			<a class="pm-link-arrow" href="<?php echo esc_url( $pm_shop_url ); ?>"><?php esc_html_e( 'Ver todos', 'palestra-mantos' ); ?></a>
 		</div>
-		<?php echo do_shortcode( '[products limit="8" columns="4" orderby="date" order="DESC"]' ); ?>
+		<?php
+		// Produtos marcados com estrela (destaque) em Produtos → Todos. Sem nenhum marcado, mostra a vitrine.
+		$pm_featured = wc_get_featured_product_ids();
+		echo do_shortcode( $pm_featured ? '[products limit="8" columns="4" visibility="featured" orderby="menu_order" order="ASC"]' : '[products limit="8" columns="4" orderby="price" order="DESC"]' );
+		?>
 	</div>
 </section>
 <?php endif; ?>
 
-<section class="pm-section">
-	<div class="pm-container">
-		<div class="pm-split">
-			<div class="pm-split__img"><img src="<?php echo esc_url( pm_img( 'conjunto-branco-masculino.webp' ) ); ?>" alt="<?php esc_attr_e( 'Conjunto moletom Palestra masculino', 'palestra-mantos' ); ?>" loading="lazy" width="600" height="750"></div>
-			<div class="pm-split__body">
-				<span class="pm-eyebrow"><?php esc_html_e( 'Qualidade Palestra', 'palestra-mantos' ); ?></span>
-				<h2><?php echo esc_html( pm_opt( 'split_title' ) ); ?></h2>
-				<p><?php echo esc_html( pm_opt( 'split_text' ) ); ?></p>
-				<ul class="pm-split__list">
-					<li><?php esc_html_e( 'Produtos oficiais e licenciados', 'palestra-mantos' ); ?></li>
-					<li><?php esc_html_e( 'Tamanhos do P ao GG', 'palestra-mantos' ); ?></li>
-					<li><?php esc_html_e( 'Envio para todo o Brasil', 'palestra-mantos' ); ?></li>
-				</ul>
-				<div><a class="pm-btn pm-btn--light" href="<?php echo esc_url( pm_cat_url( 'conjuntos' ) ); ?>"><?php esc_html_e( 'Ver conjuntos', 'palestra-mantos' ); ?> <?php pm_the_icon( 'arrow' ); ?></a></div>
-			</div>
+
+<section class="pm-section pm-welcome" id="sobre">
+	<div class="pm-container pm-welcome__inner">
+		<div class="pm-welcome__media" aria-hidden="true">
+			<img src="<?php echo esc_url( pm_img( 'banner-mapas.webp' ) ); ?>" alt="" width="368" height="490" loading="lazy">
+		</div>
+		<div class="pm-welcome__text">
+			<span class="pm-eyebrow"><?php esc_html_e( 'Nossa história', 'palestra-mantos' ); ?></span>
+			<h2><?php echo esc_html( pm_opt( 'welcome_title' ) ); ?></h2>
+			<?php echo wp_kses_post( wpautop( pm_opt( 'welcome_text' ) ) ); ?>
+			<p class="pm-welcome__sign"><?php echo esc_html( pm_opt( 'welcome_sign' ) ); ?></p>
+			<a class="pm-btn pm-btn--outline" href="<?php echo esc_url( ( $pm_about = get_page_by_path( 'quem-somos' ) ) ? get_permalink( $pm_about ) : $pm_shop_url ); ?>"><?php esc_html_e( 'Conheça a Palestra Mantos', 'palestra-mantos' ); ?> <?php pm_the_icon( 'arrow' ); ?></a>
 		</div>
 	</div>
 </section>
+
+
+<?php if ( $pm_has_wc ) : ?>
+<section class="pm-section pm-section--soft" id="lancamentos">
+	<div class="pm-container">
+		<div class="pm-section__head">
+			<div><span class="pm-eyebrow"><?php esc_html_e( 'Acabou de chegar', 'palestra-mantos' ); ?></span><h2><?php esc_html_e( 'Lançamentos', 'palestra-mantos' ); ?></h2></div>
+			<a class="pm-link-arrow" href="<?php echo esc_url( add_query_arg( 'orderby', 'date', $pm_shop_url ) ); ?>"><?php esc_html_e( 'Ver novidades', 'palestra-mantos' ); ?></a>
+		</div>
+		<?php echo do_shortcode( '[products limit="4" columns="4" orderby="date" order="DESC"]' ); ?>
+	</div>
+</section>
+<?php endif; ?>
+
+<?php get_template_part( 'template-parts/newsletter' ); ?>
 
 <section class="pm-section pm-section--soft">
 	<div class="pm-container">
@@ -105,15 +121,6 @@ $pm_times    = (int) pm_opt( 'installments' );
 	</div>
 </section>
 
-<section class="pm-cta-band">
-	<div class="pm-container pm-cta-band__inner">
-		<div>
-			<h2><?php esc_html_e( 'Entre para o grupo VIP', 'palestra-mantos' ); ?></h2>
-			<p><?php esc_html_e( 'Receba lançamentos e cupons exclusivos direto no seu WhatsApp.', 'palestra-mantos' ); ?></p>
-		</div>
-		<a class="pm-btn pm-btn--light" href="<?php echo esc_url( pm_whatsapp_url( 'Olá! Quero entrar no grupo VIP da Palestra Mantos.' ) ); ?>" target="_blank" rel="noopener"><?php pm_the_icon( 'whatsapp' ); ?> <?php esc_html_e( 'Quero participar', 'palestra-mantos' ); ?></a>
-	</div>
-</section>
 
 <?php
 get_footer();
