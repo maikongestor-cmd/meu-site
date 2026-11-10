@@ -277,10 +277,9 @@
 				var options = res && res.success && res.data.options ? res.data.options.slice() : [];
 				var hasFree = options.some(function (o) { return o.free; });
 				if (hasFree) { options = options.filter(function (o) { return o.free; }); }
-				// Com frete grátis o carrinho só mostra ele; aqui também.
-				if (!hasFree && meRes && meRes.success && meRes.data && meRes.data.length) {
-					// O frete grátis já vem da nossa rota (só quando o valor mínimo é atingido).
-					options = options.filter(function (o) { return o.free; });
+				// Com frete grátis o carrinho só mostra ele; aqui também. A cotação direta do
+				// Melhor Envio só entra se a da loja (a mesma do checkout) não trouxer opções.
+				if (!hasFree && !options.length && meRes && meRes.success && meRes.data && meRes.data.length) {
 					meRes.data.forEach(function (s) {
 						var price = parseFloat(s.price);
 						if (!(price > 0)) { return; }

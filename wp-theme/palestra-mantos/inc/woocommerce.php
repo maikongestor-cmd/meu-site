@@ -454,7 +454,7 @@ function pm_ajax_calc_shipping() {
 		}
 		$cost      = (float) $rate->get_cost() + array_sum( (array) $rate->get_taxes() );
 		$options[] = array(
-			'label' => wp_strip_all_tags( $rate->get_label() ),
+			'label' => pm_ship_label( wp_strip_all_tags( html_entity_decode( $rate->get_label(), ENT_QUOTES, 'UTF-8' ) ) ),
 			'cost'  => $cost > 0 ? html_entity_decode( wp_strip_all_tags( wc_price( $cost ) ), ENT_QUOTES, 'UTF-8' ) : __( 'Grátis', 'palestra-mantos' ),
 			'free'  => $cost <= 0,
 		);
@@ -490,6 +490,19 @@ function pm_ajax_calc_shipping() {
 	);
 }
 add_action( 'wc_ajax_pm_calc_shipping', 'pm_ajax_calc_shipping' );
+
+/**
+ * "Correios - SEDEX (2 dias úteis)" → "Correios SEDEX · 2 dias úteis".
+ *
+ * @param string $label Nome do frete.
+ * @return string
+ */
+function pm_ship_label( $label ) {
+	if ( preg_match( '/^(.+?)\s+-\s+(.+?)\s*\((.+)\)\s*$/u', $label, $m ) ) {
+		return $m[1] . ' ' . $m[2] . ' · ' . $m[3];
+	}
+	return $label;
+}
 
 /* Calculadora do carrinho: só o CEP (o estado sai do CEP). */
 add_filter( 'woocommerce_shipping_calculator_enable_state', '__return_false' );
