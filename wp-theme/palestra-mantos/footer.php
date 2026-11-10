@@ -87,7 +87,21 @@ defined( 'ABSPATH' ) || exit;
 			<div>
 				<h4 style="margin-bottom:10px"><?php esc_html_e( 'Formas de pagamento', 'palestra-mantos' ); ?></h4>
 				<div class="pm-paylist" aria-label="<?php esc_attr_e( 'Formas de pagamento aceitas', 'palestra-mantos' ); ?>">
-					<span class="is-pix">PIX</span><span>VISA</span><span>MASTERCARD</span><span>ELO</span><span>AMEX</span><span>HIPERCARD</span><span>BOLETO</span>
+					<?php
+					$pm_pay = array(
+						'visa.svg'       => 'Visa',
+						'mastercard.svg' => 'Mastercard',
+						'amex.svg'       => 'American Express',
+						'diners.svg'     => 'Diners Club',
+						'aura.png'       => 'Aura',
+						'elo.svg'        => 'Elo',
+						'discover.svg'   => 'Discover',
+						'pix.png'        => 'Pix',
+					);
+					foreach ( $pm_pay as $pm_file => $pm_label ) {
+						printf( '<img src="%s" alt="%s" title="%s" width="52" height="33" loading="lazy">', esc_url( pm_img( 'pay/' . $pm_file ) ), esc_attr( $pm_label ), esc_attr( $pm_label ) );
+					}
+					?>
 				</div>
 			</div>
 			<span class="pm-secure"><?php pm_the_icon( 'shield' ); ?> <?php esc_html_e( 'Compra 100% segura', 'palestra-mantos' ); ?></span>

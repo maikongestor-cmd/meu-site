@@ -1,0 +1,3 @@
+Ícones visa, mastercard, amex, diners, elo e discover: pacote npm "payment-icons" 1.2.1
+(https://github.com/activemerchant/payment_icons), licença MPL-2.0, arquivos sem alteração.
+Ícones aura e pix: recortados da imagem enviada pela Palestra Mantos.
