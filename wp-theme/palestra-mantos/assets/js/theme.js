@@ -564,6 +564,30 @@
 		document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !exitBox.hidden) { hideExit(); } });
 	}
 
+	// Avaliações no checkout: 2 por vez com setas.
+	document.querySelectorAll('.pm-co-reviews').forEach(function (box) {
+		var pages = parseInt(box.getAttribute('data-pages'), 10) || 1;
+		var page = 1;
+		var prev = box.querySelector('.pm-co-reviews__prev');
+		var next = box.querySelector('.pm-co-reviews__next');
+		var count = box.querySelector('.pm-co-reviews__count');
+		function show() {
+			box.querySelectorAll('.pm-co-review').forEach(function (r) { r.hidden = parseInt(r.getAttribute('data-page'), 10) !== page; });
+			if (count) { count.textContent = page + '/' + pages; }
+			if (prev) { prev.disabled = page <= 1; }
+			if (next) { next.disabled = page >= pages; }
+		}
+		if (prev) { prev.addEventListener('click', function () { if (page > 1) { page--; show(); } }); }
+		if (next) { next.addEventListener('click', function () { if (page < pages) { page++; show(); } }); }
+	});
+
+	// Links para #avaliacoes: rolagem suave até o fim da página do produto.
+	document.addEventListener('click', function (e) {
+		var a = e.target.closest('a[href="#avaliacoes"]');
+		var target = a && document.getElementById('avaliacoes');
+		if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', '#avaliacoes'); }
+	});
+
 	// Recalcula o checkout ao trocar a forma de pagamento (desconto no Pix).
 	if (window.jQuery) {
 		window.jQuery(function ($) {

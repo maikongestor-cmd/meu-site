@@ -576,3 +576,43 @@ function pm_only_free_shipping( $rates ) {
 	return $rates;
 }
 add_filter( 'woocommerce_package_rates', 'pm_only_free_shipping', 100 );
+
+
+/**
+ * "O que nossos clientes dizem" no checkout (2 por vez, com setas).
+ */
+function pm_checkout_reviews() {
+	if ( ! function_exists( 'pm_get_reviews' ) ) {
+		return;
+	}
+	$reviews = pm_get_reviews( 0, 8 );
+	if ( ! $reviews ) {
+		return;
+	}
+	$pages = (int) ceil( count( $reviews ) / 2 );
+	?>
+	<div class="pm-co-reviews" data-pages="<?php echo (int) $pages; ?>">
+		<div class="pm-co-reviews__head">
+			<strong><?php esc_html_e( 'O que nossos clientes dizem:', 'palestra-mantos' ); ?></strong>
+			<?php if ( $pages > 1 ) : ?>
+				<span class="pm-co-reviews__nav">
+					<button type="button" class="pm-co-reviews__prev" aria-label="<?php esc_attr_e( 'Anteriores', 'palestra-mantos' ); ?>" disabled>‹</button>
+					<span class="pm-co-reviews__count">1/<?php echo (int) $pages; ?></span>
+					<button type="button" class="pm-co-reviews__next" aria-label="<?php esc_attr_e( 'Próximas', 'palestra-mantos' ); ?>">›</button>
+				</span>
+			<?php endif; ?>
+		</div>
+		<?php
+		foreach ( $reviews as $i => $rv ) :
+			$page = (int) floor( $i / 2 ) + 1;
+			?>
+			<div class="pm-co-review" data-page="<?php echo (int) $page; ?>"<?php echo $page > 1 ? ' hidden' : ''; ?>>
+				<b><?php echo esc_html( get_the_title( $rv ) ); ?></b>
+				<div class="pm-co-review__meta"><?php echo pm_stars( max( 1, (int) get_post_meta( $rv->ID, '_pm_rating', true ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> <span><?php /* translators: %s: tempo. */ echo esc_html( sprintf( __( 'há %s', 'palestra-mantos' ), human_time_diff( get_post_time( 'U', true, $rv ), time() ) ) ); ?></span></div>
+				<p><?php echo esc_html( wp_trim_words( wp_strip_all_tags( $rv->post_content ), 30 ) ); ?></p>
+			</div>
+		<?php endforeach; ?>
+	</div>
+	<?php
+}
+add_action( 'woocommerce_checkout_after_order_review', 'pm_checkout_reviews' );

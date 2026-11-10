@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.8.1
+Version: 1.8.2
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -769,13 +769,13 @@ form.cart.pm-flash { animation: pm-flash 1.6s ease; border-radius: 14px; }
 
 /* Checkout: dados à esquerda, resumo e pagamento fixos à direita */
 .woocommerce-checkout.pm-store-flow .pm-content .woocommerce > .woocommerce-form-coupon-toggle .woocommerce-info { margin-bottom: 14px; }
-.woocommerce-checkout form.checkout { display: grid; grid-template-columns: minmax(0, 1fr) 440px; grid-template-rows: auto auto 1fr; gap: 0 36px; align-items: start; }
+.woocommerce-checkout form.checkout { display: grid; grid-template-columns: minmax(0, 1fr) 440px; grid-template-rows: auto auto auto 1fr; gap: 0 36px; align-items: start; }
 .woocommerce-checkout form.checkout > * { grid-column: 1; min-width: 0; }
 .woocommerce-checkout form.checkout > .pm-co-secure { grid-row: 1; }
-.woocommerce-checkout form.checkout > #customer_details { grid-row: 2 / 4; }
+.woocommerce-checkout form.checkout > #customer_details { grid-row: 2 / 5; }
 .woocommerce-checkout form.checkout > #order_review_heading { grid-column: 2; grid-row: 1; margin: 0 0 12px; font-size: 1.8rem; }
 .woocommerce-checkout form.checkout > .pm-freebar { grid-column: 2; grid-row: 2; }
-.woocommerce-checkout form.checkout > #order_review { grid-column: 2; grid-row: 3; position: sticky; top: 24px; background: #fff; border: 1px solid var(--pm-line); border-radius: 18px; padding: 18px; box-shadow: var(--pm-shadow); }
+.woocommerce-checkout form.checkout > #order_review { grid-column: 2; grid-row: 3; background: #fff; border: 1px solid var(--pm-line); border-radius: 18px; padding: 18px; box-shadow: var(--pm-shadow); }
 .woocommerce-checkout form.checkout > .woocommerce-NoticeGroup { grid-column: 1 / -1; grid-row: auto; }
 .pm-co-secure { display: flex; align-items: center; gap: 8px; font-size: .86rem; color: var(--pm-green-700); background: var(--pm-green-100); border-radius: 12px; padding: 10px 14px; margin: 0 0 18px; }
 .pm-co-secure svg { width: 18px; height: 18px; flex: none; }
@@ -826,6 +826,21 @@ form.cart.pm-flash { animation: pm-flash 1.6s ease; border-radius: 14px; }
 .woocommerce-checkout.pm-store-flow .pm-nav, .woocommerce-checkout.pm-store-flow .pm-search, .woocommerce-checkout.pm-store-flow .pm-menu-toggle, .woocommerce-checkout.pm-store-flow .pm-whats-float { display: none !important; }
 .woocommerce-checkout.pm-store-flow .pm-header__main { grid-template-columns: auto 1fr; }
 
+/* Avaliações no checkout */
+.woocommerce-checkout form.checkout > .pm-co-reviews { grid-column: 2; grid-row: 4; }
+.pm-co-reviews { background: #fff; border: 1px solid var(--pm-line); border-radius: 18px; padding: 18px 20px; margin-top: 16px; }
+.pm-co-reviews__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.pm-co-reviews__head strong { font-size: .9rem; text-transform: uppercase; letter-spacing: .04em; color: var(--pm-ink); }
+.pm-co-reviews__nav { display: inline-flex; align-items: center; gap: 6px; color: var(--pm-muted); }
+.pm-co-reviews__nav button { width: 34px; height: 34px; border: 0; border-radius: 10px; background: var(--pm-bg-soft); font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--pm-ink); }
+.pm-co-reviews__nav button:disabled { background: none; color: #b8c0bc; cursor: default; }
+.pm-co-review { padding: 12px 0; }
+.pm-co-review + .pm-co-review { border-top: 1px solid var(--pm-line); }
+.pm-co-review b { color: var(--pm-ink); }
+.pm-co-review__meta { display: flex; align-items: center; gap: 10px; margin: 4px 0; font-size: .85rem; color: var(--pm-muted); }
+.pm-co-review__meta .pm-stars { color: #8a6a00; font-size: .95rem; }
+.pm-co-review p { margin: 0; color: var(--pm-muted); font-size: .92rem; }
+
 /* Confirmação do pedido */
 .woocommerce-order-received .woocommerce-order { max-width: 860px; margin: 0 auto; }
 .woocommerce-order-received .woocommerce-thankyou-order-received { font-size: 1.15rem; font-weight: 700; color: var(--pm-green-800); background: var(--pm-green-100); border-radius: 14px; padding: 16px 18px; }
@@ -874,8 +889,11 @@ form.cart.pm-flash { animation: pm-flash 1.6s ease; border-radius: 14px; }
 
 /* Página do produto */
 .woocommerce div.product > .pm-product-reviews { grid-column: 1 / -1; scroll-margin-top: 140px; padding-top: 24px; }
-.pm-rating-line { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; color: var(--pm-muted); margin: -4px 0 10px; }
-.pm-rating-line strong { color: var(--pm-ink); }
+#avaliacoes { scroll-margin-top: 140px; }
+.pm-rating-line { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; margin: -2px 0 12px; font-size: 1rem; }
+.pm-rating-line .pm-stars { font-size: 1.55rem; letter-spacing: 1px; line-height: 1; }
+.pm-rating-line a { color: #1a4fd6; text-decoration: underline; text-underline-offset: 3px; }
+.pm-rating-line a:hover { color: var(--pm-green-700); }
 .pm-video-link { display: inline-block; font-size: .88rem; font-weight: 700; margin: 0 0 10px; }
 .pm-video { max-width: 900px; }
 .pm-video iframe, .pm-video video, .pm-video__file { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; border-radius: 14px; background: #000; }

@@ -134,14 +134,15 @@ function pm_product_rating_line() {
 	}
 	list( $avg, $total ) = pm_reviews_summary( $product->get_id() );
 	if ( ! $total ) {
+		printf( '<div class="pm-rating-line"><a href="#avaliacoes">%s</a></div>', esc_html__( 'Seja o primeiro a avaliar', 'palestra-mantos' ) );
 		return;
 	}
 	printf(
-		'<a class="pm-rating-line" href="#avaliacoes">%s <strong>%s</strong> <span>%s</span></a>',
+		'<div class="pm-rating-line">%1$s <a href="#avaliacoes">(%2$s)</a> <a href="#avaliacoes">%3$s</a></div>',
 		pm_stars( $avg ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		esc_html( number_format_i18n( $avg, 1 ) ),
+		esc_html( number_format( $avg, 1, '.', '' ) ),
 		/* translators: %d: total. */
-		esc_html( sprintf( _n( '(%d avaliação)', '(%d avaliações)', $total, 'palestra-mantos' ), $total ) )
+		esc_html( sprintf( _n( '%d avaliação', '%d avaliações', $total, 'palestra-mantos' ), $total ) )
 	);
 }
 remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
@@ -189,4 +190,4 @@ function pm_product_reviews_section() {
 	</section>
 	<?php
 }
-add_action( 'woocommerce_after_single_product_summary', 'pm_product_reviews_section', 12 );
+add_action( 'woocommerce_after_single_product_summary', 'pm_product_reviews_section', 30 );
