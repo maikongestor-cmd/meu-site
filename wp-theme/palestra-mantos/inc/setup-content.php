@@ -236,6 +236,8 @@ function pm_pages_content() {
 		'trocas-e-devolucoes'     => array(
 			'Trocas e Devoluções',
 			'<p>A satisfação dos nossos clientes é prioridade. Caso seja necessário realizar uma troca ou devolução, seguimos as normas previstas no Código de Defesa do Consumidor.</p>
+<h2>Primeira troca grátis</h2>
+<p>A <strong>primeira troca é por nossa conta</strong>: você não paga nada para trocar o tamanho. Enviamos o código de postagem e o frete de ida e de volta é gratuito.</p>
 <h2>Arrependimento da compra</h2>
 <p>Você poderá solicitar a devolução do produto em até <strong>7 dias corridos</strong> após o recebimento.</p>
 <p>O produto deverá estar:</p>
