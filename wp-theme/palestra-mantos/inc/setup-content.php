@@ -519,11 +519,20 @@ function pm_products_catalog() {
 		),
 		array(
 			'sku'     => 'PM-CONJUNTO-BRANCO',
-			'name'    => 'Conjunto Moletom Palestra Branco – Blusão + Calça',
+			'name'    => 'Conjunto Moletom Palestra Branco Feminino – Blusão + Calça',
+			'cat'     => 'conjuntos',
+			'regular' => '257.00',
+			'sale'    => '',
+			'images'  => array( 'conjunto-branco-feminino.webp' ),
+			'short'   => 'Blusão com capuz e bolso canguru + calça jogger. Logo P em verde e vermelho e detalhe da bandeira italiana.',
+		),
+		array(
+			'sku'     => 'PM-CONJUNTO-BRANCO-MASC',
+			'name'    => 'Conjunto Moletom Palestra Branco Masculino – Blusão + Calça',
 			'cat'     => 'conjuntos',
 			'regular' => '267.00',
 			'sale'    => '',
-			'images'  => array( 'conjunto-branco-feminino.webp', 'conjunto-branco-masculino.webp' ),
+			'images'  => array( 'conjunto-branco-masculino.webp' ),
 			'short'   => 'Blusão com capuz e bolso canguru + calça jogger. Logo P em verde e vermelho e detalhe da bandeira italiana.',
 		),
 		array(
@@ -646,7 +655,7 @@ function pm_setup_products() {
 		$product->set_sku( $item['sku'] );
 		$product->set_status( 'publish' );
 		$product->set_catalog_visibility( 'visible' );
-		$product->set_featured( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-CONJUNTO-VERDE', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) );
+		$product->set_featured( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-CONJUNTO-BRANCO-MASC', 'PM-CONJUNTO-VERDE', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) );
 		$product->set_short_description( $item['short'] );
 		$descs = function_exists( 'pm_product_descriptions' ) ? pm_product_descriptions() : array();
 		$product->set_description( isset( $descs[ $item['cat'] ] ) ? $descs[ $item['cat'] ] : $desc );
@@ -742,7 +751,7 @@ function pm_update_prices() {
 			$p->set_sale_price( $item['sale'] );
 			$p->save();
 		}
-		if ( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-CONJUNTO-VERDE', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) ) {
+		if ( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-CONJUNTO-BRANCO-MASC', 'PM-CONJUNTO-VERDE', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) ) {
 			$product = wc_get_product( $id );
 			$product->set_featured( true );
 			$product->save();

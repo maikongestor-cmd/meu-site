@@ -21,7 +21,8 @@ Isso cria:
 - **5 produtos** com as fotos e os tamanhos **P, M, G e GG**:
   - Calça Moletom Palestra Branca: R$ 147,00
   - Calça Moletom Palestra Verde: R$ 147,00
-  - Conjunto Moletom Palestra Branco: R$ 267,00
+  - Conjunto Moletom Palestra Branco Feminino: R$ 257,00
+  - Conjunto Moletom Palestra Branco Masculino: R$ 267,00
   - Camiseta Palestra Logo P: R$ 127,00
   - Camiseta Palestra Escudo: R$ 127,00
   - Kit 2 Camisetas Oversized (Logo P + Escudo): R$ 187,00
