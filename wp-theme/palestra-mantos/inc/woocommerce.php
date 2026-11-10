@@ -517,3 +517,52 @@ function pm_cart_calc_set_state() {
 	}
 }
 add_action( 'woocommerce_calculated_shipping', 'pm_cart_calc_set_state' );
+
+
+/* -------------------------------------------------------------------------
+ * Peso e medidas padrão para o frete (Melhor Envio / Correios)
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Medidas da embalagem por categoria (cm e kg), usadas só quando o produto
+ * não tem peso/medidas cadastrados. Ajuste pelo filtro 'pm_default_package'.
+ *
+ * @param WC_Product $product Produto ou variação.
+ * @return array
+ */
+function pm_default_package( $product ) {
+	$pid  = $product->get_parent_id() ? $product->get_parent_id() : $product->get_id();
+	$cats = wp_get_post_terms( $pid, 'product_cat', array( 'fields' => 'slugs' ) );
+	$cats = is_wp_error( $cats ) ? array() : $cats;
+	$sku  = (string) $product->get_sku();
+	if ( in_array( 'conjuntos', $cats, true ) ) {
+		$pkg = array( 'weight' => 1.2, 'length' => 35, 'width' => 30, 'height' => 10 );
+	} elseif ( false !== stripos( $sku, 'KIT' ) ) {
+		$pkg = array( 'weight' => 0.6, 'length' => 30, 'width' => 25, 'height' => 6 );
+	} elseif ( in_array( 'camisetas', $cats, true ) ) {
+		$pkg = array( 'weight' => 0.3, 'length' => 30, 'width' => 25, 'height' => 3 );
+	} else {
+		$pkg = array( 'weight' => 0.7, 'length' => 30, 'width' => 25, 'height' => 6 );
+	}
+	return apply_filters( 'pm_default_package', $pkg, $product );
+}
+
+foreach ( array( 'weight', 'length', 'width', 'height' ) as $pm_dim ) {
+	foreach ( array( 'woocommerce_product_get_', 'woocommerce_product_variation_get_' ) as $pm_hook ) {
+		add_filter(
+			$pm_hook . $pm_dim,
+			function ( $value, $product ) use ( $pm_dim ) {
+				if ( '' !== (string) $value && (float) $value > 0 ) {
+					return $value;
+				}
+				if ( is_admin() && ! wp_doing_ajax() ) {
+					return $value; // No painel, mostra o que está realmente cadastrado.
+				}
+				$pkg = pm_default_package( $product );
+				return (string) $pkg[ $pm_dim ];
+			},
+			20,
+			2
+		);
+	}
+}

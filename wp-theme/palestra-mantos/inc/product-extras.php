@@ -12,21 +12,39 @@ defined( 'ABSPATH' ) || exit;
  * ---------------------------------------------------------------------- */
 
 /**
- * Campo "Vídeo do produto" na edição do produto (aba Geral).
+ * Aba própria "Vídeo" na caixa "Dados do produto" (funciona em produtos com tamanhos).
+ *
+ * @param array $tabs Abas.
+ * @return array
+ */
+function pm_video_data_tab( $tabs ) {
+	$tabs['pm_video'] = array(
+		'label'    => __( 'Vídeo', 'palestra-mantos' ),
+		'target'   => 'pm_video_product_data',
+		'class'    => array(),
+		'priority' => 75,
+	);
+	return $tabs;
+}
+add_filter( 'woocommerce_product_data_tabs', 'pm_video_data_tab' );
+
+/**
+ * Painel da aba "Vídeo".
  */
 function pm_video_field() {
+	echo '<div id="pm_video_product_data" class="panel woocommerce_options_panel hidden"><div class="options_group">';
 	woocommerce_wp_text_input(
 		array(
 			'id'          => '_pm_video',
-			'label'       => __( 'Vídeo do produto', 'palestra-mantos' ),
-			'placeholder' => 'https://www.youtube.com/watch?v=… ou link .mp4',
-			'desc_tip'    => true,
-			'description' => __( 'Cole o link do YouTube, Vimeo ou TikTok, ou de um vídeo .mp4 enviado em Mídia → Adicionar. Aparece na aba "Vídeo" da página do produto.', 'palestra-mantos' ),
+			'label'       => __( 'Link do vídeo', 'palestra-mantos' ),
+			'placeholder' => 'https://www.youtube.com/watch?v=…',
+			'description' => __( 'YouTube, Vimeo, TikTok ou um arquivo .mp4 enviado em Mídia → Adicionar (copie a "URL do arquivo"). Depois clique em Atualizar.', 'palestra-mantos' ),
 			'type'        => 'url',
 		)
 	);
+	echo '</div></div>';
 }
-add_action( 'woocommerce_product_options_general_product_data', 'pm_video_field' );
+add_action( 'woocommerce_product_data_panels', 'pm_video_field' );
 
 /**
  * Salva o vídeo.

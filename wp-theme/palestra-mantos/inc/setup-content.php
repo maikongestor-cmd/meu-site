@@ -659,7 +659,10 @@ function pm_setup_products() {
 			$variation->set_sku( $item['sku'] . '-' . strtoupper( $size_slug ) );
 			$variation->set_manage_stock( false );
 			$variation->set_stock_status( 'instock' );
-			$variation->set_weight( 'camisetas' === $item['cat'] ? '0.3' : '0.7' );
+			$variation->set_weight( 'conjuntos' === $item['cat'] ? '1.2' : ( 'camisetas' === $item['cat'] ? '0.3' : '0.7' ) );
+			$variation->set_length( 'conjuntos' === $item['cat'] ? '35' : '30' );
+			$variation->set_width( 'conjuntos' === $item['cat'] ? '30' : '25' );
+			$variation->set_height( 'conjuntos' === $item['cat'] ? '10' : ( 'camisetas' === $item['cat'] ? '3' : '6' ) );
 			$variation->save();
 		}
 		WC_Product_Variable::sync( $product_id );
