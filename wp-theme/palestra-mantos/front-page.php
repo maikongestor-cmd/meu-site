@@ -146,6 +146,7 @@ $pm_times    = (int) pm_opt( 'installments' );
 			<?php endforeach; ?>
 		</div>
 		<?php endif; ?>
+		<?php echo function_exists( 'pm_ig_reviews_cta' ) ? pm_ig_reviews_cta() : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
 </section>
 

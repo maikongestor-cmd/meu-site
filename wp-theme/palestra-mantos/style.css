@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.8.7
+Version: 1.8.8
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -825,6 +825,12 @@ form.cart.pm-flash { animation: pm-flash 1.6s ease; border-radius: 14px; }
 /* Simplifica o topo no checkout para não distrair */
 .woocommerce-checkout.pm-store-flow .pm-nav, .woocommerce-checkout.pm-store-flow .pm-search, .woocommerce-checkout.pm-store-flow .pm-menu-toggle, .woocommerce-checkout.pm-store-flow .pm-whats-float { display: none !important; }
 .woocommerce-checkout.pm-store-flow .pm-header__main { grid-template-columns: auto 1fr; }
+
+/* Avaliações no Instagram */
+.pm-ig-cta { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 26px; text-align: center; }
+.pm-ig-cta p { margin: 0; font-weight: 700; color: var(--pm-ink); }
+.pm-ig-cta .pm-btn svg { width: 20px; height: 20px; }
+.pm-co-reviews__more { display: block; margin-top: 8px; font-weight: 700; font-size: .9rem; }
 
 /* Avaliações no checkout */
 .woocommerce-checkout form.checkout > .pm-co-reviews { grid-column: 2; grid-row: 4; }

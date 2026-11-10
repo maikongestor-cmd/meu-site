@@ -612,6 +612,12 @@ function pm_checkout_reviews() {
 				<p><?php echo esc_html( wp_trim_words( wp_strip_all_tags( $rv->post_content ), 30 ) ); ?></p>
 			</div>
 		<?php endforeach; ?>
+		<?php
+		list( $pm_igc, $pm_igu ) = pm_ig_reviews();
+		if ( $pm_igc > 0 && $pm_igu ) :
+			?>
+			<a class="pm-co-reviews__more" href="<?php echo esc_url( $pm_igu ); ?>" target="_blank" rel="noopener"><?php /* translators: %d: total. */ echo esc_html( sprintf( __( 'Ver +%d avaliações no Instagram →', 'palestra-mantos' ), $pm_igc ) ); ?></a>
+		<?php endif; ?>
 	</div>
 	<?php
 }

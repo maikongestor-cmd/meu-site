@@ -70,6 +70,8 @@ function pm_customize_register( $wp_customize ) {
 		'slide3_text'    => array( 'pm_slides', 'Banner 3 — texto', 'textarea', 'sanitize_textarea_field' ),
 		'slide3_button'  => array( 'pm_slides', 'Banner 3 — texto do botão', 'text', 'sanitize_text_field' ),
 		'slide3_link'    => array( 'pm_slides', 'Banner 3 — link do botão (vazio = Kit de camisetas)', 'url', 'esc_url_raw' ),
+		'ig_reviews_count' => array( 'pm_home', 'Avaliações no Instagram — total (ex.: 200). Use 0 para esconder.', 'number', 'absint' ),
+		'ig_reviews_url'   => array( 'pm_home', 'Avaliações no Instagram — link (destaque "Avaliações" ou perfil). Vazio = perfil do Instagram.', 'url', 'esc_url_raw' ),
 		'welcome_title' => array( 'pm_home', 'Apresentação — título', 'text', 'sanitize_text_field' ),
 		'welcome_text'  => array( 'pm_home', 'Apresentação — texto (linha em branco separa parágrafos)', 'textarea', 'sanitize_textarea_field' ),
 		'welcome_sign'  => array( 'pm_home', 'Apresentação — frase final', 'text', 'sanitize_text_field' ),

@@ -134,18 +134,22 @@ function pm_product_rating_line() {
 	}
 	list( $avg, $total ) = pm_reviews_summary( $product->get_id() );
 	if ( ! $total ) {
-		// Sem avaliações deste produto: mostra a nota real da loja (as mesmas exibidas lá embaixo).
 		list( $avg, $total ) = pm_reviews_summary( 0 );
 	}
-	if ( ! $total ) {
+	list( $ig_count ) = pm_ig_reviews();
+	if ( ! $total && ! $ig_count ) {
 		return;
 	}
-	printf(
-		'<div class="pm-rating-line">%1$s <a href="#avaliacoes">(%2$s)</a> <a href="#avaliacoes">%3$s</a></div>',
-		pm_stars( $avg ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		esc_html( number_format( $avg, 1, '.', '' ) ),
+	$label = $ig_count > 0
 		/* translators: %d: total. */
-		esc_html( sprintf( _n( '%d avaliação', '%d avaliações', $total, 'palestra-mantos' ), $total ) )
+		? sprintf( __( '+%d avaliações de clientes', 'palestra-mantos' ), $ig_count )
+		/* translators: %d: total. */
+		: sprintf( _n( '%d avaliação', '%d avaliações', $total, 'palestra-mantos' ), $total );
+	printf(
+		'<div class="pm-rating-line">%1$s %2$s <a href="#avaliacoes">%3$s</a></div>',
+		pm_stars( $total ? $avg : 5 ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$total ? '<a href="#avaliacoes">(' . esc_html( number_format( $avg, 1, '.', '' ) ) . ')</a>' : '', // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		esc_html( $label )
 	);
 }
 remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
@@ -189,6 +193,7 @@ function pm_product_reviews_section() {
 		<?php else : ?>
 			<p class="pm-reviews-empty"><?php esc_html_e( 'Este produto ainda não tem avaliações. Seja o primeiro a avaliar!', 'palestra-mantos' ); ?></p>
 		<?php endif; ?>
+		<?php echo pm_ig_reviews_cta(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		<?php pm_review_form( $pid ); ?>
 	</section>
 	<?php

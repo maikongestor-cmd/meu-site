@@ -96,6 +96,9 @@ function pm_defaults() {
 		'hero_text'      => 'Moletons, calças e camisetas para vestir o manto no dia a dia — com conforto, qualidade e a nossa história no peito.',
 		'hero_image_1'   => '',
 		'hero_image_2'   => '',
+		// Avaliações no Instagram.
+		'ig_reviews_count' => 200,
+		'ig_reviews_url'   => '',
 		// Apresentação da marca.
 		'welcome_title'  => 'Bem-vindo ao Palestra Mantos',
 		'welcome_text'   => "Palestra Mantos nasceu da paixão de um torcedor que sempre acreditou que vestir uma camisa vai muito além da roupa. É carregar histórias, memórias e a identidade de quem vive o futebol todos os dias.\n\nCriamos esta marca para pessoas como você: torcedores que procuram qualidade, conforto e peças exclusivas para representar seu amor pelo clube dentro e fora dos estádios.",
@@ -232,3 +235,35 @@ function pm_admin_store_warning() {
 	}
 }
 add_action( 'wp_body_open', 'pm_admin_store_warning', 5 );
+
+
+/**
+ * Link e total das avaliações no Instagram.
+ *
+ * @return array array( total, url )
+ */
+function pm_ig_reviews() {
+	$count = (int) pm_opt( 'ig_reviews_count' );
+	$url   = pm_opt( 'ig_reviews_url' ) ? pm_opt( 'ig_reviews_url' ) : pm_opt( 'instagram' );
+	return array( $count, $url );
+}
+
+/**
+ * Botão "Quer ver mais? Veja as +200 avaliações no Instagram".
+ *
+ * @return string
+ */
+function pm_ig_reviews_cta() {
+	list( $count, $url ) = pm_ig_reviews();
+	if ( $count <= 0 || ! $url ) {
+		return '';
+	}
+	return sprintf(
+		'<div class="pm-ig-cta"><p>%s</p><a class="pm-btn pm-btn--outline" href="%s" target="_blank" rel="noopener">%s %s</a></div>',
+		esc_html__( 'Quer ver mais?', 'palestra-mantos' ),
+		esc_url( $url ),
+		pm_icon( 'instagram' ),
+		/* translators: %d: total. */
+		esc_html( sprintf( __( 'Veja as +%d avaliações no nosso Instagram', 'palestra-mantos' ), $count ) )
+	);
+}
