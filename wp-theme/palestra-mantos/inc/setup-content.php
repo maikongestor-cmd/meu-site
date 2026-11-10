@@ -616,6 +616,12 @@ function pm_setup_products() {
 <p><em>Descrição de rascunho — complete com composição do tecido e detalhes da peça.</em></p>';
 
 	foreach ( pm_products_catalog() as $item ) {
+		// Não cria um segundo kit se a loja já tem um produto "Kit" (mesmo com outro código).
+		if ( false !== stripos( $item['name'], 'Kit' ) && pm_store_has_kit() ) {
+			/* translators: %s: produto. */
+			$log[] = sprintf( __( 'Já existe um kit na loja, não criei outro: %s', 'palestra-mantos' ), $item['name'] );
+			continue;
+		}
 		if ( wc_get_product_id_by_sku( $item['sku'] ) ) {
 			/* translators: %s: produto. */
 			$log[] = sprintf( __( 'Produto já existia: %s', 'palestra-mantos' ), $item['name'] );
@@ -686,6 +692,20 @@ function pm_setup_products() {
 }
 
 /**
+ * A loja já tem algum produto com "Kit" no nome?
+ *
+ * @return bool
+ */
+function pm_store_has_kit() {
+	foreach ( get_posts( array( 'post_type' => 'product', 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids' ) ) as $id ) {
+		if ( false !== stripos( get_the_title( $id ), 'Kit' ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
  * Atualiza os preços dos produtos do catálogo que já existem (todas as variações).
  *
  * @return array
@@ -699,6 +719,12 @@ function pm_update_prices() {
 		}
 		$product = wc_get_product( $id );
 		if ( ! $product ) {
+			continue;
+		}
+		// Se o produto foi transformado (ex.: camiseta virou kit), não mexe no preço.
+		if ( ( false !== stripos( $item['name'], 'Kit' ) ) !== ( false !== stripos( $product->get_name(), 'Kit' ) ) ) {
+			/* translators: %s: produto. */
+			$log[] = sprintf( __( 'Preço mantido (produto foi alterado por você): %s', 'palestra-mantos' ), $product->get_name() );
 			continue;
 		}
 		$targets = $product->is_type( 'variable' ) ? $product->get_children() : array( $id );
