@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.3.0
+Version: 1.4.0
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -263,6 +263,62 @@ button, input, select, textarea { font: inherit; color: inherit; }
 	.pm-hero__mark { width: 320px; }
 }
 
+/* Banner rotativo */
+.pm-slider { position: relative; overflow: hidden; }
+.pm-slides { display: grid; }
+.pm-slide { grid-area: 1 / 1; position: relative; overflow: hidden; opacity: 0; visibility: hidden; transition: opacity .7s ease, visibility .7s; }
+.pm-slide.is-active { opacity: 1; visibility: visible; z-index: 1; }
+.pm-slide__inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; min-height: 520px; padding-top: 48px; padding-bottom: 64px; }
+.pm-slide__title { font-family: var(--pm-font-display); font-weight: 400; font-size: clamp(2.6rem, 6vw, 4.6rem); letter-spacing: .02em; line-height: 1.02; margin: 0 0 16px; }
+.pm-slide__desc { font-size: 1.1rem; max-width: 520px; margin-bottom: 28px; }
+.pm-slide__ship { display: inline-flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 700; }
+.pm-slide__ship svg { width: 20px; height: 20px; }
+.pm-slide__media { position: relative; display: flex; justify-content: center; align-items: center; }
+.pm-slide__media img { max-height: 470px; width: auto; max-width: 100%; object-fit: contain; }
+.pm-slide__media.has-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
+.pm-slide__media.has-two img { width: 100%; max-height: 440px; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 20px; }
+.pm-slide__media.has-two img:last-child { margin-bottom: 40px; }
+.pm-hero__cta { align-items: center; }
+
+/* Slide claro (imagem com fundo branco "some" no fundo) */
+.pm-slide--light { background: radial-gradient(circle at 80% 30%, #e3f3e8, #f5f8f6 60%); color: var(--pm-text); }
+.pm-slide--light .pm-slide__title { color: var(--pm-green-800); }
+.pm-slide--light .pm-slide__title em { font-style: normal; color: var(--pm-green-500); }
+.pm-slide--light .pm-slide__media img { filter: drop-shadow(0 20px 30px rgba(6,50,29,.12)); }
+.pm-slide--light .pm-slide__ship { color: var(--pm-green-700); }
+
+/* Slides Black Friday */
+.pm-slide--dark { background: radial-gradient(circle at 78% 40%, rgba(25,160,88,.45), transparent 55%), #080b09; color: rgba(255,255,255,.85); }
+.pm-slide--dark .pm-eyebrow { color: #3ddc84; }
+.pm-slide--dark .pm-slide__title { color: #fff; }
+.pm-slide--dark .pm-slide__title em { display: block; font-style: normal; color: #3ddc84; font-size: 1.25em; }
+.pm-slide--dark .pm-slide__ship { color: #b9f0cf; }
+.pm-slide--dark .pm-slide__media:not(.has-two) img { border-radius: 20px; max-height: 440px; box-shadow: 0 30px 60px rgba(0,0,0,.5); }
+.pm-slide__bf { position: absolute; left: -2%; bottom: -6%; font-family: var(--pm-font-display); font-size: clamp(6rem, 18vw, 15rem); line-height: .8; color: transparent; -webkit-text-stroke: 2px rgba(61,220,132,.16); white-space: nowrap; pointer-events: none; user-select: none; }
+.pm-btn--green { background: #19a058; border-color: #19a058; color: #fff; }
+.pm-btn--green:hover { background: #3ddc84; border-color: #3ddc84; color: #06321d; }
+
+/* Controles */
+.pm-slider__arrow { position: absolute; top: 50%; z-index: 3; width: 46px; height: 46px; margin-top: -23px; border: 0; border-radius: 50%; background: rgba(255,255,255,.9); color: var(--pm-green-800); display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.15); transition: transform .2s; }
+.pm-slider__arrow:hover { transform: scale(1.08); }
+.pm-slider__arrow svg { width: 22px; height: 22px; }
+.pm-slider__arrow--prev { left: 16px; }
+.pm-slider__arrow--prev svg { transform: rotate(180deg); }
+.pm-slider__arrow--next { right: 16px; }
+.pm-slider__dots { position: absolute; left: 0; right: 0; bottom: 18px; z-index: 3; display: flex; justify-content: center; gap: 8px; }
+.pm-slider__dot { width: 10px; height: 10px; padding: 0; border: 0; border-radius: 999px; background: rgba(120,140,130,.5); cursor: pointer; transition: width .3s, background .3s; }
+.pm-slider__dot.is-active { width: 30px; background: var(--pm-green-500); }
+
+@media (max-width: 900px) {
+	.pm-slide__inner { grid-template-columns: 1fr; gap: 20px; min-height: 0; padding-top: 32px; padding-bottom: 60px; text-align: left; }
+	.pm-slide__media img { max-height: 300px; }
+	.pm-slide__media.has-two img { max-height: 260px; }
+	.pm-slide__media.has-two img:last-child { margin-bottom: 24px; }
+	.pm-slide__desc { font-size: 1rem; margin-bottom: 20px; }
+	.pm-slider__arrow { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .pm-slide { transition: none; } }
+
 /* ==========================================================================
    5. Benefits, categories, banners, testimonials
    ========================================================================== */
@@ -470,6 +526,14 @@ button.pm-size-guide { background: none; border: 0; padding: 0; cursor: pointer;
 .pm-fit__body { transform-box: view-box; transform-origin: 100px 362px; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
 .pm-fit__top, .pm-fit__pants, .pm-fit__pants-cuff, .pm-fit__pants-waist { transform-box: fill-box; transform-origin: center; transition: transform .35s cubic-bezier(.2,.8,.2,1), fill .2s; }
 .pm-fit__skin { fill: #d9c3ae; }
+.pm-fit__hair { fill: #3b2a20; }
+.pm-fit[data-sex="f"] .pm-fit__body--m, .pm-fit[data-sex="m"] .pm-fit__body--f { display: none; }
+.pm-fit__sex { display: inline-flex; border: 0; padding: 4px; margin: 0 0 16px; background: #fff; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--pm-line); }
+.pm-fit__sex label { position: relative; cursor: pointer; }
+.pm-fit__sex input { position: absolute; opacity: 0; pointer-events: none; }
+.pm-fit__sex span { display: block; padding: 8px 18px; border-radius: 999px; font-weight: 700; font-size: .9rem; color: var(--pm-muted); transition: background .2s, color .2s; }
+.pm-fit__sex input:checked + span { background: var(--pm-green-600); color: #fff; }
+.pm-fit__sex input:focus-visible + span { outline: 3px solid var(--pm-green-500); outline-offset: 2px; }
 .pm-fit__shoe { fill: #fff; stroke: #c9d2cd; stroke-width: 1.5; }
 .pm-fit__floor { stroke: #b9cbbf; stroke-width: 2; stroke-dasharray: 4 5; }
 .pm-fit__top { fill: #e9eeeb; stroke: #c9d2cd; stroke-width: 1.5; }

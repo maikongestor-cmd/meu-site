@@ -26,7 +26,8 @@ function pm_customize_register( $wp_customize ) {
 	$sections = array(
 		'pm_contact' => __( 'Contato e redes sociais', 'palestra-mantos' ),
 		'pm_store'   => __( 'Loja: Pix, frete e parcelamento', 'palestra-mantos' ),
-		'pm_home'    => __( 'Página inicial (banner)', 'palestra-mantos' ),
+		'pm_home'    => __( 'Página inicial', 'palestra-mantos' ),
+		'pm_slides'  => __( 'Banners rotativos', 'palestra-mantos' ),
 	);
 	foreach ( $sections as $id => $title ) {
 		$wp_customize->add_section(
@@ -54,10 +55,22 @@ function pm_customize_register( $wp_customize ) {
 		'address'       => array( 'pm_contact', 'Cidade / endereço', 'text', 'sanitize_text_field' ),
 		'company'       => array( 'pm_contact', 'Razão social / nome no rodapé', 'text', 'sanitize_text_field' ),
 		'cnpj'          => array( 'pm_contact', 'CNPJ', 'text', 'sanitize_text_field' ),
-		'hero_eyebrow'  => array( 'pm_home', 'Banner — texto pequeno acima do título', 'text', 'sanitize_text_field' ),
-		'hero_title'    => array( 'pm_home', 'Banner — título (pode usar <em>destaque</em>)', 'text', 'wp_kses_post' ),
-		'hero_text'     => array( 'pm_home', 'Banner — texto', 'textarea', 'sanitize_textarea_field' ),
 		'split_title'   => array( 'pm_home', 'Seção "dia a dia" — título', 'text', 'sanitize_text_field' ),
+		'slide1_eyebrow' => array( 'pm_slides', 'Banner 1 — texto pequeno', 'text', 'sanitize_text_field' ),
+		'slide1_title'   => array( 'pm_slides', 'Banner 1 — título (use <em>destaque</em>)', 'text', 'wp_kses_post' ),
+		'slide1_text'    => array( 'pm_slides', 'Banner 1 — texto', 'textarea', 'sanitize_textarea_field' ),
+		'slide1_button'  => array( 'pm_slides', 'Banner 1 — texto do botão', 'text', 'sanitize_text_field' ),
+		'slide1_link'    => array( 'pm_slides', 'Banner 1 — link do botão (vazio = loja)', 'url', 'esc_url_raw' ),
+		'slide2_eyebrow' => array( 'pm_slides', 'Banner 2 — texto pequeno', 'text', 'sanitize_text_field' ),
+		'slide2_title'   => array( 'pm_slides', 'Banner 2 — título (use <em>destaque</em>)', 'text', 'wp_kses_post' ),
+		'slide2_text'    => array( 'pm_slides', 'Banner 2 — texto', 'textarea', 'sanitize_textarea_field' ),
+		'slide2_button'  => array( 'pm_slides', 'Banner 2 — texto do botão', 'text', 'sanitize_text_field' ),
+		'slide2_link'    => array( 'pm_slides', 'Banner 2 — link do botão (vazio = Conjuntos)', 'url', 'esc_url_raw' ),
+		'slide3_eyebrow' => array( 'pm_slides', 'Banner 3 — texto pequeno', 'text', 'sanitize_text_field' ),
+		'slide3_title'   => array( 'pm_slides', 'Banner 3 — título (use <em>destaque</em>)', 'text', 'wp_kses_post' ),
+		'slide3_text'    => array( 'pm_slides', 'Banner 3 — texto', 'textarea', 'sanitize_textarea_field' ),
+		'slide3_button'  => array( 'pm_slides', 'Banner 3 — texto do botão', 'text', 'sanitize_text_field' ),
+		'slide3_link'    => array( 'pm_slides', 'Banner 3 — link do botão (vazio = Kit de camisetas)', 'url', 'esc_url_raw' ),
 		'split_text'    => array( 'pm_home', 'Seção "dia a dia" — texto', 'textarea', 'sanitize_textarea_field' ),
 	);
 
@@ -80,8 +93,9 @@ function pm_customize_register( $wp_customize ) {
 	}
 
 	foreach ( array(
-		'hero_image_1' => 'Banner — foto principal (vertical 4:5)',
-		'hero_image_2' => 'Banner — foto secundária (vertical 4:5)',
+		'slide1_image' => 'Banner 1 — imagem',
+		'slide2_image' => 'Banner 2 — imagem',
+		'slide3_image' => 'Banner 3 — imagem',
 	) as $key => $label ) {
 		$wp_customize->add_setting(
 			'pm_' . $key,
@@ -95,7 +109,7 @@ function pm_customize_register( $wp_customize ) {
 				$wp_customize,
 				'pm_' . $key,
 				array(
-					'section' => 'pm_home',
+					'section' => 'pm_slides',
 					'label'   => $label,
 				)
 			)

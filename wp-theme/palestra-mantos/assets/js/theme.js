@@ -65,22 +65,69 @@
 	}
 	document.querySelectorAll('form.variations_form').forEach(buildSwatches);
 
-	// Provador "Descubra seu tamanho".
+	// Banner rotativo.
+	var slider = document.querySelector('.pm-slider');
+	if (slider) {
+		var slides = slider.querySelectorAll('.pm-slide');
+		var dots = slider.querySelectorAll('.pm-slider__dot');
+		var current = 0;
+		var timer = null;
+		var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		function go(n) {
+			current = (n + slides.length) % slides.length;
+			slides.forEach(function (s, i) {
+				var on = i === current;
+				s.classList.toggle('is-active', on);
+				if (on) { s.removeAttribute('aria-hidden'); } else { s.setAttribute('aria-hidden', 'true'); }
+				s.querySelectorAll('a').forEach(function (a) { if (on) { a.removeAttribute('tabindex'); } else { a.setAttribute('tabindex', '-1'); } });
+			});
+			dots.forEach(function (d, i) { d.classList.toggle('is-active', i === current); });
+		}
+		function start() { if (!reduce && slides.length > 1) { stop(); timer = setInterval(function () { go(current + 1); }, 6000); } }
+		function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+		var prev = slider.querySelector('.pm-slider__arrow--prev');
+		var next = slider.querySelector('.pm-slider__arrow--next');
+		if (prev) { prev.addEventListener('click', function () { go(current - 1); start(); }); }
+		if (next) { next.addEventListener('click', function () { go(current + 1); start(); }); }
+		dots.forEach(function (d, i) { d.addEventListener('click', function () { go(i); start(); }); });
+		slider.addEventListener('mouseenter', stop);
+		slider.addEventListener('mouseleave', start);
+		slider.addEventListener('focusin', stop);
+
+		var x0 = null;
+		slider.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; stop(); }, { passive: true });
+		slider.addEventListener('touchend', function (e) {
+			if (x0 === null) { return; }
+			var dx = e.changedTouches[0].clientX - x0;
+			if (Math.abs(dx) > 40) { go(current + (dx < 0 ? 1 : -1)); }
+			x0 = null;
+			start();
+		});
+		document.addEventListener('visibilitychange', function () { if (document.hidden) { stop(); } else { start(); } });
+		start();
+	}
+
+	// Provador "Descubra seu tamanho" (feminino / masculino).
 	function initFit(root) {
 		var table;
 		try { table = JSON.parse(root.getAttribute('data-table')); } catch (e) { return; }
 		var h = root.querySelector('input[name="height"]');
 		var w = root.querySelector('input[name="weight"]');
-		var body = root.querySelector('.pm-fit__body');
-		var top = root.querySelector('.pm-fit__top');
-		var pants = root.querySelector('.pm-fit__pants');
+		var bodies = root.querySelectorAll('.pm-fit__body');
+		var garments = root.querySelectorAll('.pm-fit__top, .pm-fit__pants');
 		var out = function (k) { return root.querySelector('[data-out="' + k + '"]'); };
 		var STORE = 'pm_fit';
 		var current = 'M';
 
+		function setSex(v) {
+			root.setAttribute('data-sex', v);
+			root.querySelectorAll('.pm-fit__sex input').forEach(function (r) { r.checked = r.value === v; });
+		}
 		try {
 			var saved = JSON.parse(localStorage.getItem(STORE) || 'null');
-			if (saved) { h.value = saved.h; w.value = saved.w; }
+			if (saved) { h.value = saved.h; w.value = saved.w; if (saved.s) { setSex(saved.s); } }
 		} catch (e) {}
 
 		function idx(value, limits) {
@@ -95,10 +142,12 @@
 		function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
 		function update() {
+			var sex = root.getAttribute('data-sex') === 'm' ? 'm' : 'f';
+			var t = table[sex] || table;
 			var hv = parseInt(h.value, 10);
 			var wv = parseInt(w.value, 10);
 			var last = table.sizes.length - 1;
-			var score = 0.65 * idx(wv, table.weight) + 0.35 * idx(hv, table.height) + 0.6 * pref();
+			var score = 0.65 * idx(wv, t.weight) + 0.35 * idx(hv, t.height) + 0.6 * pref();
 			var i = clamp(Math.round(score), 0, last);
 			current = table.sizes[i];
 
@@ -111,26 +160,28 @@
 
 			var note = '';
 			var frac = score - Math.floor(score);
-			if (wv > table.max.weight || hv > table.max.height) {
+			if (wv > t.max.weight || hv > t.max.height) {
 				note = 'Acima da nossa tabela: o GG pode ficar justo. Fale com a gente no WhatsApp.';
 			} else if (frac > 0.35 && frac < 0.65 && Math.floor(score) < last && score >= 0) {
 				note = 'Você está entre ' + table.sizes[Math.floor(score)] + ' e ' + table.sizes[Math.floor(score) + 1] + '. Para ficar mais solto, escolha o ' + table.sizes[Math.floor(score) + 1] + '.';
 			}
 			out('note').textContent = note;
 
-			// Corpo: largura pelo IMC, altura pela estatura.
+			// Corpo: largura pelo IMC, altura pela estatura (referência diferente por sexo).
 			var bmi = wv / Math.pow(hv / 100, 2);
 			var sx = clamp(0.7 + (bmi - 18) * 0.036, 0.72, 1.55);
-			var sy = clamp(hv / 178, 0.8, 1.16);
-			body.style.transform = 'scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')';
+			var sy = clamp(hv / (sex === 'm' ? 178 : 168), 0.8, 1.16);
+			bodies.forEach(function (b) { b.style.transform = 'scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')'; });
 
-			// Roupa: quanto o tamanho escolhido "sobra" no corpo.
 			var garment = clamp((0.86 + i * 0.13) / sx, 0.94, 1.22);
-			[top, pants].forEach(function (g) { if (g) { g.style.transform = 'scaleX(' + garment.toFixed(3) + ')'; } });
+			garments.forEach(function (g) { g.style.transform = 'scaleX(' + garment.toFixed(3) + ')'; });
 
-			try { localStorage.setItem(STORE, JSON.stringify({ h: hv, w: wv })); } catch (e) {}
+			try { localStorage.setItem(STORE, JSON.stringify({ h: hv, w: wv, s: sex })); } catch (e) {}
 		}
 
+		root.querySelectorAll('.pm-fit__sex input').forEach(function (r) {
+			r.addEventListener('change', function () { if (r.checked) { setSex(r.value); update(); } });
+		});
 		root.addEventListener('input', update);
 		root.addEventListener('change', update);
 		update();

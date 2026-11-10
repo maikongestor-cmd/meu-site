@@ -15,28 +15,7 @@ $pm_free     = (int) pm_opt( 'free_shipping' );
 $pm_times    = (int) pm_opt( 'installments' );
 ?>
 
-<section class="pm-hero">
-	<img class="pm-hero__mark" src="<?php echo esc_url( pm_img( 'logo-mark.png' ) ); ?>" alt="">
-	<div class="pm-container pm-hero__inner">
-		<div>
-			<div class="pm-hero__flag" aria-hidden="true"><i></i><i></i><i></i></div>
-			<span class="pm-eyebrow"><?php echo esc_html( pm_opt( 'hero_eyebrow' ) ); ?></span>
-			<h1><?php echo wp_kses( pm_opt( 'hero_title' ), array( 'em' => array(), 'br' => array() ) ); ?></h1>
-			<p class="pm-hero__text"><?php echo esc_html( pm_opt( 'hero_text' ) ); ?></p>
-			<div class="pm-hero__cta">
-				<a class="pm-btn pm-btn--light" href="<?php echo esc_url( $pm_shop_url ); ?>"><?php esc_html_e( 'Ver coleção', 'palestra-mantos' ); ?> <?php pm_the_icon( 'arrow' ); ?></a>
-				<a class="pm-btn pm-btn--ghost" href="<?php echo esc_url( pm_whatsapp_url() ); ?>" target="_blank" rel="noopener"><?php pm_the_icon( 'whatsapp' ); ?> <?php esc_html_e( 'Comprar pelo WhatsApp', 'palestra-mantos' ); ?></a>
-			</div>
-		</div>
-		<div class="pm-hero__media">
-			<img src="<?php echo esc_url( pm_opt_img( 'hero_image_1', 'conjunto-branco-feminino.webp' ) ); ?>" alt="<?php esc_attr_e( 'Conjunto moletom branco Palestra', 'palestra-mantos' ); ?>" width="500" height="625" fetchpriority="high">
-			<img src="<?php echo esc_url( pm_opt_img( 'hero_image_2', 'calca-verde.webp' ) ); ?>" alt="<?php esc_attr_e( 'Calça moletom verde Palestra', 'palestra-mantos' ); ?>" width="400" height="500">
-			<?php if ( $pm_pix > 0 ) : ?>
-				<div class="pm-hero__badge"><small><?php esc_html_e( 'pagando no Pix', 'palestra-mantos' ); ?></small><strong><?php echo esc_html( $pm_pix ); ?>% OFF</strong></div>
-			<?php endif; ?>
-		</div>
-	</div>
-</section>
+<?php get_template_part( 'template-parts/hero-slider' ); ?>
 
 <section class="pm-benefits" aria-label="<?php esc_attr_e( 'Vantagens', 'palestra-mantos' ); ?>">
 	<div class="pm-container pm-benefits__grid">

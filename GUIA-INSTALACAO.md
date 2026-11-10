@@ -21,9 +21,10 @@ Isso cria:
 - **5 produtos** com as fotos e os tamanhos **P, M, G e GG**:
   - Calça Moletom Palestra Branca: R$ 147,00
   - Calça Moletom Palestra Verde: R$ 147,00
-  - Conjunto Moletom Palestra Branco: ~~R$ 349,90~~ R$ 279,90 *(preço de exemplo)*
+  - Conjunto Moletom Palestra Branco: R$ 267,00
   - Camiseta Palestra Logo P: R$ 127,00
   - Camiseta Palestra Escudo: R$ 127,00
+  - Kit 2 Camisetas Oversized (Logo P + Escudo): R$ 187,00
 - **Menus** do topo e do rodapé.
 - **Loja em reais**, com frete fixo de R$ 19,90 *(exemplo)* e **frete grátis acima de R$ 249**.
 - **Carrinho e checkout no modelo clássico**, que é o mais compatível com Appmax e Mercado Pago.
@@ -50,8 +51,8 @@ Para trocar o logo por uma imagem, use **Aparência → Personalizar → Identid
 O frete fixo de R$ 19,90 é só um exemplo. Para calcular o frete pelos Correios ou por transportadoras, instale o **Melhor Envio** ou o **Frenet**. Depois remova o "Entrega padrão" em **WooCommerce → Configurações → Entrega → Brasil**.
 
 ## O que ainda falta você mandar ou revisar
-- [ ] Número de WhatsApp, e-mail, Instagram e CNPJ reais
-- [ ] Preço final do conjunto
+- [x] WhatsApp: (11) 98995-8223
+- [ ] E-mail, Instagram e CNPJ reais
 - [ ] Textos de Quem Somos, Trocas, Guia de Medidas (medidas reais) e Privacidade
 - [ ] Depoimentos reais de clientes. Eles ficam em `front-page.php`, e eu posso trocar para você.
 - [ ] Mais fotos de cada produto (frente, costas e detalhes)

@@ -65,6 +65,7 @@ function pm_setup_admin_page() {
 			'products' => ! empty( $_POST['pm_products'] ),
 			'menus'    => ! empty( $_POST['pm_menus'] ),
 			'store'    => ! empty( $_POST['pm_store'] ),
+			'prices'   => ! empty( $_POST['pm_prices'] ),
 		);
 		$log = pm_run_setup( $opts );
 		update_option( 'pm_setup_done', 1 );
@@ -93,6 +94,7 @@ function pm_setup_admin_page() {
 			<p><?php esc_html_e( 'Escolha o que criar. Pode rodar de novo sem duplicar: itens que já existem são mantidos.', 'palestra-mantos' ); ?></p>
 			<p><label><input type="checkbox" name="pm_pages" value="1" checked> <?php esc_html_e( 'Páginas: Início, Quem Somos, Trocas e Devoluções, Guia de Medidas, Política de Privacidade e Contato (textos de rascunho)', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_products" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Categorias e produtos com as fotos e tamanhos P, M, G e GG (preços de exemplo)', 'palestra-mantos' ); ?></label></p>
+			<p><label><input type="checkbox" name="pm_prices" value="1" <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Atualizar os preços dos produtos que já existem para a tabela atual (calças R$ 147, conjunto R$ 267, camisetas R$ 127, kit R$ 187). Isso substitui preços editados à mão.', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_menus" value="1" checked> <?php esc_html_e( 'Menus do topo e do rodapé', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_store" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Loja em reais (R$), endereço no Brasil, frete grátis acima de R$ 249 e checkout clássico (compatível com Appmax e Mercado Pago)', 'palestra-mantos' ); ?></label></p>
 			<p><button class="button button-primary button-hero" name="pm_run_setup" value="1"><?php esc_html_e( 'Criar conteúdo da loja', 'palestra-mantos' ); ?></button></p>
@@ -129,6 +131,9 @@ function pm_run_setup( $opts ) {
 	}
 	if ( $opts['products'] && class_exists( 'WooCommerce' ) ) {
 		$log = array_merge( $log, pm_setup_products() );
+	}
+	if ( ! empty( $opts['prices'] ) && class_exists( 'WooCommerce' ) ) {
+		$log = array_merge( $log, pm_update_prices() );
 	}
 	if ( $opts['menus'] ) {
 		$log = array_merge( $log, pm_setup_menus() );
@@ -501,8 +506,8 @@ function pm_products_catalog() {
 			'sku'     => 'PM-CONJUNTO-BRANCO',
 			'name'    => 'Conjunto Moletom Palestra Branco – Blusão + Calça',
 			'cat'     => 'conjuntos',
-			'regular' => '349.90',
-			'sale'    => '279.90',
+			'regular' => '267.00',
+			'sale'    => '',
 			'images'  => array( 'conjunto-branco-feminino.webp', 'conjunto-branco-masculino.webp' ),
 			'short'   => 'Blusão com capuz e bolso canguru + calça jogger. Logo P bordado em verde e vermelho e detalhe da bandeira italiana.',
 		),
@@ -523,6 +528,15 @@ function pm_products_catalog() {
 			'sale'    => '',
 			'images'  => array( 'camiseta-escudo.webp' ),
 			'short'   => 'Camiseta oversized em algodão com o escudo histórico no peito e bandeira italiana na barra.',
+		),
+		array(
+			'sku'     => 'PM-KIT-CAMISETAS',
+			'name'    => 'Kit 2 Camisetas Oversized Palestra – Logo P + Escudo',
+			'cat'     => 'camisetas',
+			'regular' => '187.00',
+			'sale'    => '',
+			'images'  => array( 'kit-camisetas.webp', 'camiseta-logo-p.webp', 'camiseta-escudo.webp' ),
+			'short'   => 'Kit com 2 camisetas oversized em algodão: uma com o logo P e outra com o escudo histórico, ambas com a bandeira italiana na barra. As duas peças vêm no tamanho escolhido.',
 		),
 	);
 }
@@ -627,6 +641,42 @@ function pm_setup_products() {
 	}
 	update_option( 'pm_products_done', 1 );
 
+	return $log;
+}
+
+/**
+ * Atualiza os preços dos produtos do catálogo que já existem (todas as variações).
+ *
+ * @return array
+ */
+function pm_update_prices() {
+	$log = array();
+	foreach ( pm_products_catalog() as $item ) {
+		$id = wc_get_product_id_by_sku( $item['sku'] );
+		if ( ! $id ) {
+			continue;
+		}
+		$product = wc_get_product( $id );
+		if ( ! $product ) {
+			continue;
+		}
+		$targets = $product->is_type( 'variable' ) ? $product->get_children() : array( $id );
+		foreach ( $targets as $target_id ) {
+			$p = wc_get_product( $target_id );
+			if ( ! $p ) {
+				continue;
+			}
+			$p->set_regular_price( $item['regular'] );
+			$p->set_sale_price( $item['sale'] );
+			$p->save();
+		}
+		if ( $product->is_type( 'variable' ) ) {
+			WC_Product_Variable::sync( $id );
+		}
+		wc_delete_product_transients( $id );
+		/* translators: 1: produto, 2: preço. */
+		$log[] = sprintf( __( 'Preço atualizado: %1$s → R$ %2$s', 'palestra-mantos' ), $item['name'], number_format( (float) ( '' !== $item['sale'] ? $item['sale'] : $item['regular'] ), 2, ',', '.' ) );
+	}
 	return $log;
 }
 
