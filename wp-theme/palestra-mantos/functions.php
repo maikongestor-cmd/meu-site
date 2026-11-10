@@ -111,7 +111,7 @@ function pm_fallback_menu() {
 		}
 	}
 
-	foreach ( array( 'guia-de-medidas', 'trocas-e-devolucoes', 'quem-somos', 'contato' ) as $slug ) {
+	foreach ( array( 'guia-de-medidas', 'trocas-e-devolucoes', 'quem-somos', 'politica-de-privacidade', 'contato' ) as $slug ) {
 		$page = get_page_by_path( $slug );
 		if ( $page ) {
 			$items[] = array( get_permalink( $page ), get_the_title( $page ) );

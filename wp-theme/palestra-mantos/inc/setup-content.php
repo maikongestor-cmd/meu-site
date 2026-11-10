@@ -860,7 +860,7 @@ function pm_setup_menus() {
 		if ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 ) {
 			$added += pm_menu_ensure_object( $menu_id, 'post_type', 'page', wc_get_page_id( 'shop' ), 'Todos os produtos' );
 		}
-		foreach ( array( 'guia-de-medidas', 'trocas-e-devolucoes', 'quem-somos', 'contato' ) as $slug ) {
+		foreach ( array( 'guia-de-medidas', 'trocas-e-devolucoes', 'quem-somos', 'politica-de-privacidade', 'contato' ) as $slug ) {
 			$page = get_page_by_path( $slug );
 			if ( $page ) {
 				$added += pm_menu_ensure_object( $menu_id, 'post_type', 'page', (int) $page->ID, get_the_title( $page ) );
