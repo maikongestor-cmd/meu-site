@@ -132,7 +132,7 @@ $pm_times    = (int) pm_opt( 'installments' );
 			<?php
 			// Rascunho — troque pelos depoimentos reais dos clientes.
 			$pm_testimonials = array(
-				array( 'Ana P.', 'São Paulo — SP', 'O conjunto é lindo e muito confortável. O bordado é perfeito e chegou super rápido!' ),
+				array( 'Ana P.', 'São Paulo — SP', 'O conjunto é lindo e muito confortável. O acabamento é perfeito e chegou super rápido!' ),
 				array( 'Rafael M.', 'Campinas — SP', 'Qualidade excelente, moletom grosso de verdade. Já estou de olho na próxima peça.' ),
 				array( 'Juliana S.', 'Santos — SP', 'Atendimento pelo WhatsApp nota 10. Troquei o tamanho sem nenhuma dor de cabeça.' ),
 			);

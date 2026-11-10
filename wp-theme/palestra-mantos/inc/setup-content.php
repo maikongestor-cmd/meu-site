@@ -68,6 +68,7 @@ function pm_setup_admin_page() {
 			'prices'   => ! empty( $_POST['pm_prices'] ),
 			'clean'    => ! empty( $_POST['pm_clean'] ),
 			'desc'     => ! empty( $_POST['pm_desc'] ),
+			'igrev'    => ! empty( $_POST['pm_igreviews'] ),
 		);
 		$log = pm_run_setup( $opts );
 		update_option( 'pm_setup_done', 1 );
@@ -98,7 +99,8 @@ function pm_setup_admin_page() {
 			<p><label><input type="checkbox" name="pm_products" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Categorias e produtos com as fotos e tamanhos P, M, G e GG (preços de exemplo)', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_prices" value="1" <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Atualizar os preços dos produtos que já existem para a tabela atual (calças R$ 147, conjuntos R$ 267, camisetas R$ 127, kit R$ 187). Também marca conjunto, kit e calças como destaque. Isso substitui preços editados à mão.', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_desc" value="1" <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Atualizar as descrições de todos os produtos (conjuntos, calças e camisetas) com os textos da Palestra Mantos. Substitui a descrição atual.', 'palestra-mantos' ); ?></label></p>
-			<p><label><input type="checkbox" name="pm_clean" value="1"> <?php esc_html_e( 'Remover as menções a "licenciado/oficial" dos textos já salvos (Quem Somos, descrições dos produtos e banner).', 'palestra-mantos' ); ?></label></p>
+			<p><label><input type="checkbox" name="pm_igreviews" value="1"> <?php esc_html_e( 'Adicionar as 9 avaliações de clientes do Instagram (aparecem na página inicial, nos produtos e no checkout).', 'palestra-mantos' ); ?></label></p>
+			<p><label><input type="checkbox" name="pm_clean" value="1"> <?php esc_html_e( 'Limpar os textos já salvos: tirar "licenciado/oficial" e "bordado" (Quem Somos, descrições e resumos dos produtos, banner).', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_menus" value="1" checked> <?php esc_html_e( 'Menus do topo e do rodapé', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_store" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Loja em reais (R$), endereço no Brasil, frete grátis acima de R$ 249 e checkout clássico (compatível com Appmax e Mercado Pago)', 'palestra-mantos' ); ?></label></p>
 			<p><button class="button button-primary button-hero" name="pm_run_setup" value="1"><?php esc_html_e( 'Criar conteúdo da loja', 'palestra-mantos' ); ?></button></p>
@@ -141,6 +143,9 @@ function pm_run_setup( $opts ) {
 	}
 	if ( ! empty( $opts['desc'] ) && class_exists( 'WooCommerce' ) ) {
 		$log = array_merge( $log, pm_apply_product_descriptions() );
+	}
+	if ( ! empty( $opts['igrev'] ) && function_exists( 'pm_import_instagram_reviews' ) ) {
+		$log = array_merge( $log, pm_import_instagram_reviews() );
 	}
 	if ( ! empty( $opts['clean'] ) ) {
 		$log = array_merge( $log, pm_clean_licensed_texts() );
@@ -223,7 +228,7 @@ function pm_pages_content() {
 <p>A <strong>Palestra Mantos</strong> nasceu da paixão pelo verde e branco e da vontade de levar essa história para o dia a dia. Criamos moletons, calças e camisetas que unem conforto, qualidade e o orgulho de carregar o Palestra no peito.</p>
 <h2>Nosso compromisso</h2>
 <ul>
-<li><strong>Qualidade:</strong> tecidos de alta gramatura, bordados e estampas que duram.</li>
+<li><strong>Qualidade:</strong> tecidos de alta gramatura e estampas que duram.</li>
 <li><strong>Atendimento humano:</strong> fale com a gente pelo WhatsApp sempre que precisar.</li>
 <li><strong>Entrega para todo o Brasil</strong>, com frete grátis acima de R$ 249.</li>
 </ul>
@@ -501,7 +506,7 @@ function pm_products_catalog() {
 			'regular' => '147.00',
 			'sale'    => '',
 			'images'  => array( 'calca-branca-feminina.webp' ),
-			'short'   => 'Calça jogger em moletom flanelado, cós com elástico e punhos nas barras. Logo P bordado em verde e vermelho.',
+			'short'   => 'Calça jogger em moletom flanelado, cós com elástico e punhos nas barras. Logo P em verde e vermelho.',
 		),
 		array(
 			'sku'     => 'PM-CALCA-VERDE',
@@ -519,7 +524,7 @@ function pm_products_catalog() {
 			'regular' => '267.00',
 			'sale'    => '',
 			'images'  => array( 'conjunto-branco-feminino.webp', 'conjunto-branco-masculino.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger. Logo P bordado em verde e vermelho e detalhe da bandeira italiana.',
+			'short'   => 'Blusão com capuz e bolso canguru + calça jogger. Logo P em verde e vermelho e detalhe da bandeira italiana.',
 		),
 		array(
 			'sku'     => 'PM-CAMISETA-P',
@@ -555,7 +560,7 @@ function pm_products_catalog() {
 			'regular' => '267.00',
 			'sale'    => '',
 			'images'  => array( 'conjunto-verde.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom verde. Logo P bordado em branco e detalhe da bandeira italiana.',
+			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom verde. Logo P em branco e detalhe da bandeira italiana.',
 		),
 		array(
 			'sku'     => 'PM-CALCA-BRANCA-BANDEIRA',
@@ -611,7 +616,7 @@ function pm_setup_products() {
 	$desc = '<ul>
 <li>Tamanhos: P, M, G e GG — consulte o Guia de Medidas;</li>
 <li>Lavar do avesso, à mão ou em ciclo delicado;</li>
-<li>Não usar alvejante e não passar ferro sobre o bordado/estampa.</li>
+<li>Não usar alvejante e não passar ferro sobre a estampa.</li>
 </ul>
 <p><em>Descrição de rascunho — complete com composição do tecido e detalhes da peça.</em></p>';
 
@@ -763,6 +768,9 @@ function pm_clean_licensed_texts() {
 		'<li><strong>Produtos licenciados:</strong> todas as peças são oficiais e autorizadas.</li>' => '',
 		'camisetas licenciados que unem' => 'camisetas que unem',
 		'camisetas licenciados para vestir' => 'camisetas para vestir',
+		'Logo P bordado em'                  => 'Logo P em',
+		'bordados e estampas que duram'      => 'estampas que duram',
+		'sobre o bordado/estampa'            => 'sobre a estampa',
 	);
 	$log   = array();
 	$ids   = array();
@@ -778,8 +786,9 @@ function pm_clean_licensed_texts() {
 		$post = get_post( $id );
 		$new  = str_replace( array_keys( $pairs ), array_values( $pairs ), $post->post_content );
 		$new  = preg_replace( "/\n{3,}/", "\n\n", $new );
-		if ( $new !== $post->post_content ) {
-			wp_update_post( array( 'ID' => $id, 'post_content' => $new ) );
+		$exc  = str_replace( array_keys( $pairs ), array_values( $pairs ), $post->post_excerpt );
+		if ( $new !== $post->post_content || $exc !== $post->post_excerpt ) {
+			wp_update_post( array( 'ID' => $id, 'post_content' => $new, 'post_excerpt' => $exc ) );
 			$count++;
 		}
 	}

@@ -269,7 +269,7 @@ function pm_review_card( $review, $show_prod = true ) {
 			<div class="pm-review__text"><?php echo wp_kses_post( wpautop( $review->post_content ) ); ?></div>
 			<footer class="pm-review__author">
 				<span class="pm-avatar"><?php echo esc_html( mb_strtoupper( mb_substr( $name, 0, 1 ) ) ); ?></span>
-				<span><b><?php echo esc_html( $name ); ?></b><?php if ( ! get_post_meta( $review->ID, '_pm_from_site', true ) ) : ?> <span class="pm-verified">✓ <?php esc_html_e( 'Compra verificada', 'palestra-mantos' ); ?></span><?php endif; ?><?php echo $city ? '<br>' . esc_html( $city ) : ''; ?>
+				<span><b><?php echo esc_html( $name ); ?></b><?php if ( 'instagram' === get_post_meta( $review->ID, '_pm_source', true ) ) : ?> <span class="pm-verified">via Instagram</span><?php elseif ( ! get_post_meta( $review->ID, '_pm_from_site', true ) ) : ?> <span class="pm-verified">✓ <?php esc_html_e( 'Compra verificada', 'palestra-mantos' ); ?></span><?php endif; ?><?php echo $city ? '<br>' . esc_html( $city ) : ''; ?>
 				<?php if ( $show_prod && $pid ) : ?>
 					<br><a href="<?php echo esc_url( get_permalink( $pid ) ); ?>"><?php echo esc_html( get_the_title( $pid ) ); ?></a>
 				<?php endif; ?>
@@ -417,3 +417,74 @@ function pm_reviews_pending_badge() {
 	}
 }
 add_action( 'admin_menu', 'pm_reviews_pending_badge', 99 );
+
+
+/* -------------------------------------------------------------------------
+ * Avaliações vindas do Instagram (comentários de clientes)
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Comentários reais enviados pela loja: nome, semanas atrás, nota, texto.
+ *
+ * @return array
+ */
+function pm_instagram_reviews_data() {
+	return array(
+		array( 'ig-guilherme', 'Guilherme B.', 90, 5, 'Já comprei, em duas ocasiões, no Palestra Mantos e só tenho elogios a fazer. Os produtos chegam muito rápidos e são de excelente qualidade. Parabéns!' ),
+		array( 'ig-rhe', 'Rhe P.', 91, 5, 'Já peguei esse kit... Muito bom, tecido confortável do jeito que eu gosto... Obrigado 👏' ),
+		array( 'ig-raquel', 'Raquel S.', 80, 5, 'Sou de Goiás!! A minha chegou hoje e amei a modelagem dessa feminina 😍 vou comprar mais' ),
+		array( 'ig-adriana', 'Adriana A.', 83, 5, 'Linda calça, amei e chegou direitinho 😉' ),
+		array( 'ig-nanda', 'Nanda L.', 83, 5, 'Chegou!!!!! A tão querida calça. Chegou muito rápido. Comprei uma para mim e uma para meu filho, são lindas! Chegaram no prazo, sem problema algum. Agora já quer uma blusa hahaha. Obrigada pela atenção. 🐷🇮🇹' ),
+		array( 'ig-sheila', 'Sheila L.', 85, 5, 'Linda calça, confortável!!! Chegou no prazo e sem intercorrências!!!! Recomendo muito!!!!!' ),
+		array( 'ig-nubia', 'Núbia F.', 71, 4, 'Recebi a minha ontem e é ótima, não fica transparente e é felpuda por dentro. Pena que o símbolo não é bordado, mas mesmo assim é ótima 👏👏' ),
+		array( 'ig-alex', 'Alex A.', 86, 5, "Atendimento pós-venda sempre atencioso.\nProduto corresponde à foto.\nEntrega regular.\nRecomendo a compra, entrega garantida." ),
+		array( 'ig-diego', 'Diego S.', 89, 5, 'Chegou certinho, produto tooop!' ),
+	);
+}
+
+/**
+ * Cadastra as avaliações do Instagram (não duplica).
+ *
+ * @return array Log.
+ */
+function pm_import_instagram_reviews() {
+	$added = 0;
+	foreach ( pm_instagram_reviews_data() as $r ) {
+		list( $key, $name, $weeks, $rating, $text ) = $r;
+		$exists = get_posts(
+			array(
+				'post_type'      => 'pm_review',
+				'post_status'    => 'any',
+				'meta_key'       => '_pm_import_key', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'     => $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'fields'         => 'ids',
+				'posts_per_page' => 1,
+			)
+		);
+		if ( $exists ) {
+			continue;
+		}
+		$date = gmdate( 'Y-m-d H:i:s', time() - $weeks * WEEK_IN_SECONDS );
+		$id   = wp_insert_post(
+			array(
+				'post_type'     => 'pm_review',
+				'post_status'   => 'publish',
+				'post_title'    => $name,
+				'post_content'  => $text,
+				'post_date_gmt' => $date,
+				'post_date'     => get_date_from_gmt( $date ),
+			)
+		);
+		if ( $id && ! is_wp_error( $id ) ) {
+			update_post_meta( $id, '_pm_rating', $rating );
+			update_post_meta( $id, '_pm_city', 'Raquel S.' === $name ? 'Goiás' : '' );
+			update_post_meta( $id, '_pm_product_id', 0 );
+			update_post_meta( $id, '_pm_source', 'instagram' );
+			update_post_meta( $id, '_pm_import_key', $key );
+			$added++;
+		}
+	}
+	pm_reviews_flush_cache();
+	/* translators: %d: quantidade. */
+	return array( sprintf( __( 'Avaliações do Instagram adicionadas: %d (as que já existiam foram mantidas).', 'palestra-mantos' ), $added ) );
+}

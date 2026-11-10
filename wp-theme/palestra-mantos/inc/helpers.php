@@ -122,7 +122,7 @@ function pm_defaults() {
 		'slide3_button'  => 'Comprar kit',
 		'slide3_link'    => '',
 		'split_title'    => 'Vista o manto no dia a dia',
-		'split_text'     => 'Peças em moletom flanelado e algodão de alta gramatura, bordados que não desbotam e modelagem pensada para o conforto — da arquibancada ao rolê.',
+		'split_text'     => 'Peças em moletom flanelado e algodão de alta gramatura, estampas que não desbotam e modelagem pensada para o conforto — da arquibancada ao rolê.',
 	);
 }
 
