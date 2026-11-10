@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_VERSION', '1.9.4' );
+define( 'PM_VERSION', '1.9.5' );
 define( 'PM_DIR', get_template_directory() );
 define( 'PM_URI', get_template_directory_uri() );
 
@@ -19,6 +19,7 @@ require PM_DIR . '/inc/size-finder.php';
 require PM_DIR . '/inc/newsletter.php';
 require PM_DIR . '/inc/reviews.php';
 require PM_DIR . '/inc/contact.php';
+require PM_DIR . '/inc/meta-pixel.php';
 
 if ( class_exists( 'WooCommerce' ) ) {
 	require PM_DIR . '/inc/woocommerce.php';
