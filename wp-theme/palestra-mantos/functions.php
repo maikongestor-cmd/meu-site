@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_VERSION', '1.9.3' );
+define( 'PM_VERSION', '1.9.4' );
 define( 'PM_DIR', get_template_directory() );
 define( 'PM_URI', get_template_directory_uri() );
 
@@ -93,6 +93,20 @@ function pm_assets() {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'pm_assets' );
+
+/**
+ * Favicon do tema (só quando não há "Ícone do site" em Aparência → Personalizar).
+ */
+function pm_favicon() {
+	if ( has_site_icon() ) {
+		return;
+	}
+	printf( '<link rel="icon" href="%s" sizes="any">' . "\n", esc_url( PM_URI . '/assets/img/favicon.ico' ) );
+	printf( '<link rel="icon" type="image/png" href="%s" sizes="512x512">' . "\n", esc_url( PM_URI . '/assets/img/favicon.png' ) );
+	printf( '<link rel="apple-touch-icon" href="%s">' . "\n", esc_url( PM_URI . '/assets/img/apple-touch-icon.png' ) );
+}
+add_action( 'wp_head', 'pm_favicon', 2 );
+add_action( 'admin_head', 'pm_favicon', 2 );
 
 /**
  * Menu padrão quando nenhum menu foi atribuído.

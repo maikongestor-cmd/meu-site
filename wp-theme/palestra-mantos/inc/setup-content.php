@@ -217,7 +217,6 @@ function pm_setup_pages() {
 function pm_pages_content() {
 	$whats = esc_url( pm_whatsapp_url() );
 	$email = esc_html( pm_opt( 'email' ) );
-	$draft = '<p class="pm-note"><strong>Rascunho:</strong> revise este texto em Páginas → Editar antes de divulgar o site.</p>';
 
 	return array(
 		'inicio'                  => array( 'Início', '<!-- A página inicial é montada pelo tema. Edite os textos em Aparência → Personalizar → Palestra Mantos. -->' ),
@@ -272,8 +271,7 @@ function pm_pages_content() {
 		),
 		'guia-de-medidas'         => array(
 			'Guia de Medidas',
-			$draft .
-			'<p>Medidas aproximadas da peça aberta sobre uma superfície plana, em centímetros. Pode haver variação de 1 a 2 cm.</p>
+						'<p>Medidas aproximadas da peça aberta sobre uma superfície plana, em centímetros. Pode haver variação de 1 a 2 cm.</p>
 <h2>Camisetas</h2>
 <div class="pm-table-wrap"><table><thead><tr><th>Tamanho</th><th>Largura (peito)</th><th>Comprimento</th></tr></thead><tbody>
 <tr><td>P</td><td>50</td><td>70</td></tr>
