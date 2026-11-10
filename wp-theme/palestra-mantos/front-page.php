@@ -41,7 +41,18 @@ $pm_times    = (int) pm_opt( 'installments' );
 			foreach ( pm_category_slugs() as $pm_slug => $pm_label ) :
 				?>
 				<a class="pm-cat" href="<?php echo esc_url( pm_cat_url( $pm_slug ) ); ?>">
-					<img src="<?php echo esc_url( pm_img( $pm_cat_imgs[ $pm_slug ] ) ); ?>" alt="" loading="lazy" width="500" height="625">
+					<?php
+					// Usa a "Miniatura" da categoria (Produtos → Categorias); sem ela, a foto padrão do tema.
+					$pm_cat_src  = pm_img( $pm_cat_imgs[ $pm_slug ] );
+					$pm_cat_term = taxonomy_exists( 'product_cat' ) ? get_term_by( 'slug', $pm_slug, 'product_cat' ) : false;
+					if ( $pm_cat_term ) {
+						$pm_thumb_id = (int) get_term_meta( $pm_cat_term->term_id, 'thumbnail_id', true );
+						if ( $pm_thumb_id ) {
+							$pm_cat_src = wp_get_attachment_image_url( $pm_thumb_id, 'large' ) ?: $pm_cat_src;
+						}
+					}
+					?>
+					<img src="<?php echo esc_url( $pm_cat_src ); ?>" alt="" loading="lazy" width="500" height="625">
 					<span class="pm-cat__label"><strong><?php echo esc_html( $pm_label ); ?></strong><span><?php pm_the_icon( 'arrow' ); ?></span></span>
 				</a>
 			<?php endforeach; ?>
