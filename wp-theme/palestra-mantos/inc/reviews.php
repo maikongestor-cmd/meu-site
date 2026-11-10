@@ -436,7 +436,6 @@ function pm_instagram_reviews_data() {
 		array( 'ig-adriana', 'Adriana A.', 83, 5, 'Linda calça, amei e chegou direitinho 😉' ),
 		array( 'ig-nanda', 'Nanda L.', 83, 5, 'Chegou!!!!! A tão querida calça. Chegou muito rápido. Comprei uma para mim e uma para meu filho, são lindas! Chegaram no prazo, sem problema algum. Agora já quer uma blusa hahaha. Obrigada pela atenção. 🐷🇮🇹' ),
 		array( 'ig-sheila', 'Sheila L.', 85, 5, 'Linda calça, confortável!!! Chegou no prazo e sem intercorrências!!!! Recomendo muito!!!!!' ),
-		array( 'ig-nubia', 'Núbia F.', 71, 4, 'Recebi a minha ontem e é ótima, não fica transparente e é felpuda por dentro. Pena que o símbolo não é bordado, mas mesmo assim é ótima 👏👏' ),
 		array( 'ig-alex', 'Alex A.', 86, 5, "Atendimento pós-venda sempre atencioso.\nProduto corresponde à foto.\nEntrega regular.\nRecomendo a compra, entrega garantida." ),
 		array( 'ig-diego', 'Diego S.', 89, 5, 'Chegou certinho, produto tooop!' ),
 	);
@@ -488,3 +487,28 @@ function pm_import_instagram_reviews() {
 	/* translators: %d: quantidade. */
 	return array( sprintf( __( 'Avaliações do Instagram adicionadas: %d (as que já existiam foram mantidas).', 'palestra-mantos' ), $added ) );
 }
+
+/**
+ * Remove avaliações importadas que saíram da lista (ex.: a que fala do símbolo bordado).
+ * Roda uma vez por versão da lista.
+ */
+function pm_remove_retired_reviews() {
+	if ( '1' === get_option( 'pm_retired_reviews_v1' ) ) {
+		return;
+	}
+	$ids = get_posts(
+		array(
+			'post_type'      => 'pm_review',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'meta_key'       => '_pm_import_key', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'     => 'ig-nubia', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+		)
+	);
+	foreach ( $ids as $id ) {
+		wp_trash_post( $id );
+	}
+	update_option( 'pm_retired_reviews_v1', '1', false );
+}
+add_action( 'init', 'pm_remove_retired_reviews', 20 );
