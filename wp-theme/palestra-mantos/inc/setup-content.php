@@ -94,7 +94,7 @@ function pm_setup_admin_page() {
 			<p><?php esc_html_e( 'Escolha o que criar. Pode rodar de novo sem duplicar: itens que já existem são mantidos.', 'palestra-mantos' ); ?></p>
 			<p><label><input type="checkbox" name="pm_pages" value="1" checked> <?php esc_html_e( 'Páginas: Início, Quem Somos, Trocas e Devoluções, Guia de Medidas, Política de Privacidade e Contato (textos de rascunho)', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_products" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Categorias e produtos com as fotos e tamanhos P, M, G e GG (preços de exemplo)', 'palestra-mantos' ); ?></label></p>
-			<p><label><input type="checkbox" name="pm_prices" value="1" <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Atualizar os preços dos produtos que já existem para a tabela atual (calças R$ 147, conjunto R$ 267, camisetas R$ 127, kit R$ 187). Também marca conjunto, kit e calças como destaque. Isso substitui preços editados à mão.', 'palestra-mantos' ); ?></label></p>
+			<p><label><input type="checkbox" name="pm_prices" value="1" <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Atualizar os preços dos produtos que já existem para a tabela atual (calças R$ 147, conjuntos R$ 267, camisetas R$ 127, kit R$ 187). Também marca conjunto, kit e calças como destaque. Isso substitui preços editados à mão.', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_menus" value="1" checked> <?php esc_html_e( 'Menus do topo e do rodapé', 'palestra-mantos' ); ?></label></p>
 			<p><label><input type="checkbox" name="pm_store" value="1" <?php checked( $has_wc ); ?> <?php disabled( ! $has_wc ); ?>> <?php esc_html_e( 'Loja em reais (R$), endereço no Brasil, frete grátis acima de R$ 249 e checkout clássico (compatível com Appmax e Mercado Pago)', 'palestra-mantos' ); ?></label></p>
 			<p><button class="button button-primary button-hero" name="pm_run_setup" value="1"><?php esc_html_e( 'Criar conteúdo da loja', 'palestra-mantos' ); ?></button></p>
@@ -539,6 +539,33 @@ function pm_products_catalog() {
 			'images'  => array( 'kit-camisetas.webp', 'camiseta-logo-p.webp', 'camiseta-escudo.webp' ),
 			'short'   => 'Kit com 2 camisetas oversized em algodão: uma com o logo P e outra com o escudo histórico, ambas com a bandeira italiana na barra. As duas peças vêm no tamanho escolhido.',
 		),
+		array(
+			'sku'     => 'PM-CONJUNTO-VERDE',
+			'name'    => 'Conjunto Moletom Palestra Verde – Blusão + Calça',
+			'cat'     => 'conjuntos',
+			'regular' => '267.00',
+			'sale'    => '',
+			'images'  => array( 'conjunto-verde.webp' ),
+			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom verde. Logo P bordado em branco e detalhe da bandeira italiana.',
+		),
+		array(
+			'sku'     => 'PM-CALCA-BRANCA-BANDEIRA',
+			'name'    => 'Calça Moletom Palestra Branca – Logo P + Bandeira Itália',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-branca-bandeira.webp' ),
+			'short'   => 'Calça jogger branca em moletom, com cordão de ajuste, logo P em verde e vermelho e a bandeira italiana na perna.',
+		),
+		array(
+			'sku'     => 'PM-CALCA-BRANCA-VERMELHO',
+			'name'    => 'Calça Moletom Palestra Branca – Logo Vermelho',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-branca-logo-vermelho.webp' ),
+			'short'   => 'Calça jogger branca em moletom, cós com elástico e punhos nas barras, com o logo P em vermelho.',
+		),
 	);
 }
 
@@ -600,7 +627,7 @@ function pm_setup_products() {
 		$product->set_sku( $item['sku'] );
 		$product->set_status( 'publish' );
 		$product->set_catalog_visibility( 'visible' );
-		$product->set_featured( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) );
+		$product->set_featured( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-CONJUNTO-VERDE', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) );
 		$product->set_short_description( $item['short'] );
 		$product->set_description( $desc );
 		if ( isset( $cat_ids[ $item['cat'] ] ) ) {
@@ -672,7 +699,7 @@ function pm_update_prices() {
 			$p->set_sale_price( $item['sale'] );
 			$p->save();
 		}
-		if ( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) ) {
+		if ( in_array( $item['sku'], array( 'PM-CONJUNTO-BRANCO', 'PM-CONJUNTO-VERDE', 'PM-KIT-CAMISETAS', 'PM-CALCA-VERDE', 'PM-CALCA-BRANCA' ), true ) ) {
 			$product = wc_get_product( $id );
 			$product->set_featured( true );
 			$product->save();
