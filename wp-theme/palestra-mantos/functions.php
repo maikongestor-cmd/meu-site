@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_VERSION', '1.7.1' );
+define( 'PM_VERSION', '1.8.0' );
 define( 'PM_DIR', get_template_directory() );
 define( 'PM_URI', get_template_directory_uri() );
 
@@ -16,10 +16,14 @@ require PM_DIR . '/inc/customizer.php';
 require PM_DIR . '/inc/setup-content.php';
 require PM_DIR . '/inc/size-finder.php';
 require PM_DIR . '/inc/newsletter.php';
+require PM_DIR . '/inc/reviews.php';
 
 if ( class_exists( 'WooCommerce' ) ) {
 	require PM_DIR . '/inc/woocommerce.php';
 	require PM_DIR . '/inc/checkout.php';
+	require PM_DIR . '/inc/product-extras.php';
+	require PM_DIR . '/inc/minicart.php';
+	require PM_DIR . '/inc/exit-survey.php';
 }
 
 /**

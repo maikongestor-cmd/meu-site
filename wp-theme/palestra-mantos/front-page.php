@@ -107,11 +107,27 @@ $pm_times    = (int) pm_opt( 'installments' );
 
 <?php get_template_part( 'template-parts/newsletter' ); ?>
 
-<section class="pm-section pm-section--soft">
+<section class="pm-section pm-section--soft" id="avaliacoes">
 	<div class="pm-container">
+		<?php
+		$pm_reviews = function_exists( 'pm_get_reviews' ) ? pm_get_reviews( 0, 8 ) : array();
+		list( $pm_avg, $pm_total ) = function_exists( 'pm_reviews_summary' ) ? pm_reviews_summary( 0 ) : array( 0, 0 );
+		?>
 		<div class="pm-section__head">
-			<div><span class="pm-eyebrow"><?php esc_html_e( 'Depoimentos', 'palestra-mantos' ); ?></span><h2><?php esc_html_e( 'Veja o que falam da nossa loja', 'palestra-mantos' ); ?></h2></div>
+			<div><span class="pm-eyebrow"><?php esc_html_e( 'Avaliações', 'palestra-mantos' ); ?></span><h2><?php esc_html_e( 'Veja o que falam da nossa loja', 'palestra-mantos' ); ?></h2></div>
+			<?php if ( $pm_total ) : ?>
+				<p class="pm-rating-summary"><?php echo pm_stars( $pm_avg ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> <strong><?php echo esc_html( number_format_i18n( $pm_avg, 1 ) ); ?></strong> <?php echo esc_html( sprintf( _n( '(%d avaliação)', '(%d avaliações)', $pm_total, 'palestra-mantos' ), $pm_total ) ); ?></p>
+			<?php endif; ?>
 		</div>
+		<?php if ( $pm_reviews ) : ?>
+			<div class="pm-reviews-grid">
+				<?php
+				foreach ( $pm_reviews as $pm_rv ) {
+					echo pm_review_card( $pm_rv ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+				?>
+			</div>
+		<?php else : ?>
 		<div class="pm-testimonials">
 			<?php
 			// Rascunho — troque pelos depoimentos reais dos clientes.
@@ -129,6 +145,7 @@ $pm_times    = (int) pm_opt( 'installments' );
 				</blockquote>
 			<?php endforeach; ?>
 		</div>
+		<?php endif; ?>
 	</div>
 </section>
 
