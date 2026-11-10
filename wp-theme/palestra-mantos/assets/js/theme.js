@@ -255,25 +255,54 @@
 			body.append('qty', qty && qty.value ? qty.value : '1');
 			result.innerHTML = '<p class="pm-ship__loading">' + esc(pmShip.loading) + '</p>';
 
-			fetch(pmShip.url, { method: 'POST', body: body, credentials: 'same-origin' })
+			// Nossa rota (frete grátis, aviso e CEP salvo) + cotação do plugin Melhor Envio, quando ativo.
+			var own = fetch(pmShip.url, { method: 'POST', body: body, credentials: 'same-origin' })
 				.then(function (r) { return r.json(); })
-				.then(function (res) {
-					if (!res || !res.success) {
-						var msg = res && res.data && res.data.message ? res.data.message : pmShip.msgError;
-						result.innerHTML = '<p class="pm-ship__error">' + esc(msg) + '</p>';
-						return;
-					}
-					var html = '<ul class="pm-ship__list">';
-					res.data.options.forEach(function (o) {
-						html += '<li' + (o.free ? ' class="is-free"' : '') + '><span>' + esc(o.label) + '</span><b>' + esc(o.cost) + '</b></li>';
+				.catch(function () { return null; });
+			var me = Promise.resolve(null);
+			if (window.meSC && window.meSC.ajaxUrl) {
+				var meBody = new FormData();
+				meBody.append('action', 'me_quote');
+				meBody.append('nonce', window.meSC.nonce);
+				meBody.append('cep', cep);
+				meBody.append('product_id', window.meSC.productId || ship.getAttribute('data-product'));
+				meBody.append('quantity', qty && qty.value ? qty.value : '1');
+				me = fetch(window.meSC.ajaxUrl, { method: 'POST', body: meBody, credentials: 'same-origin' })
+					.then(function (r) { return r.json(); })
+					.catch(function () { return null; });
+			}
+
+			Promise.all([own, me]).then(function (out) {
+				var res = out[0], meRes = out[1];
+				var options = res && res.success && res.data.options ? res.data.options.slice() : [];
+				var hasFree = options.some(function (o) { return o.free; });
+				if (hasFree) { options = options.filter(function (o) { return o.free; }); }
+				// Com frete grátis o carrinho só mostra ele; aqui também.
+				if (!hasFree && meRes && meRes.success && meRes.data && meRes.data.length) {
+					// O frete grátis já vem da nossa rota (só quando o valor mínimo é atingido).
+					options = options.filter(function (o) { return o.free; });
+					meRes.data.forEach(function (s) {
+						var price = parseFloat(s.price);
+						if (!(price > 0)) { return; }
+						var days = parseInt(s.delivery_time, 10);
+						var label = [s.company, s.name].filter(Boolean).join(' ');
+						if (days > 0) { label += ' · ' + (days === 1 ? pmShip.day : pmShip.days.replace('%d', days)); }
+						options.push({ label: label, cost: price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }), free: false });
 					});
-					html += '</ul>';
-					if (res.data.note) { html += '<p class="pm-ship__note">' + esc(res.data.note) + '</p>'; }
-					result.innerHTML = html;
-				})
-				.catch(function () {
-					result.innerHTML = '<p class="pm-ship__error">' + esc(pmShip.msgError) + '</p>';
+				}
+				if (!options.length) {
+					var msg = res && res.success ? pmShip.msgNone : (res && res.data && res.data.message ? res.data.message : pmShip.msgError);
+					result.innerHTML = '<p class="pm-ship__error">' + esc(msg) + '</p>';
+					return;
+				}
+				var html = '<ul class="pm-ship__list">';
+				options.forEach(function (o) {
+					html += '<li' + (o.free ? ' class="is-free"' : '') + '><span>' + esc(o.label) + '</span><b>' + esc(o.cost) + '</b></li>';
 				});
+				html += '</ul>';
+				if (!hasFree && res && res.success && res.data.note) { html += '<p class="pm-ship__note">' + esc(res.data.note) + '</p>'; }
+				result.innerHTML = html;
+			});
 		});
 	}
 

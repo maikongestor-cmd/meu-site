@@ -350,6 +350,9 @@ function pm_shipping_script_data() {
 			'url'      => WC_AJAX::get_endpoint( 'pm_calc_shipping' ),
 			'msgCep'   => __( 'Digite um CEP válido com 8 números.', 'palestra-mantos' ),
 			'msgError' => __( 'Não foi possível calcular agora. Tente de novo.', 'palestra-mantos' ),
+			'msgNone'  => __( 'Não encontramos opções de entrega para este CEP. Fale com a gente no WhatsApp.', 'palestra-mantos' ),
+			'days'     => __( '%d dias úteis', 'palestra-mantos' ),
+			'day'      => __( '1 dia útil', 'palestra-mantos' ),
 			'loading'  => __( 'Calculando…', 'palestra-mantos' ),
 		)
 	);
@@ -452,19 +455,15 @@ function pm_ajax_calc_shipping() {
 		$cost      = (float) $rate->get_cost() + array_sum( (array) $rate->get_taxes() );
 		$options[] = array(
 			'label' => wp_strip_all_tags( $rate->get_label() ),
-			'cost'  => $cost > 0 ? wp_strip_all_tags( wc_price( $cost ) ) : __( 'Grátis', 'palestra-mantos' ),
+			'cost'  => $cost > 0 ? html_entity_decode( wp_strip_all_tags( wc_price( $cost ) ), ENT_QUOTES, 'UTF-8' ) : __( 'Grátis', 'palestra-mantos' ),
 			'free'  => $cost <= 0,
 		);
-	}
-
-	if ( ! $options ) {
-		wp_send_json_error( array( 'message' => __( 'Não encontramos opções de entrega para este CEP. Fale com a gente no WhatsApp.', 'palestra-mantos' ) ) );
 	}
 
 	$note = '';
 	if ( null !== $free_min && $free_min > 0 && $line < $free_min ) {
 		/* translators: %s: valor que falta. */
-		$note = sprintf( __( 'Faltam %s para ganhar frete grátis.', 'palestra-mantos' ), wp_strip_all_tags( wc_price( $free_min - $line ) ) );
+		$note = sprintf( __( 'Faltam %s para ganhar frete grátis.', 'palestra-mantos' ), html_entity_decode( wp_strip_all_tags( wc_price( $free_min - $line ) ), ENT_QUOTES, 'UTF-8' ) );
 	}
 
 	// Guarda o CEP para já vir preenchido no carrinho e no checkout.
@@ -481,6 +480,7 @@ function pm_ajax_calc_shipping() {
 		WC()->customer->save();
 	}
 
+	// Sem opções aqui o JS ainda tenta a cotação do Melhor Envio antes de mostrar o erro.
 	wp_send_json_success(
 		array(
 			'options' => $options,
