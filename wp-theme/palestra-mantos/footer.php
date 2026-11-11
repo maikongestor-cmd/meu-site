@@ -115,7 +115,18 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 </footer>
 
-<a class="pm-whats-float" href="<?php echo esc_url( pm_whatsapp_url() ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Fale conosco pelo WhatsApp', 'palestra-mantos' ); ?>"><?php pm_the_icon( 'whatsapp' ); ?></a>
+<?php
+// Na página do produto, a mensagem já vem com o nome da peça.
+$pm_wa_msg = '';
+if ( function_exists( 'is_product' ) && is_product() ) {
+	/* translators: 1: produto, 2: link. */
+	$pm_wa_msg = sprintf( __( 'Olá! Tenho interesse no %1$s: %2$s', 'palestra-mantos' ), get_the_title( get_queried_object_id() ), get_permalink( get_queried_object_id() ) );
+}
+?>
+<a class="pm-whats-float" href="<?php echo esc_url( pm_whatsapp_url( $pm_wa_msg ) ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Fale conosco pelo WhatsApp', 'palestra-mantos' ); ?>">
+	<span class="pm-whats-float__label"><?php esc_html_e( 'Dúvidas? Fale com a gente', 'palestra-mantos' ); ?></span>
+	<span class="pm-whats-float__icon"><?php pm_the_icon( 'whatsapp' ); ?></span>
+</a>
 
 <?php wp_footer(); ?>
 </body>
