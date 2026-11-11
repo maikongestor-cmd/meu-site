@@ -619,8 +619,18 @@
 	// Recalcula o checkout ao trocar a forma de pagamento (desconto no Pix).
 	if (window.jQuery) {
 		window.jQuery(function ($) {
+			// Só recalcula quando entra ou sai do Pix: recarregar à toa apaga o formulário do cartão.
+			function isPix(v) { return /pix/i.test(v || ''); }
+			var lastPix = isPix($('input[name="payment_method"]:checked').val());
 			$('form.checkout').on('change', 'input[name="payment_method"]', function () {
-				$(document.body).trigger('update_checkout');
+				var nowPix = isPix(this.value);
+				if (nowPix !== lastPix) {
+					lastPix = nowPix;
+					$(document.body).trigger('update_checkout');
+				}
+			});
+			$(document.body).on('updated_checkout', function () {
+				lastPix = isPix($('input[name="payment_method"]:checked').val());
 			});
 		});
 	}
