@@ -632,6 +632,31 @@
 			$(document.body).on('updated_checkout', function () {
 				lastPix = isPix($('input[name="payment_method"]:checked').val());
 			});
+
+			// CPF do titular do cartão (Mercado Pago): já vem preenchido com o CPF do checkout.
+			// Continua editável para quem paga com o cartão de outra pessoa.
+			function fillCardCpf() {
+				var src = document.getElementById('billing_cpf');
+				var dst = document.getElementById('form-checkout__identificationNumber');
+				if (!src || !dst || dst.tagName !== 'INPUT') { return; }
+				var cpf = (src.value || '').replace(/\D/g, '');
+				if (cpf.length !== 11 || dst.dataset.pmTouched === '1') { return; }
+				if ((dst.value || '').replace(/\D/g, '') === cpf) { return; }
+				dst.value = cpf;
+				dst.dispatchEvent(new Event('input', { bubbles: true }));
+				dst.dispatchEvent(new Event('change', { bubbles: true }));
+			}
+			$(document).on('input', '#form-checkout__identificationNumber', function (e) {
+				if (e.originalEvent && e.originalEvent.isTrusted) { this.dataset.pmTouched = '1'; }
+			});
+			$(document).on('change blur', '#billing_cpf', fillCardCpf);
+			$(document.body).on('updated_checkout payment_method_selected', function () { setTimeout(fillCardCpf, 300); });
+			if (window.MutationObserver) {
+				var cpfObs = new MutationObserver(function () { fillCardCpf(); });
+				var payArea = document.getElementById('order_review') || document.body;
+				cpfObs.observe(payArea, { childList: true, subtree: true });
+			}
+			setTimeout(fillCardCpf, 800);
 		});
 	}
 })();
