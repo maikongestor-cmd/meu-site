@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.9.7
+Version: 1.9.8
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -295,7 +295,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pm-slide--dark .pm-slide__title em { display: block; font-style: normal; color: #3ddc84; font-size: 1.25em; }
 .pm-slide--dark .pm-slide__ship { color: #b9f0cf; }
 .pm-slide--dark .pm-slide__media:not(.has-two) img { border-radius: 20px; max-height: 440px; box-shadow: 0 30px 60px rgba(0,0,0,.5); }
-.pm-slide__bf { position: absolute; left: -2%; bottom: -6%; font-family: var(--pm-font-display); font-size: clamp(6rem, 18vw, 15rem); line-height: .8; color: transparent; -webkit-text-stroke: 2px rgba(61,220,132,.16); white-space: nowrap; pointer-events: none; user-select: none; }
+.pm-slide__bf { display: none; }
+/* Selo "Black Friday" no lugar do texto pequeno acima do título. */
+.pm-slide--dark .pm-eyebrow { display: inline-block; background: #3ddc84; color: #06321d; padding: 7px 14px; border-radius: 6px; font-size: .82rem; letter-spacing: .16em; box-shadow: 0 8px 24px rgba(61,220,132,.25); }
+@media (min-width: 901px) {
+	/* Espaço para as setas não ficarem em cima do texto e da foto. */
+	.pm-slide__inner { padding-left: 84px; padding-right: 84px; }
+}
 .pm-btn--green { background: #19a058; border-color: #19a058; color: #fff; }
 .pm-btn--green:hover { background: #3ddc84; border-color: #3ddc84; color: #06321d; }
 
