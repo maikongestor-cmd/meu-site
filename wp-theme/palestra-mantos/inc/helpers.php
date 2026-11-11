@@ -30,6 +30,7 @@ function pm_icon( $name ) {
 		'mail'     => '<rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 6-10 7L2 6" />',
 		'phone'    => '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />',
 		'pin'      => '<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" />',
+		'check'    => '<path d="M20 6 9 17l-5-5" />',
 	);
 
 	if ( 'whatsapp' === $name ) {
@@ -81,6 +82,22 @@ function pm_fix_old_cnpj() {
 add_action( 'after_setup_theme', 'pm_fix_old_cnpj', 20 );
 
 /**
+ * Troca os textos antigos dos banners (se tiverem sido salvos no Personalizar) pelos novos padrões.
+ */
+function pm_fix_old_slide_texts() {
+	$old = array(
+		'pm_slide2_text' => 'Blusão com capuz + calça jogger em moletom flanelado. Tamanhos do P ao GG.',
+		'pm_slide3_text' => 'Logo P + escudo histórico, em algodão. E calças moletom por R$ 147.',
+	);
+	foreach ( $old as $key => $text ) {
+		if ( get_theme_mod( $key ) === $text ) {
+			remove_theme_mod( $key );
+		}
+	}
+}
+add_action( 'after_setup_theme', 'pm_fix_old_slide_texts', 20 );
+
+/**
  * Valores padrão (rascunho — editar em Aparência → Personalizar → Palestra Mantos).
  *
  * @return array
@@ -120,18 +137,21 @@ function pm_defaults() {
 		'slide1_eyebrow' => 'Coleção Palestra',
 		'slide1_title'   => 'Paixão e <em>Estilo!</em>',
 		'slide1_text'    => 'Moletons, calças e camisetas para vestir o manto no dia a dia — com conforto, qualidade e a nossa história no peito.',
+		'slide1_points'  => '',
 		'slide1_button'  => 'Ver coleção',
 		'slide1_link'    => '',
 		'slide2_image'   => '',
 		'slide2_eyebrow' => 'Black Friday Palestra',
 		'slide2_title'   => 'Conjunto moletom <em>R$ 267</em>',
-		'slide2_text'    => 'Blusão com capuz + calça jogger em moletom flanelado. Tamanhos do P ao GG.',
+		'slide2_text'    => 'Moletom flanelado e forrado, com estampa que não solta e nem desbota.',
+		'slide2_points'  => "Estampa que não desbota\nFlanelado e forrado\nConforto que dura",
 		'slide2_button'  => 'Comprar conjunto',
 		'slide2_link'    => '',
 		'slide3_image'   => '',
 		'slide3_eyebrow' => 'Black Friday Palestra',
 		'slide3_title'   => 'Kit 2 camisetas oversized <em>R$ 187</em>',
-		'slide3_text'    => 'Logo P + escudo histórico, em algodão. E calças moletom por R$ 147.',
+		'slide3_text'    => 'Camisetas oversized 100% algodão, com logo P e escudo histórico.',
+		'slide3_points'  => "100% algodão\nEstampa que não desbota\nConforto que dura",
 		'slide3_button'  => 'Comprar kit',
 		'slide3_link'    => '',
 		'split_title'    => 'Vista o manto no dia a dia',

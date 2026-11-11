@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 1.9.8
+Version: 1.9.9
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -272,6 +272,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pm-slide__inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; min-height: 520px; padding-top: 48px; padding-bottom: 64px; }
 .pm-slide__title { font-family: var(--pm-font-display); font-weight: 400; font-size: clamp(2.6rem, 6vw, 4.6rem); letter-spacing: .02em; line-height: 1.02; margin: 0 0 16px; }
 .pm-slide__desc { font-size: 1.1rem; max-width: 520px; margin-bottom: 28px; }
+.pm-slide__points { list-style: none; margin: -12px 0 26px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.pm-slide__points li { display: inline-flex; align-items: center; gap: 7px; font-size: .92rem; font-weight: 600; }
+.pm-slide__points svg { width: 18px; height: 18px; flex: none; stroke-width: 2.6; }
+.pm-slide--dark .pm-slide__points li { color: #fff; }
+.pm-slide--dark .pm-slide__points svg { color: #3ddc84; }
+.pm-slide--light .pm-slide__points svg { color: var(--pm-green-500); }
 .pm-slide__ship { display: inline-flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 700; }
 .pm-slide__ship svg { width: 20px; height: 20px; }
 .pm-slide__media { position: relative; display: flex; justify-content: center; align-items: center; }

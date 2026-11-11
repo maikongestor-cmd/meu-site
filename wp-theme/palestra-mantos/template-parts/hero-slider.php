@@ -56,6 +56,16 @@ $pm_free = (int) pm_opt( 'free_shipping' );
 						<?php $pm_tag = 0 === $pm_i ? 'h1' : 'h2'; ?>
 						<<?php echo esc_html( $pm_tag ); ?> class="pm-slide__title"><?php echo wp_kses( pm_opt( 'slide' . $pm_n . '_title' ), array( 'em' => array(), 'br' => array() ) ); ?></<?php echo esc_html( $pm_tag ); ?>>
 						<p class="pm-slide__desc"><?php echo esc_html( pm_opt( 'slide' . $pm_n . '_text' ) ); ?></p>
+						<?php
+						$pm_points = array_filter( array_map( 'trim', explode( "\n", (string) pm_opt( 'slide' . $pm_n . '_points' ) ) ) );
+						if ( $pm_points ) :
+							?>
+							<ul class="pm-slide__points">
+								<?php foreach ( array_slice( $pm_points, 0, 4 ) as $pm_point ) : ?>
+									<li><?php pm_the_icon( 'check' ); ?> <?php echo esc_html( $pm_point ); ?></li>
+								<?php endforeach; ?>
+							</ul>
+						<?php endif; ?>
 						<div class="pm-hero__cta">
 							<a class="pm-btn <?php echo 'dark' === $pm_slide['variant'] ? 'pm-btn--green' : ''; ?>" href="<?php echo esc_url( $pm_slide['link'] ); ?>"<?php echo 0 === $pm_i ? '' : ' tabindex="-1"'; ?>><?php echo esc_html( pm_opt( 'slide' . $pm_n . '_button' ) ); ?> <?php pm_the_icon( 'arrow' ); ?></a>
 							<?php if ( $pm_free > 0 ) : ?>
