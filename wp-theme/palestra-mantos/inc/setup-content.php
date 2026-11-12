@@ -605,6 +605,16 @@ function pm_products_catalog() {
 			'images'  => array( 'calca-branca-logo-vermelho.webp' ),
 			'short'   => 'Calça jogger branca em moletom, cós com elástico e punhos nas barras, com o logo P em vermelho.',
 		),
+		array(
+			'sku'     => 'PM-CALCA-BRANCA-FAIXA',
+			'name'    => 'Calça Moletom Palestra Branca – Faixa Verde e Vermelha',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-branca-faixa.webp' ),
+			'short'   => 'Calça jogger branca em moletom flanelado, com cordão de ajuste, logo P em verde e vermelho e faixa lateral verde e vermelha.',
+			'order'   => 7,
+		),
 	);
 }
 
@@ -613,7 +623,7 @@ function pm_products_catalog() {
  *
  * @return array
  */
-function pm_setup_products() {
+function pm_setup_products( $only_skus = array() ) {
 	$log = array();
 
 	// Categorias.
@@ -646,6 +656,9 @@ function pm_setup_products() {
 <p><em>Descrição de rascunho — complete com composição do tecido e detalhes da peça.</em></p>';
 
 	foreach ( pm_products_catalog() as $item ) {
+		if ( $only_skus && ! in_array( $item['sku'], $only_skus, true ) ) {
+			continue;
+		}
 		// Não cria um segundo kit se a loja já tem um produto "Kit" (mesmo com outro código).
 		if ( false !== stripos( $item['name'], 'Kit' ) && pm_store_has_kit() ) {
 			/* translators: %s: produto. */
@@ -691,6 +704,9 @@ function pm_setup_products() {
 		$attribute->set_visible( true );
 		$attribute->set_variation( true );
 		$product->set_attributes( array( $attribute ) );
+		if ( isset( $item['order'] ) ) {
+			$product->set_menu_order( (int) $item['order'] );
+		}
 		$product_id = $product->save();
 
 		foreach ( array( 'p', 'm', 'g', 'gg' ) as $size_slug ) {
@@ -716,10 +732,44 @@ function pm_setup_products() {
 		/* translators: %s: produto. */
 		$log[] = sprintf( __( 'Produto criado: %s (P, M, G, GG)', 'palestra-mantos' ), $item['name'] );
 	}
-	update_option( 'pm_products_done', 1 );
+	if ( ! $only_skus ) {
+		update_option( 'pm_products_done', 1 );
+	}
 
 	return $log;
 }
+
+/**
+ * Produtos novos que entram sozinhos ao atualizar o tema (uma vez só, ao abrir o painel).
+ */
+function pm_auto_add_new_products() {
+	if ( ! class_exists( 'WooCommerce' ) || ! current_user_can( 'manage_woocommerce' ) || wp_doing_ajax() ) {
+		return;
+	}
+	$new = array( 'PM-CALCA-BRANCA-FAIXA' );
+	$done = (array) get_option( 'pm_auto_products', array() );
+	$todo = array_values( array_diff( $new, $done ) );
+	if ( ! $todo ) {
+		return;
+	}
+	update_option( 'pm_auto_products', array_values( array_unique( array_merge( $done, $todo ) ) ), false );
+	$log = pm_setup_products( $todo );
+	set_transient( 'pm_auto_products_log', $log, HOUR_IN_SECONDS );
+}
+add_action( 'admin_init', 'pm_auto_add_new_products', 30 );
+
+/**
+ * Aviso no painel com o que foi criado.
+ */
+function pm_auto_products_notice() {
+	$log = get_transient( 'pm_auto_products_log' );
+	if ( ! $log || ! current_user_can( 'manage_woocommerce' ) ) {
+		return;
+	}
+	delete_transient( 'pm_auto_products_log' );
+	echo '<div class="notice notice-success is-dismissible"><p><strong>Palestra Mantos:</strong> ' . esc_html( implode( ' · ', (array) $log ) ) . '</p></div>';
+}
+add_action( 'admin_notices', 'pm_auto_products_notice' );
 
 /**
  * A loja já tem algum produto com "Kit" no nome?
