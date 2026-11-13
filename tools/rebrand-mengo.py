@@ -318,8 +318,9 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-pay b, .pm-pay strong, .pm-pay-info b { color: #ff4d5e !important; }
 .pm-pay svg, .pm-pay-info svg { color: #ff4d5e !important; }
 .pm-size-link, .pm-size-link svg, .pm-size-links a, .pm-size-links a svg, .pm-size-guide, .pm-size-guide svg { color: #000 !important; }
-.pm-swatch { background: #0d0d0d; border-color: #000; color: #fff; }
-.pm-swatch.is-selected, .pm-swatch[aria-pressed="true"] { background: #fff; border-color: #fff; color: #c8102e; }
+.pm-swatch { background: rgba(255,255,255,.12) !important; border: 2px solid rgba(255,255,255,.75) !important; color: #fff !important; }
+.pm-swatch:hover { border-color: #fff !important; background: rgba(255,255,255,.22) !important; }
+.pm-swatch.is-active, .pm-swatch.is-selected, .pm-swatch[aria-pressed="true"] { background: #000 !important; border-color: #000 !important; color: #fff !important; box-shadow: 0 0 0 3px rgba(255,255,255,.9); transform: scale(1.06); }
 .woocommerce div.product form.cart .single_add_to_cart_button { background: #000 !important; color: #fff !important; }
 .pm-ship, .pm-cat, .pm-review, .pm-testimonial, .pm-co-reviews, .pm-fit { background: #0d0d0d !important; border-color: #000 !important; }
 .pm-ship__list li { background: #1a1a1a; }
@@ -525,7 +526,7 @@ function pm_mengo_review_text( $review ) {
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.2.4', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.2.5', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
         s += """
@@ -541,7 +542,7 @@ function pm_mengo_preload_hero() {
 }
 add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
 """
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.4' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.5' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 
