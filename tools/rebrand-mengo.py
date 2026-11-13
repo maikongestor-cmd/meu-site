@@ -58,6 +58,8 @@ TEXTS = [
     ('Coleção Palestra', 'Coleção Mengo'),
     ('Avanti!', 'Vamos juntos!'),
     ('@palestra_mantos', '@mengomantos'),
+    ("'palestra-' . $file", "'mengo-' . $file"),
+    ('newsletter-palestra-mantos-', 'newsletter-mengo-mantos-'),
     ('💚', '❤️'),
     # contatos (rascunho: trocar pelos reais da loja)
     ("'5511989958223'", "'5521900000000'"),
@@ -165,6 +167,81 @@ CATALOG = """function pm_products_catalog() {
 }
 """
 
+DARK_CSS = """
+
+/* ==========================================================================
+   Mengo Mantos — tema escuro (preto e vermelho)
+   ========================================================================== */
+html, body { background: var(--pm-bg); color: var(--pm-text); }
+a:hover { color: #ff4d5e; }
+::placeholder { color: #8a8a8a; opacity: 1; }
+.pm-logo, .pm-logo__text { color: #fff; }
+.pm-logo__text small { color: #e0283c; }
+.pm-header { background: rgba(10,10,10,.96); border-bottom-color: #222; backdrop-filter: blur(6px); }
+.pm-nav a, .pm-actions a, .pm-icon-btn, .pm-menu-toggle { color: #fff; }
+.pm-search input[type="search"] { background: #161616; border-color: #2a2a2a; color: #fff; }
+.pm-search input[type="search"]:focus { background: #1b1b1b; }
+input, select, textarea, .input-text { background: #161616 !important; color: #fff !important; border-color: #2e2e2e !important; }
+.select2-container--default .select2-selection--single { background: #161616; border-color: #2e2e2e; }
+.select2-container--default .select2-selection--single .select2-selection__rendered { color: #fff; }
+.select2-dropdown { background: #161616; color: #fff; border-color: #2e2e2e; }
+/* Banners: todos escuros, com a fumaça vermelha */
+.pm-slide--light, .pm-slide--dark { background: #050505 url(assets/img/bg-fumaca.webp) center / cover no-repeat; color: rgba(255,255,255,.86); }
+.pm-slide--light::before, .pm-slide--dark::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.2) 100%); }
+.pm-slide--light .pm-slide__title { color: #fff; }
+.pm-slide--light .pm-slide__title em { color: #e0283c; }
+.pm-slide--light .pm-eyebrow { color: #ff4d5e; }
+.pm-slide--light .pm-slide__ship, .pm-slide--light .pm-slide__points li { color: #fff; }
+.pm-slide--light .pm-slide__media img { filter: drop-shadow(0 30px 50px rgba(0,0,0,.6)); }
+.pm-slider__arrow { background: rgba(255,255,255,.12); color: #fff; box-shadow: none; backdrop-filter: blur(4px); }
+.pm-slider__dot { background: rgba(255,255,255,.35); }
+/* Seções */
+.pm-section--soft { background: #111 !important; }
+.pm-benefits { background: #0f0f0f; border-color: #222; }
+.pm-benefit + .pm-benefit { border-color: #222; }
+.pm-benefit svg { color: #e0283c; }
+.pm-cat { background: #151515; }
+.pm-newsletter { background: linear-gradient(120deg, #7a0716, #c8102e) !important; }
+.pm-welcome { background: #0a0a0a; }
+.pm-eyebrow { color: #ff4d5e; }
+/* Produtos */
+.woocommerce ul.products li.product, .woocommerce-page ul.products li.product { background: transparent; }
+.woocommerce ul.products li.product .woocommerce-loop-product__title, .woocommerce ul.products li.product .price { color: #fff !important; }
+.woocommerce ul.products li.product a img { background: #151515; }
+.woocommerce div.product .product_title, .woocommerce div.product p.price, .woocommerce div.product span.price { color: #fff !important; }
+.woocommerce div.product .woocommerce-tabs ul.tabs li { background: #151515 !important; border-color: #2a2a2a !important; }
+.woocommerce div.product .woocommerce-tabs ul.tabs li a { color: #ddd !important; }
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active { background: #0a0a0a !important; }
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active a { color: #fff !important; }
+.woocommerce div.product .woocommerce-tabs ul.tabs::before, .woocommerce div.product .woocommerce-tabs ul.tabs li::before, .woocommerce div.product .woocommerce-tabs ul.tabs li::after { border-color: #2a2a2a !important; box-shadow: none !important; }
+.woocommerce .woocommerce-breadcrumb, .woocommerce .woocommerce-breadcrumb a { color: #9b9b9b; }
+.woocommerce span.onsale { background: #e0283c; }
+.pm-swatch, .woocommerce div.product form.cart .variations label { color: #fff; }
+.woocommerce .quantity .qty { color: #fff; background: transparent !important; border: 0 !important; }
+.pm-qty button { color: #fff; }
+.woocommerce-message, .woocommerce-info, .woocommerce-error { background: #161616 !important; color: #ddd !important; border-top-color: #e0283c !important; }
+.woocommerce table.shop_table, .woocommerce table.shop_table th, .woocommerce table.shop_table td { color: #ddd; border-color: #2a2a2a !important; }
+.woocommerce-checkout #payment div.payment_box { background: #121212 !important; color: #ddd; }
+.woocommerce-checkout #payment ul.payment_methods li:has(input:checked) { background: #1e0a0d; border-color: #e0283c; }
+.pm-minicart { background: #121212; color: #ddd; }
+.pm-minicart__head, .pm-minicart__foot { border-color: #262626 !important; background: #121212; }
+.pm-pay, .pm-pay-info { background: #151515 !important; }
+.pm-steps__n { background: #181818; }
+.pm-stars { color: #f5b301; }
+.pm-page-hero, .pm-page-header { background: #111 !important; }
+.pm-page-hero h1, .pm-page-header h1 { color: #fff; }
+.pm-table-wrap table th { background: #c8102e; color: #fff; }
+.pm-table-wrap table td { border-color: #2a2a2a; }
+.pm-fit { background: #121212 !important; }
+.pm-fit__floor { fill: #1c1c1c; }
+.pm-footer { background: #000 !important; border-top: 3px solid #c8102e; }
+.pm-topbar { background: #c8102e !important; color: #fff; }
+.pm-whats-float__label { background: #fff; color: #111; }
+.pm-welcome__sign { color: #ff4d5e !important; }
+.pm-freebar--mini .pm-freebar__track, .pm-freebar__track { background: #2a2a2a; }
+.pm-steps li.is-done .pm-steps__n { color: #ff4d5e; }
+"""
+
 FEATURED = "array( 'MM-CONJUNTO-PRETO', 'MM-CONJUNTO-VERMELHO', 'MM-CALCA-PRETA', 'MM-KIT-CAMISETAS' )"
 
 for path in DST.rglob('*'):
@@ -188,6 +265,18 @@ for path in DST.rglob('*'):
         s = re.sub(r"function pm_instagram_reviews_data\(\) \{\n\treturn array\(.*?\n\t\);\n\}",
                    "function pm_instagram_reviews_data() {\n\treturn array();\n}", s, count=1, flags=re.S)
     if path.name == 'style.css':
+        # Tema escuro: preto com vermelho.
+        s = s.replace('background: #fff', 'background: var(--pm-surface)')
+        s = s.replace('.pm-hero__flag i:nth-child(2) { background: var(--pm-surface); }', '.pm-hero__flag i:nth-child(2) { background: #fff; }')
+        s = s.replace('.pm-btn--light { background: var(--pm-surface);', '.pm-btn--light { background: #fff;')
+        # Textos que eram verde-escuro sobre fundo claro passam a ser brancos.
+        s = s.replace('color: var(--pm-green-800)', 'color: #fff').replace('color: var(--pm-green-900)', 'color: #fff')
+        s = s.replace('.pm-btn--light { background: #fff; border-color: #fff; color: #fff; }', '.pm-btn--light { background: #fff; border-color: #fff; color: #111; }')
+        s = s.replace('\t--pm-ink: #151515;\n\t--pm-text: #3a3a3a;\n\t--pm-muted: #737373;\n\t--pm-line: #e6e6e6;\n\t--pm-bg: #ffffff;\n\t--pm-bg-soft: #f6f6f6;',
+                      '\t--pm-ink: #ffffff;\n\t--pm-text: #d2d2d2;\n\t--pm-muted: #9b9b9b;\n\t--pm-line: #2a2a2a;\n\t--pm-bg: #0a0a0a;\n\t--pm-bg-soft: #131313;\n\t--pm-surface: #181818;')
+        s = s.replace('\t--pm-green-100: #fbe7ea;', '\t--pm-green-100: #2b0b10;')
+        s = s.replace('\t--pm-shadow: 0 10px 30px rgba(20, 20, 20, .10);', '\t--pm-shadow: 0 10px 30px rgba(0, 0, 0, .55);')
+        s += DARK_CSS
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)

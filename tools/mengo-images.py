@@ -1,17 +1,21 @@
 import sys
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 OUT=sys.argv[1]
-RED=(200,16,46); DRED=(150,8,28); BLK=(17,17,17); GRY=(40,40,40); WHT=(255,255,255)
+RED=(200,16,46); DRED=(150,8,28); BLK=(12,12,12); GRY=(34,34,34); WHT=(255,255,255)
 FB='/usr/share/fonts/opentype/inter/Inter-Black.otf'
 try: ImageFont.truetype(FB,10)
 except Exception: FB='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 def font(s): return ImageFont.truetype(FB,s)
 S=2  # supersample
 
-def bg(w,h,top=(246,246,246),bot=(226,226,226)):
+def bg(w,h,top=(44,44,44),bot=(16,16,16)):
     im=Image.new('RGB',(w,h),top); d=ImageDraw.Draw(im)
     for y in range(h):
         t=y/h; d.line([(0,y),(w,y)],fill=tuple(int(top[i]+(bot[i]-top[i])*t) for i in range(3)))
+    # brilho vermelho atrás da peça
+    glow=Image.new('L',(w,h),0); ImageDraw.Draw(glow).ellipse([w*0.1,h*0.12,w*0.9,h*0.78],fill=120)
+    glow=glow.filter(ImageFilter.GaussianBlur(w*0.12))
+    im.paste(Image.new('RGB',(w,h),(150,10,28)),(0,0),glow)
     return im
 
 def mono(d,cx,cy,size,fill,stroke=None):
@@ -27,7 +31,7 @@ def stripes(d,x0,y0,x1,y1,n=6,c1=RED,c2=BLK):
 
 def shadow(im,box):
     sh=Image.new('L',im.size,0); ImageDraw.Draw(sh).ellipse(box,fill=90)
-    sh=sh.filter(ImageFilter.GaussianBlur(30)); dark=Image.new('RGB',im.size,(150,150,150))
+    sh=sh.filter(ImageFilter.GaussianBlur(30)); dark=Image.new('RGB',im.size,(0,0,0))
     im.paste(dark,(0,0),sh)
 
 def hoodie(d,cx,top,w,col,trim,logo=WHT):

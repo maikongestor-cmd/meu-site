@@ -180,7 +180,7 @@ function pm_newsletter_export() {
 	);
 	nocache_headers();
 	header( 'Content-Type: text/csv; charset=utf-8' );
-	header( 'Content-Disposition: attachment; filename=newsletter-palestra-mantos-' . gmdate( 'Y-m-d' ) . '.csv' );
+	header( 'Content-Disposition: attachment; filename=newsletter-mengo-mantos-' . gmdate( 'Y-m-d' ) . '.csv' );
 	$out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 	fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- BOM para o Excel abrir acentos.
 	fputcsv( $out, array( 'email', 'nome', 'inscrito_em' ) );

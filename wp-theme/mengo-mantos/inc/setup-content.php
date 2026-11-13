@@ -447,7 +447,7 @@ function pm_import_theme_image( $file, $alt ) {
 	}
 	$id = media_handle_sideload(
 		array(
-			'name'     => 'palestra-' . $file,
+			'name'     => 'mengo-' . $file,
 			'tmp_name' => $tmp,
 		),
 		0,
