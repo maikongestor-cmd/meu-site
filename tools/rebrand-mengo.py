@@ -324,6 +324,7 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-ship__list li { background: #1a1a1a; }
 .pm-ship__list li.is-free b, .pm-ship__note { color: #ff4d5e; }
 .pm-stars { color: #f5b301; }
+.pm-rating-line, .pm-rating-line a, .pm-rating-line a:hover, .pm-rating-line span, .pm-rating-line b, .pm-rating-line strong { color: #000 !important; font-weight: 700; }
 /* Carrinho e checkout: cartões pretos sobre o vermelho */
 .pm-freebar { background: #0d0d0d; }
 .pm-freebar p svg { color: #ff4d5e; }
@@ -502,7 +503,7 @@ add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.2.0', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.2.1', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
         s += """
@@ -518,7 +519,7 @@ function pm_mengo_preload_hero() {
 }
 add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
 """
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.0' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.1' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 
