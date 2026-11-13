@@ -3,7 +3,7 @@ Theme Name: Mengo Mantos
 Theme URI: https://mengomantos.com.br
 Author: Mengo Mantos
 Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.
-Version: 1.1.0
+Version: 1.1.1
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -1111,7 +1111,8 @@ input, select, textarea, .input-text { background: #161616 !important; color: #f
 .pm-slide--light .pm-slide__title em { color: #e0283c; }
 .pm-slide--light .pm-eyebrow { color: #ff4d5e; }
 .pm-slide--light .pm-slide__ship, .pm-slide--light .pm-slide__points li { color: #fff; }
-.pm-slide--light .pm-slide__media img { filter: drop-shadow(0 30px 50px rgba(0,0,0,.6)); }
+.pm-slide--light .pm-slide__media img { filter: none; border-radius: 20px; max-height: 440px; box-shadow: 0 30px 60px rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.08); }
+.pm-welcome__media img { border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,.45); filter: none; }
 .pm-slider__arrow { background: rgba(255,255,255,.12); color: #fff; box-shadow: none; backdrop-filter: blur(4px); }
 .pm-slider__dot { background: rgba(255,255,255,.35); }
 /* Seções */

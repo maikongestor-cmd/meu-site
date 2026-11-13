@@ -70,13 +70,13 @@ TEXTS = [
     ("https://www.instagram.com/palestra_mantos/", "https://www.instagram.com/mengomantos/"),
     ("https://facebook.com/palestramantos", "https://facebook.com/mengomantos"),
     ("'São Paulo — SP'", "'Rio de Janeiro — RJ'"),
-    ("'cnpj'           => '30.105.559/0001-76'", "'cnpj'           => '00.000.000/0001-00'"),
+    ("'cnpj'           => '30.105.559/0001-76'", "'cnpj'           => '39.252.739/0001-69'"),
     ("'ig_reviews_count' => 200", "'ig_reviews_count' => 0"),
     ("define( 'PM_FB_DEFAULT_PIXEL', '1686861222371865' );", "define( 'PM_FB_DEFAULT_PIXEL', '' );"),
     # banners e imagens
     ("'slide3_text'    => 'Camisetas oversized 100% algodão, com logo P e escudo histórico.'",
      "'slide3_text'    => 'Camisetas oversized 100% algodão, com o CRF no peito e a arte 81·19·22·25 nas costas.'"),
-    ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' )", "pm_opt_img( 'slide1_image', 'banner-colecao.webp' )"),
+    ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' )", "pm_opt_img( 'slide1_image', 'banner-flamengo.webp' )"),
     ("pm_opt_img( 'slide2_image', 'conjunto-branco-masculino.webp' )", "pm_opt_img( 'slide2_image', 'conjunto-vermelho-preto-crf.webp' )"),
     ("pm_img( 'conjunto-branco-feminino.webp' )", "pm_img( 'conjunto-preto-crf.webp' )"),
     ("Mapas de São Paulo, do Brasil e da América do Sul em verde com os símbolos do Palestra", "Arte rubro-negra com o monograma da Mengo Mantos"),
@@ -87,7 +87,7 @@ TEXTS = [
     ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' )", "pm_opt_img( 'slide3_image', 'camiseta-preta-crf-frente.webp' )"),
     ("'camisetas' => 'camiseta-logo-p.webp'", "'camisetas' => 'camiseta-vermelha-crf-frente.webp'"),
     ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho-preto-crf.webp'"),
-    ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-colecao.webp' )"),
+    ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-flamengo.webp' )"),
     ("'Palestra'", "'Mengo'"),
     ('Palestra', 'Mengo'),
     ('Palestrino', 'Rubro-negro'),
@@ -197,7 +197,8 @@ input, select, textarea, .input-text { background: #161616 !important; color: #f
 .pm-slide--light .pm-slide__title em { color: #e0283c; }
 .pm-slide--light .pm-eyebrow { color: #ff4d5e; }
 .pm-slide--light .pm-slide__ship, .pm-slide--light .pm-slide__points li { color: #fff; }
-.pm-slide--light .pm-slide__media img { filter: drop-shadow(0 30px 50px rgba(0,0,0,.6)); }
+.pm-slide--light .pm-slide__media img { filter: none; border-radius: 20px; max-height: 440px; box-shadow: 0 30px 60px rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.08); }
+.pm-welcome__media img { border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,.45); filter: none; }
 .pm-slider__arrow { background: rgba(255,255,255,.12); color: #fff; box-shadow: none; backdrop-filter: blur(4px); }
 .pm-slider__dot { background: rgba(255,255,255,.35); }
 /* Seções */
@@ -437,10 +438,10 @@ add_action( 'admin_init', 'pm_mengo_trash_demo_products', 45 );
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.1.0', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.1.1', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.0' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.1' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 

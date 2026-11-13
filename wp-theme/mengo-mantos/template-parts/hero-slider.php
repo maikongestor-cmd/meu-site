@@ -19,7 +19,7 @@ if ( function_exists( 'wc_get_product_id_by_sku' ) ) {
 $pm_slides = array(
 	array(
 		'variant' => 'light',
-		'image'   => pm_opt_img( 'slide1_image', 'banner-colecao.webp' ),
+		'image'   => pm_opt_img( 'slide1_image', 'banner-flamengo.webp' ),
 		'link'    => pm_opt( 'slide1_link' ) ? pm_opt( 'slide1_link' ) : $pm_shop_url,
 		'alt'     => __( 'Arte rubro-negra com o monograma da Mengo Mantos', 'palestra-mantos' ),
 	),

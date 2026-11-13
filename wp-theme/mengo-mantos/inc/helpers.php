@@ -113,7 +113,7 @@ function pm_defaults() {
 		'facebook'       => 'https://facebook.com/mengomantos',
 		'tiktok'         => '',
 		'address'        => 'Rio de Janeiro — RJ',
-		'cnpj'           => '00.000.000/0001-00',
+		'cnpj'           => '39.252.739/0001-69',
 		'company'        => 'Mengo Mantos',
 		'pix_discount'   => 5,
 		'free_shipping'  => 249,
