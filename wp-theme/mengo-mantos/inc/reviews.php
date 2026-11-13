@@ -429,7 +429,16 @@ add_action( 'admin_menu', 'pm_reviews_pending_badge', 99 );
  * @return array
  */
 function pm_instagram_reviews_data() {
-	return array();
+	return array(
+		array( 'ig-guilherme', 'Guilherme B.', 90, 5, 'Já comprei, em duas ocasiões, no Mengo Mantos e só tenho elogios a fazer. Os produtos chegam muito rápidos e são de excelente qualidade. Parabéns!' ),
+		array( 'ig-rhe', 'Rhe P.', 91, 5, 'Já peguei esse kit... Muito bom, tecido confortável do jeito que eu gosto... Obrigado 👏' ),
+		array( 'ig-raquel', 'Raquel S.', 80, 5, 'Sou de Goiás!! A minha chegou hoje e amei a modelagem dessa feminina 😍 vou comprar mais' ),
+		array( 'ig-adriana', 'Adriana A.', 83, 5, 'Linda calça, amei e chegou direitinho 😉' ),
+		array( 'ig-nanda', 'Nanda L.', 83, 5, 'Chegou!!!!! A tão querida calça. Chegou muito rápido. Comprei uma para mim e uma para meu filho, são lindas! Chegaram no prazo, sem problema algum. Agora já quer uma blusa hahaha. Obrigada pela atenção. 🐷🇮🇹' ),
+		array( 'ig-sheila', 'Sheila L.', 85, 5, 'Linda calça, confortável!!! Chegou no prazo e sem intercorrências!!!! Recomendo muito!!!!!' ),
+		array( 'ig-alex', 'Alex A.', 86, 5, "Atendimento pós-venda sempre atencioso.\nProduto corresponde à foto.\nEntrega regular.\nRecomendo a compra, entrega garantida." ),
+		array( 'ig-diego', 'Diego S.', 89, 5, 'Chegou certinho, produto tooop!' ),
+	);
 }
 
 /**

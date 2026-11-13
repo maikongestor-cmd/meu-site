@@ -105,9 +105,9 @@ add_action( 'after_setup_theme', 'pm_fix_old_slide_texts', 20 );
 function pm_defaults() {
 	return array(
 		'topbar'         => '5% de desconto no Pix · Frete grátis acima de R$ 249 · Troca gratuita',
-		'whatsapp'       => '5521900000000',
+		'whatsapp'       => '5511918214971',
 		'whatsapp_msg'   => 'Olá! Vim pelo site da Mengo Mantos e gostaria de mais informações.',
-		'phone'          => '(21) 90000-0000',
+		'phone'          => '(11) 91821-4971',
 		'email'          => 'contato@mengomantos.com.br',
 		'instagram'      => 'https://www.instagram.com/mengomantos/',
 		'facebook'       => 'https://facebook.com/mengomantos',

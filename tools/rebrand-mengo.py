@@ -63,8 +63,8 @@ TEXTS = [
     ('newsletter-palestra-mantos-', 'newsletter-mengo-mantos-'),
     ('💚', '❤️'),
     # contatos (rascunho: trocar pelos reais da loja)
-    ("'5511989958223'", "'5521900000000'"),
-    ("'(11) 98995-8223'", "'(21) 90000-0000'"),
+    ("'5511989958223'", "'5511918214971'"),
+    ("'(11) 98995-8223'", "'(11) 91821-4971'"),
     ("https://www.instagram.com/palestra_mantos/", "https://www.instagram.com/mengomantos/"),
     ("https://facebook.com/palestramantos", "https://facebook.com/mengomantos"),
     ("'São Paulo — SP'", "'Rio de Janeiro — RJ'"),
@@ -381,12 +381,6 @@ function pm_mengo_tshirt_photos() {
 }
 add_action( 'admin_init', 'pm_mengo_tshirt_photos', 40 );
 """
-        # Sem avaliações do Instagram para importar na loja nova.
-        s = re.sub(r"\t\t\t<p><label><input type=\"checkbox\" name=\"pm_igreviews\".*?</label></p>\n", '', s)
-    if path.name == 'reviews.php':
-        # As avaliações do Instagram são de clientes da Palestra: a Mengo começa sem nenhuma.
-        s = re.sub(r"function pm_instagram_reviews_data\(\) \{\n\treturn array\(.*?\n\t\);\n\}",
-                   "function pm_instagram_reviews_data() {\n\treturn array();\n}", s, count=1, flags=re.S)
     if path.name == 'style.css':
         # Tema escuro: preto com vermelho.
         s = s.replace('background: #fff', 'background: var(--pm-surface)')
