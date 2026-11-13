@@ -65,7 +65,7 @@ function pm_size_finder_html( $type = 'both', $apply = false ) {
 					<path class="pm-fit__pants-waist" d="M70 178 L130 178 L130 186 L70 186 Z" />
 					<path class="pm-fit__top" d="M64 74 Q100 64 136 74 L158 112 L141 122 L132 106 L133 192 Q100 200 67 192 L68 106 L59 122 L42 112 Z" />
 					<path class="pm-fit__collar" d="M88 70 Q100 82 112 70" />
-					<text class="pm-fit__logo" x="116" y="104">P</text>
+					<text class="pm-fit__logo" x="114" y="104">M</text>
 				</g>
 				<g class="pm-fit__body pm-fit__body--f">
 					<path class="pm-fit__hair" d="M80 40 Q78 16 100 16 Q122 16 120 40 L126 96 Q113 104 100 102 Q87 104 74 96 Z" />
@@ -80,7 +80,7 @@ function pm_size_finder_html( $type = 'both', $apply = false ) {
 					<path class="pm-fit__pants-waist" d="M71 178 L129 178 L129 186 L71 186 Z" />
 					<path class="pm-fit__top" d="M70 76 Q100 68 130 76 L150 110 L136 119 L128 104 Q123 148 130 192 Q100 199 70 192 Q77 148 72 104 L64 119 L50 110 Z" />
 					<path class="pm-fit__collar" d="M90 72 Q100 82 110 72" />
-					<text class="pm-fit__logo" x="112" y="104">P</text>
+					<text class="pm-fit__logo" x="110" y="104">M</text>
 				</g>
 			</svg>
 			<div class="pm-fit__height-tag"><span data-out="height-m">1,75 m</span></div>

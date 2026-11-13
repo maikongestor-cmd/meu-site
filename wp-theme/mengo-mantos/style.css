@@ -1236,5 +1236,20 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-welcome__sign { color: #fff !important; }
 .pm-footer { border-top-color: #000; }
 .pm-page-hero, .pm-page-header { background: rgba(0,0,0,.25) !important; }
+/* Descubra seu tamanho: boneco com camiseta vermelha e calça preta */
+.pm-fit__stage { background: radial-gradient(circle at 50% 35%, #4a0a14, #0b0b0b 75%) !important; }
+.pm-fit__floor { stroke: rgba(255,255,255,.35); }
+.pm-fit__top, .pm-fit[data-type="top"] .pm-fit__top, .pm-fit[data-type="both"] .pm-fit__top { fill: #d0102b !important; stroke: #000 !important; }
+.pm-fit__collar { stroke: #000; }
+.pm-fit__logo, .pm-fit[data-type="top"] .pm-fit__logo, .pm-fit[data-type="both"] .pm-fit__logo { fill: #fff !important; }
+.pm-fit__pants, .pm-fit[data-type="bottom"] .pm-fit__pants, .pm-fit[data-type="both"] .pm-fit__pants { fill: #111 !important; stroke: #000 !important; }
+.pm-fit__pants-cuff, .pm-fit__pants-waist, .pm-fit[data-type="bottom"] .pm-fit__pants-cuff, .pm-fit[data-type="both"] .pm-fit__pants-cuff, .pm-fit[data-type="bottom"] .pm-fit__pants-waist, .pm-fit[data-type="both"] .pm-fit__pants-waist { fill: #d0102b !important; stroke: #000 !important; }
+.pm-fit__shoe { fill: #fff; stroke: #000; }
+.pm-fit__height-tag { background: #d0102b !important; color: #fff !important; }
+.pm-fit__sex { background: #1a1a1a !important; box-shadow: none; }
+.pm-fit__sex input:checked + span { background: #d0102b; color: #fff; }
+.pm-fit input[type="range"], .pm-fit__pref input { accent-color: #d0102b; }
+.pm-fit__result { background: #d0102b !important; }
+.pm-fit__result strong { color: #fff !important; }
 .pm-table-wrap table th { background: #000; }
 .pm-table-wrap table td { border-color: rgba(0,0,0,.3); }
