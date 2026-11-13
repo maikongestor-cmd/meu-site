@@ -1159,3 +1159,82 @@ input, select, textarea, .input-text { background: #161616 !important; color: #f
 .pm-welcome__sign { color: #ff4d5e !important; }
 .pm-freebar--mini .pm-freebar__track, .pm-freebar__track { background: #2a2a2a; }
 .pm-steps li.is-done .pm-steps__n { color: #ff4d5e; }
+
+
+/* ==========================================================================
+   Mengo Mantos — vermelho como cor principal, preto como secundária
+   ========================================================================== */
+:root {
+	--pm-bg: #b80d22;
+	--pm-bg-soft: #9b0a1c;
+	--pm-surface: #111111;
+	--pm-line: rgba(0,0,0,.28);
+	--pm-text: #ffffff;
+	--pm-muted: rgba(255,255,255,.78);
+	--pm-green-600: #0d0d0d;
+	--pm-green-500: #000000;
+	--pm-green-700: #ffffff;
+	--pm-green-100: rgba(0,0,0,.28);
+}
+html, body { background: var(--pm-bg); }
+body { background: linear-gradient(180deg, #c8102e 0%, #a90b1f 100%) fixed; }
+.pm-topbar { background: #000 !important; }
+.pm-header { background: rgba(0,0,0,.94); border-bottom-color: #000; }
+.pm-nav a:hover, .pm-nav .current-menu-item > a, .pm-nav .current_page_item > a { color: #ff4d5e !important; }
+.pm-section--soft { background: rgba(0,0,0,.16) !important; }
+.pm-benefits { background: #0d0d0d; border-color: #000; }
+.pm-benefit svg { color: #ff4d5e; }
+.pm-eyebrow { color: #fff !important; opacity: .85; }
+h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
+.pm-link-arrow, .pm-link-arrow:hover { color: #fff; }
+/* Botões: pretos sobre o vermelho */
+.pm-btn, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, .woocommerce a.button.alt, .woocommerce button.button.alt { background: #0d0d0d; border-color: #0d0d0d; color: #fff; }
+.pm-btn:hover, .woocommerce a.button:hover, .woocommerce button.button:hover, .woocommerce button.button.alt:hover { background: #fff; border-color: #fff; color: #c8102e; }
+.pm-btn--outline { background: transparent; border-color: #fff; color: #fff; }
+.pm-btn--outline:hover { background: #fff; color: #c8102e; }
+.woocommerce ul.products li.product .button { background: transparent !important; border: 2px solid #fff !important; color: #fff !important; }
+.woocommerce ul.products li.product .button:hover { background: #fff !important; color: #c8102e !important; }
+/* Banners */
+.pm-slide--light::before, .pm-slide--dark::before { background: linear-gradient(90deg, rgba(120,6,20,.92) 0%, rgba(160,8,28,.6) 55%, rgba(0,0,0,.15) 100%); }
+.pm-slide--light .pm-slide__title em, .pm-slide--dark .pm-slide__title em { color: #fff; text-shadow: 3px 3px 0 #000; }
+.pm-search button { background: #c8102e; }
+.pm-slide--dark .pm-eyebrow { background: #000 !important; color: #fff !important; opacity: 1; box-shadow: none; }
+.pm-slide__points svg { color: #fff !important; }
+.pm-btn--green { background: #000; border-color: #000; color: #fff; }
+.pm-btn--green:hover { background: #fff; border-color: #fff; color: #c8102e; }
+.pm-slider__dot.is-active { background: #000; }
+/* Produtos e preços */
+.pm-pix-loop, .pm-pix-loop b { color: #fff !important; }
+.woocommerce ul.products li.product a img { background: #111; }
+.pm-pay, .pm-pay-info { background: #0d0d0d !important; }
+.pm-pay b, .pm-pay strong, .pm-pay-info b { color: #ff4d5e !important; }
+.pm-pay svg, .pm-pay-info svg { color: #ff4d5e !important; }
+.pm-size-link, .pm-size-link svg { color: #fff !important; }
+.pm-swatch { background: #0d0d0d; border-color: #000; color: #fff; }
+.pm-swatch.is-selected, .pm-swatch[aria-pressed="true"] { background: #fff; border-color: #fff; color: #c8102e; }
+.woocommerce div.product form.cart .single_add_to_cart_button { background: #000 !important; color: #fff !important; }
+.pm-ship, .pm-cat, .pm-review, .pm-testimonial, .pm-co-reviews, .pm-fit { background: #0d0d0d !important; border-color: #000 !important; }
+.pm-ship__list li { background: #1a1a1a; }
+.pm-ship__list li.is-free b, .pm-ship__note { color: #ff4d5e; }
+.pm-stars { color: #f5b301; }
+/* Carrinho e checkout: cartões pretos sobre o vermelho */
+.pm-freebar { background: #0d0d0d; }
+.pm-freebar p svg { color: #ff4d5e; }
+.pm-freebar__fill, .pm-freebar__bar span { background: #ff4d5e !important; }
+.pm-minicart { background: #0d0d0d; }
+.pm-minicart .pm-btn, .pm-minicart .button.checkout { background: #c8102e !important; border-color: #c8102e !important; color: #fff !important; }
+.pm-minicart .pm-btn:hover { background: #fff !important; color: #c8102e !important; }
+.woocommerce-checkout #payment #place_order, .woocommerce-cart .wc-proceed-to-checkout a.checkout-button { background: #000 !important; color: #fff !important; }
+.woocommerce-checkout #payment ul.payment_methods li:has(input:checked) { border-color: #fff; }
+.pm-steps li.is-current .pm-steps__n { background: #000; border-color: #000; }
+.pm-steps li.is-done, .pm-steps li.is-done .pm-steps__n { color: #fff; border-color: #fff; background: transparent; }
+.pm-steps li.is-done + li::before, .pm-steps li.is-current + li::before { background: #fff; }
+.woocommerce-message, .woocommerce-info, .woocommerce-error { border-top-color: #000 !important; }
+.pm-newsletter { background: #000 !important; }
+.pm-newsletter .pm-btn { background: #c8102e; border-color: #c8102e; }
+.pm-welcome { background: transparent; }
+.pm-welcome__sign { color: #fff !important; }
+.pm-footer { border-top-color: #000; }
+.pm-page-hero, .pm-page-header { background: rgba(0,0,0,.25) !important; }
+.pm-table-wrap table th { background: #000; }
+.pm-table-wrap table td { border-color: rgba(0,0,0,.3); }
