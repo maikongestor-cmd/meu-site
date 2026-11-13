@@ -28,8 +28,9 @@ for name in ['banner-mapas.webp', 'logo-completo.webp']:
 for pat in ['calca-*', 'camiseta-*', 'conjunto-*', 'kit-camisetas*', 'logo-mark*', 'favicon*', 'apple-touch-icon*']:
     for f in (DST / 'assets/img').glob(pat):
         f.unlink()
-for f in IMG.iterdir():
-    shutil.copy(f, DST / 'assets/img' / f.name)
+for f in IMG.rglob('*'):
+    if f.is_file():
+        shutil.copy(f, DST / 'assets/img' / f.name)
 
 # ---------------------------------------------------------------- cores
 COLORS = [
@@ -72,14 +73,16 @@ TEXTS = [
     ("define( 'PM_FB_DEFAULT_PIXEL', '1686861222371865' );", "define( 'PM_FB_DEFAULT_PIXEL', '' );"),
     # banners e imagens
     ("'slide3_text'    => 'Camisetas oversized 100% algodão, com logo P e escudo histórico.'",
-     "'slide3_text'    => 'Camisetas oversized 100% algodão, com o monograma M em vermelho e preto.'"),
+     "'slide3_text'    => 'Camisetas oversized 100% algodão, com o CRF no peito e a arte 81·19·22·25 nas costas.'"),
     ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' )", "pm_opt_img( 'slide1_image', 'banner-colecao.webp' )"),
     ("pm_opt_img( 'slide2_image', 'conjunto-branco-masculino.webp' )", "pm_opt_img( 'slide2_image', 'conjunto-preto.webp' )"),
     ("pm_img( 'conjunto-branco-feminino.webp' )", "pm_img( 'conjunto-vermelho.webp' )"),
     ("Mapas de São Paulo, do Brasil e da América do Sul em verde com os símbolos do Palestra", "Arte rubro-negra com o monograma da Mengo Mantos"),
     ("Conjunto moletom branco Palestra", "Conjunto moletom Mengo"),
     ("'PM-KIT-CAMISETAS'", "'MM-KIT-CAMISETAS'"),
-    ("'calcas'    => 'calca-verde.webp'", "'calcas'    => 'calca-preta.webp'"),
+    ("'calcas'    => 'calca-verde.webp'", "'calcas'    => 'calca-vermelha-ancora.webp'"),
+    ("'slide3_title'   => 'Kit 2 camisetas oversized <em>R$ 187</em>'", "'slide3_title'   => 'Camiseta oversized <em>R$ 137</em>'"),
+    ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' )", "pm_opt_img( 'slide3_image', 'camiseta-preta.webp' )"),
     ("'camisetas' => 'camiseta-logo-p.webp'", "'camisetas' => 'camiseta-preta.webp'"),
     ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho.webp'"),
     ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-colecao.webp' )"),
@@ -94,14 +97,64 @@ TEXTS = [
 CATALOG = """function pm_products_catalog() {
 	return array(
 		array(
+			'sku'     => 'MM-CALCA-VERMELHA-CRF',
+			'name'    => 'Calça Moletom Mengo Vermelha – CRF e Âncora',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-vermelha-ancora.webp' ),
+			'short'   => 'Calça jogger vermelha em moletom flanelado, com cordão de ajuste, CRF e âncora em preto.',
+			'order'   => 1,
+		),
+		array(
+			'sku'     => 'MM-CALCA-PRETA-CRF',
+			'name'    => 'Calça Moletom Mengo Preta – CRF, Âncora e 81·19·22·25',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-preta-ancora-anos.webp' ),
+			'short'   => 'Calça jogger preta em moletom flanelado, com CRF e âncora em vermelho e os anos 81, 19, 22 e 25 na perna.',
+			'order'   => 2,
+		),
+		array(
+			'sku'     => 'MM-CALCA-BRANCA-CRF',
+			'name'    => 'Calça Moletom Mengo Branca – CRF, Âncora e 81·19·22·25',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-branca-ancora-anos.webp', 'calca-branca-ancora-anos-feminina.webp' ),
+			'short'   => 'Calça jogger branca em moletom flanelado, com CRF e âncora em vermelho e os anos 81, 19, 22 e 25 na perna.',
+			'order'   => 3,
+		),
+		array(
+			'sku'     => 'MM-CAMISETA-PRETA-LIB',
+			'name'    => 'Camiseta Oversized Mengo Preta – 81·19·22·25',
+			'cat'     => 'camisetas',
+			'regular' => '137.00',
+			'sale'    => '',
+			'images'  => array( 'camiseta-preta.webp' ),
+			'short'   => 'Camiseta oversized 100% algodão, preta, com o CRF vermelho no peito e a arte 81·19·22·25 nas costas.',
+			'order'   => 4,
+		),
+		array(
+			'sku'     => 'MM-CAMISETA-VERMELHA-LIB',
+			'name'    => 'Camiseta Oversized Mengo Vermelha – 81·19·22·25',
+			'cat'     => 'camisetas',
+			'regular' => '137.00',
+			'sale'    => '',
+			'images'  => array( 'camiseta-vermelha.webp' ),
+			'short'   => 'Camiseta oversized 100% algodão, vermelha, com o CRF preto no peito e a arte 81·19·22·25 nas costas.',
+			'order'   => 5,
+		),
+		array(
 			'sku'     => 'MM-CONJUNTO-PRETO',
 			'name'    => 'Conjunto Moletom Mengo Preto – Blusão + Calça',
 			'cat'     => 'conjuntos',
 			'regular' => '267.00',
 			'sale'    => '',
 			'images'  => array( 'conjunto-preto.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado preto, com o monograma M em vermelho.',
-			'order'   => 1,
+			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado preto.',
+			'order'   => 6,
 		),
 		array(
 			'sku'     => 'MM-CONJUNTO-VERMELHO',
@@ -110,58 +163,8 @@ CATALOG = """function pm_products_catalog() {
 			'regular' => '267.00',
 			'sale'    => '',
 			'images'  => array( 'conjunto-vermelho.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado vermelho, com o monograma M em preto.',
-			'order'   => 3,
-		),
-		array(
-			'sku'     => 'MM-CALCA-PRETA',
-			'name'    => 'Calça Moletom Mengo Preta – Faixa Rubro-Negra',
-			'cat'     => 'calcas',
-			'regular' => '147.00',
-			'sale'    => '',
-			'images'  => array( 'calca-preta.webp' ),
-			'short'   => 'Calça jogger preta em moletom flanelado, com cordão de ajuste, faixa lateral vermelha e branca e monograma M.',
-			'order'   => 2,
-		),
-		array(
-			'sku'     => 'MM-CALCA-VERMELHA',
-			'name'    => 'Calça Moletom Mengo Vermelha',
-			'cat'     => 'calcas',
-			'regular' => '147.00',
-			'sale'    => '',
-			'images'  => array( 'calca-vermelha.webp' ),
-			'short'   => 'Calça jogger vermelha em moletom flanelado, cós com elástico, punhos nas barras e monograma M em preto.',
-			'order'   => 5,
-		),
-		array(
-			'sku'     => 'MM-CAMISETA-PRETA',
-			'name'    => 'Camiseta Oversized Mengo Preta',
-			'cat'     => 'camisetas',
-			'regular' => '127.00',
-			'sale'    => '',
-			'images'  => array( 'camiseta-preta.webp' ),
-			'short'   => 'Camiseta oversized 100% algodão, preta, com o monograma M em vermelho no peito.',
-			'order'   => 6,
-		),
-		array(
-			'sku'     => 'MM-CAMISETA-BRANCA',
-			'name'    => 'Camiseta Oversized Mengo Branca',
-			'cat'     => 'camisetas',
-			'regular' => '127.00',
-			'sale'    => '',
-			'images'  => array( 'camiseta-branca.webp' ),
-			'short'   => 'Camiseta oversized 100% algodão, branca, com o monograma M em vermelho e preto.',
+			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado vermelho.',
 			'order'   => 7,
-		),
-		array(
-			'sku'     => 'MM-KIT-CAMISETAS',
-			'name'    => 'Kit 2 Camisetas Oversized Mengo',
-			'cat'     => 'camisetas',
-			'regular' => '187.00',
-			'sale'    => '',
-			'images'  => array( 'kit-camisetas.webp' ),
-			'short'   => 'Kit com 2 camisetas oversized 100% algodão: uma preta e uma vermelha, com o monograma M.',
-			'order'   => 4,
 		),
 	);
 }
@@ -292,7 +295,7 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-pay, .pm-pay-info { background: #0d0d0d !important; }
 .pm-pay b, .pm-pay strong, .pm-pay-info b { color: #ff4d5e !important; }
 .pm-pay svg, .pm-pay-info svg { color: #ff4d5e !important; }
-.pm-size-link, .pm-size-link svg { color: #fff !important; }
+.pm-size-link, .pm-size-link svg, .pm-size-links a, .pm-size-links a svg, .pm-size-guide, .pm-size-guide svg { color: #fff !important; }
 .pm-swatch { background: #0d0d0d; border-color: #000; color: #fff; }
 .pm-swatch.is-selected, .pm-swatch[aria-pressed="true"] { background: #fff; border-color: #fff; color: #c8102e; }
 .woocommerce div.product form.cart .single_add_to_cart_button { background: #000 !important; color: #fff !important; }
@@ -323,7 +326,7 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-table-wrap table td { border-color: rgba(0,0,0,.3); }
 """
 
-FEATURED = "array( 'MM-CONJUNTO-PRETO', 'MM-CONJUNTO-VERMELHO', 'MM-CALCA-PRETA', 'MM-KIT-CAMISETAS' )"
+FEATURED = "array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB' )"
 
 for path in DST.rglob('*'):
     if path.suffix not in ('.php', '.css', '.js', '.txt') or not path.is_file():
@@ -337,7 +340,7 @@ for path in DST.rglob('*'):
     if path.name == 'setup-content.php':
         s = re.sub(r"function pm_products_catalog\(\) \{.*?\n\}\n", lambda m: CATALOG, s, count=1, flags=re.S)
         s = re.sub(r"array\( 'PM-CONJUNTO-BRANCO'[^)]*\)", FEATURED, s)
-        s = s.replace("$new = array( 'PM-CALCA-BRANCA-FAIXA' );", "$new = array();")
+        s = s.replace("$new = array( 'PM-CALCA-BRANCA-FAIXA' );", "$new = array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB', 'MM-CAMISETA-VERMELHA-LIB' );")
     if path.name == 'setup-content.php':
         # Sem avaliações do Instagram para importar na loja nova.
         s = re.sub(r"\t\t\t<p><label><input type=\"checkbox\" name=\"pm_igreviews\".*?</label></p>\n", '', s)

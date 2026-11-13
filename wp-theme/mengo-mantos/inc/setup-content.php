@@ -515,14 +515,64 @@ function pm_ensure_size_attribute() {
 function pm_products_catalog() {
 	return array(
 		array(
+			'sku'     => 'MM-CALCA-VERMELHA-CRF',
+			'name'    => 'Calça Moletom Mengo Vermelha – CRF e Âncora',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-vermelha-ancora.webp' ),
+			'short'   => 'Calça jogger vermelha em moletom flanelado, com cordão de ajuste, CRF e âncora em preto.',
+			'order'   => 1,
+		),
+		array(
+			'sku'     => 'MM-CALCA-PRETA-CRF',
+			'name'    => 'Calça Moletom Mengo Preta – CRF, Âncora e 81·19·22·25',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-preta-ancora-anos.webp' ),
+			'short'   => 'Calça jogger preta em moletom flanelado, com CRF e âncora em vermelho e os anos 81, 19, 22 e 25 na perna.',
+			'order'   => 2,
+		),
+		array(
+			'sku'     => 'MM-CALCA-BRANCA-CRF',
+			'name'    => 'Calça Moletom Mengo Branca – CRF, Âncora e 81·19·22·25',
+			'cat'     => 'calcas',
+			'regular' => '147.00',
+			'sale'    => '',
+			'images'  => array( 'calca-branca-ancora-anos.webp', 'calca-branca-ancora-anos-feminina.webp' ),
+			'short'   => 'Calça jogger branca em moletom flanelado, com CRF e âncora em vermelho e os anos 81, 19, 22 e 25 na perna.',
+			'order'   => 3,
+		),
+		array(
+			'sku'     => 'MM-CAMISETA-PRETA-LIB',
+			'name'    => 'Camiseta Oversized Mengo Preta – 81·19·22·25',
+			'cat'     => 'camisetas',
+			'regular' => '137.00',
+			'sale'    => '',
+			'images'  => array( 'camiseta-preta.webp' ),
+			'short'   => 'Camiseta oversized 100% algodão, preta, com o CRF vermelho no peito e a arte 81·19·22·25 nas costas.',
+			'order'   => 4,
+		),
+		array(
+			'sku'     => 'MM-CAMISETA-VERMELHA-LIB',
+			'name'    => 'Camiseta Oversized Mengo Vermelha – 81·19·22·25',
+			'cat'     => 'camisetas',
+			'regular' => '137.00',
+			'sale'    => '',
+			'images'  => array( 'camiseta-vermelha.webp' ),
+			'short'   => 'Camiseta oversized 100% algodão, vermelha, com o CRF preto no peito e a arte 81·19·22·25 nas costas.',
+			'order'   => 5,
+		),
+		array(
 			'sku'     => 'MM-CONJUNTO-PRETO',
 			'name'    => 'Conjunto Moletom Mengo Preto – Blusão + Calça',
 			'cat'     => 'conjuntos',
 			'regular' => '267.00',
 			'sale'    => '',
 			'images'  => array( 'conjunto-preto.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado preto, com o monograma M em vermelho.',
-			'order'   => 1,
+			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado preto.',
+			'order'   => 6,
 		),
 		array(
 			'sku'     => 'MM-CONJUNTO-VERMELHO',
@@ -531,58 +581,8 @@ function pm_products_catalog() {
 			'regular' => '267.00',
 			'sale'    => '',
 			'images'  => array( 'conjunto-vermelho.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado vermelho, com o monograma M em preto.',
-			'order'   => 3,
-		),
-		array(
-			'sku'     => 'MM-CALCA-PRETA',
-			'name'    => 'Calça Moletom Mengo Preta – Faixa Rubro-Negra',
-			'cat'     => 'calcas',
-			'regular' => '147.00',
-			'sale'    => '',
-			'images'  => array( 'calca-preta.webp' ),
-			'short'   => 'Calça jogger preta em moletom flanelado, com cordão de ajuste, faixa lateral vermelha e branca e monograma M.',
-			'order'   => 2,
-		),
-		array(
-			'sku'     => 'MM-CALCA-VERMELHA',
-			'name'    => 'Calça Moletom Mengo Vermelha',
-			'cat'     => 'calcas',
-			'regular' => '147.00',
-			'sale'    => '',
-			'images'  => array( 'calca-vermelha.webp' ),
-			'short'   => 'Calça jogger vermelha em moletom flanelado, cós com elástico, punhos nas barras e monograma M em preto.',
-			'order'   => 5,
-		),
-		array(
-			'sku'     => 'MM-CAMISETA-PRETA',
-			'name'    => 'Camiseta Oversized Mengo Preta',
-			'cat'     => 'camisetas',
-			'regular' => '127.00',
-			'sale'    => '',
-			'images'  => array( 'camiseta-preta.webp' ),
-			'short'   => 'Camiseta oversized 100% algodão, preta, com o monograma M em vermelho no peito.',
-			'order'   => 6,
-		),
-		array(
-			'sku'     => 'MM-CAMISETA-BRANCA',
-			'name'    => 'Camiseta Oversized Mengo Branca',
-			'cat'     => 'camisetas',
-			'regular' => '127.00',
-			'sale'    => '',
-			'images'  => array( 'camiseta-branca.webp' ),
-			'short'   => 'Camiseta oversized 100% algodão, branca, com o monograma M em vermelho e preto.',
+			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado vermelho.',
 			'order'   => 7,
-		),
-		array(
-			'sku'     => 'MM-KIT-CAMISETAS',
-			'name'    => 'Kit 2 Camisetas Oversized Mengo',
-			'cat'     => 'camisetas',
-			'regular' => '187.00',
-			'sale'    => '',
-			'images'  => array( 'kit-camisetas.webp' ),
-			'short'   => 'Kit com 2 camisetas oversized 100% algodão: uma preta e uma vermelha, com o monograma M.',
-			'order'   => 4,
 		),
 	);
 }
@@ -653,7 +653,7 @@ function pm_setup_products( $only_skus = array() ) {
 		$product->set_sku( $item['sku'] );
 		$product->set_status( 'publish' );
 		$product->set_catalog_visibility( 'visible' );
-		$product->set_featured( in_array( $item['sku'], array( 'MM-CONJUNTO-PRETO', 'MM-CONJUNTO-VERMELHO', 'MM-CALCA-PRETA', 'MM-KIT-CAMISETAS' ), true ) );
+		$product->set_featured( in_array( $item['sku'], array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB' ), true ) );
 		$product->set_short_description( $item['short'] );
 		$descs = function_exists( 'pm_product_descriptions' ) ? pm_product_descriptions() : array();
 		$product->set_description( isset( $descs[ $item['cat'] ] ) ? $descs[ $item['cat'] ] : $desc );
@@ -715,7 +715,7 @@ function pm_auto_add_new_products() {
 	if ( ! class_exists( 'WooCommerce' ) || ! current_user_can( 'manage_woocommerce' ) || wp_doing_ajax() ) {
 		return;
 	}
-	$new = array();
+	$new = array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB', 'MM-CAMISETA-VERMELHA-LIB' );
 	$done = (array) get_option( 'pm_auto_products', array() );
 	$todo = array_values( array_diff( $new, $done ) );
 	if ( ! $todo ) {
@@ -786,7 +786,7 @@ function pm_update_prices() {
 			$p->set_sale_price( $item['sale'] );
 			$p->save();
 		}
-		if ( in_array( $item['sku'], array( 'MM-CONJUNTO-PRETO', 'MM-CONJUNTO-VERMELHO', 'MM-CALCA-PRETA', 'MM-KIT-CAMISETAS' ), true ) ) {
+		if ( in_array( $item['sku'], array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB' ), true ) ) {
 			$product = wc_get_product( $id );
 			$product->set_featured( true );
 			$product->save();

@@ -34,7 +34,7 @@ $pm_times    = (int) pm_opt( 'installments' );
 		<div class="pm-cats">
 			<?php
 			$pm_cat_imgs = array(
-				'calcas'    => 'calca-preta.webp',
+				'calcas'    => 'calca-vermelha-ancora.webp',
 				'camisetas' => 'camiseta-preta.webp',
 				'conjuntos' => 'conjunto-vermelho.webp',
 			);

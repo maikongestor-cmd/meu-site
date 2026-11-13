@@ -1209,7 +1209,7 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-pay, .pm-pay-info { background: #0d0d0d !important; }
 .pm-pay b, .pm-pay strong, .pm-pay-info b { color: #ff4d5e !important; }
 .pm-pay svg, .pm-pay-info svg { color: #ff4d5e !important; }
-.pm-size-link, .pm-size-link svg { color: #fff !important; }
+.pm-size-link, .pm-size-link svg, .pm-size-links a, .pm-size-links a svg, .pm-size-guide, .pm-size-guide svg { color: #fff !important; }
 .pm-swatch { background: #0d0d0d; border-color: #000; color: #fff; }
 .pm-swatch.is-selected, .pm-swatch[aria-pressed="true"] { background: #fff; border-color: #fff; color: #c8102e; }
 .woocommerce div.product form.cart .single_add_to_cart_button { background: #000 !important; color: #fff !important; }

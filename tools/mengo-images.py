@@ -110,6 +110,7 @@ def camis(col,name,logo,stroke=None):
         tee(d,W//2,int(H*0.18),int(W*0.6),col,logo,stroke)
     save(card(f),name)
 camis(BLK,'camiseta-preta.webp',RED)
+camis(RED,'camiseta-vermelha.webp',BLK)
 camis(WHT,'camiseta-branca.webp',RED,BLK)
 def kit(im,d):
     shadow(im,(W*0.1,H*0.78,W*0.9,H*0.88))

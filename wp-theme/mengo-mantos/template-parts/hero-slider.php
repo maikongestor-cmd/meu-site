@@ -32,7 +32,7 @@ $pm_slides = array(
 	),
 	array(
 		'variant' => 'dark',
-		'image'   => pm_opt_img( 'slide3_image', 'kit-camisetas.webp' ),
+		'image'   => pm_opt_img( 'slide3_image', 'camiseta-preta.webp' ),
 		'link'    => pm_opt( 'slide3_link' ) ? pm_opt( 'slide3_link' ) : $pm_kit_url,
 		'alt'     => __( 'Kit com duas camisetas oversized Mengo', 'palestra-mantos' ),
 	),
