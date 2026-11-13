@@ -72,7 +72,6 @@ TEXTS = [
     ("'São Paulo — SP'", "'Rio de Janeiro — RJ'"),
     ("'cnpj'           => '30.105.559/0001-76'", "'cnpj'           => '39.252.739/0001-69'"),
     ("'ig_reviews_count' => 200", "'ig_reviews_count' => 0"),
-    ("define( 'PM_FB_DEFAULT_PIXEL', '1686861222371865' );", "define( 'PM_FB_DEFAULT_PIXEL', '' );"),
     # banners e imagens
     ("'slide3_text'    => 'Camisetas oversized 100% algodão, com logo P e escudo histórico.'",
      "'slide3_text'    => 'Camisetas oversized 100% algodão, com o CRF no peito e a arte 81·19·22·25 nas costas.'"),
@@ -527,7 +526,7 @@ function pm_mengo_review_text( $review ) {
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.2.7', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.2.8', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
         s += """
@@ -543,7 +542,7 @@ function pm_mengo_preload_hero() {
 }
 add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
 """
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.7' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.8' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 

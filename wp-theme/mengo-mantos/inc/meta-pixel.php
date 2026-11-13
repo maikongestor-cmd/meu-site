@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_FB_DEFAULT_PIXEL', '' );
+define( 'PM_FB_DEFAULT_PIXEL', '1686861222371865' );
 
 /**
  * O plugin oficial "Meta for WooCommerce" está ativo? Nesse caso ele cuida do
