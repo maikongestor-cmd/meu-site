@@ -339,6 +339,12 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-fit input[type="range"], .pm-fit__pref input { accent-color: #d0102b; }
 .pm-fit__result { background: #d0102b !important; }
 .pm-fit__result strong { color: #fff !important; }
+/* Tabelas e links das páginas (Guia de Medidas, Trocas…) */
+.pm-content table:not(.shop_table):not(.variations) thead th { background: #000 !important; color: #fff !important; border-color: #000 !important; }
+.pm-content table:not(.shop_table):not(.variations) td { background: #111; color: #fff; border-color: #000 !important; }
+.pm-content table:not(.shop_table):not(.variations) tbody tr:nth-child(even) td { background: #1b1b1b; }
+.pm-content a:not(.pm-btn) { color: #fff; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+.pm-content a:not(.pm-btn):hover { color: #000; }
 .pm-table-wrap table th { background: #000; }
 .pm-table-wrap table td { border-color: rgba(0,0,0,.3); }
 """
