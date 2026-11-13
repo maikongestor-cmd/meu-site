@@ -103,9 +103,9 @@ function pm_favicon() {
 	if ( has_site_icon() ) {
 		return;
 	}
-	printf( '<link rel="icon" href="%s" sizes="any">' . "\n", esc_url( PM_URI . '/assets/img/favicon.ico' ) );
-	printf( '<link rel="icon" type="image/png" href="%s" sizes="512x512">' . "\n", esc_url( PM_URI . '/assets/img/favicon.png' ) );
-	printf( '<link rel="apple-touch-icon" href="%s">' . "\n", esc_url( PM_URI . '/assets/img/apple-touch-icon.png' ) );
+	printf( '<link rel="icon" href="%s" sizes="any">' . "\n", esc_url( PM_URI . '/assets/img/favicon.ico?v=' . PM_VERSION ) );
+	printf( '<link rel="icon" type="image/png" href="%s" sizes="512x512">' . "\n", esc_url( PM_URI . '/assets/img/favicon.png?v=' . PM_VERSION ) );
+	printf( '<link rel="apple-touch-icon" href="%s">' . "\n", esc_url( PM_URI . '/assets/img/apple-touch-icon.png?v=' . PM_VERSION ) );
 }
 add_action( 'wp_head', 'pm_favicon', 2 );
 add_action( 'admin_head', 'pm_favicon', 2 );
