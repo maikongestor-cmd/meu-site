@@ -35,7 +35,7 @@ $pm_times    = (int) pm_opt( 'installments' );
 			<?php
 			$pm_cat_imgs = array(
 				'calcas'    => 'calca-vermelha-ancora.webp',
-				'camisetas' => 'camiseta-preta.webp',
+				'camisetas' => 'camiseta-vermelha-crf-frente.webp',
 				'conjuntos' => 'conjunto-vermelho.webp',
 			);
 			foreach ( pm_category_slugs() as $pm_slug => $pm_label ) :

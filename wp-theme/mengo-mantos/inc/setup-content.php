@@ -550,7 +550,7 @@ function pm_products_catalog() {
 			'cat'     => 'camisetas',
 			'regular' => '137.00',
 			'sale'    => '',
-			'images'  => array( 'camiseta-preta.webp' ),
+			'images'  => array( 'camiseta-preta-crf-frente.webp', 'camiseta-preta-crf-costas.webp' ),
 			'short'   => 'Camiseta oversized 100% algodão, preta, com o CRF vermelho no peito e a arte 81·19·22·25 nas costas.',
 			'order'   => 4,
 		),
@@ -560,7 +560,7 @@ function pm_products_catalog() {
 			'cat'     => 'camisetas',
 			'regular' => '137.00',
 			'sale'    => '',
-			'images'  => array( 'camiseta-vermelha.webp' ),
+			'images'  => array( 'camiseta-vermelha-crf-frente.webp', 'camiseta-vermelha-crf-costas.webp' ),
 			'short'   => 'Camiseta oversized 100% algodão, vermelha, com o CRF preto no peito e a arte 81·19·22·25 nas costas.',
 			'order'   => 5,
 		),
@@ -1048,3 +1048,40 @@ function pm_menu_add_custom( $menu_id, $title, $url ) {
 		)
 	);
 }
+
+/**
+ * Camisetas que entraram com a foto desenhada recebem as fotos reais (frente e costas).
+ */
+function pm_mengo_tshirt_photos() {
+	if ( ! class_exists( 'WooCommerce' ) || ! current_user_can( 'manage_woocommerce' ) || wp_doing_ajax() || get_option( 'pm_mengo_tshirt_photos' ) ) {
+		return;
+	}
+	update_option( 'pm_mengo_tshirt_photos', 1, false );
+	$fotos = array(
+		'MM-CAMISETA-PRETA-LIB'    => array( 'camiseta-preta-crf-frente.webp', 'camiseta-preta-crf-costas.webp' ),
+		'MM-CAMISETA-VERMELHA-LIB' => array( 'camiseta-vermelha-crf-frente.webp', 'camiseta-vermelha-crf-costas.webp' ),
+	);
+	foreach ( $fotos as $sku => $files ) {
+		$id      = wc_get_product_id_by_sku( $sku );
+		$product = $id ? wc_get_product( $id ) : null;
+		if ( ! $product ) {
+			continue;
+		}
+		$current = basename( (string) get_attached_file( $product->get_image_id() ) );
+		if ( $current && false === strpos( $current, 'crf-frente' ) ) {
+			$ids = array();
+			foreach ( $files as $file ) {
+				$img = pm_import_theme_image( $file, $product->get_name() );
+				if ( $img ) {
+					$ids[] = $img;
+				}
+			}
+			if ( $ids ) {
+				$product->set_image_id( $ids[0] );
+				$product->set_gallery_image_ids( array_slice( $ids, 1 ) );
+				$product->save();
+			}
+		}
+	}
+}
+add_action( 'admin_init', 'pm_mengo_tshirt_photos', 40 );

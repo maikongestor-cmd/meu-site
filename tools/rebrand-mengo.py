@@ -82,8 +82,8 @@ TEXTS = [
     ("'PM-KIT-CAMISETAS'", "'MM-KIT-CAMISETAS'"),
     ("'calcas'    => 'calca-verde.webp'", "'calcas'    => 'calca-vermelha-ancora.webp'"),
     ("'slide3_title'   => 'Kit 2 camisetas oversized <em>R$ 187</em>'", "'slide3_title'   => 'Camiseta oversized <em>R$ 137</em>'"),
-    ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' )", "pm_opt_img( 'slide3_image', 'camiseta-preta.webp' )"),
-    ("'camisetas' => 'camiseta-logo-p.webp'", "'camisetas' => 'camiseta-preta.webp'"),
+    ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' )", "pm_opt_img( 'slide3_image', 'camiseta-preta-crf-frente.webp' )"),
+    ("'camisetas' => 'camiseta-logo-p.webp'", "'camisetas' => 'camiseta-vermelha-crf-frente.webp'"),
     ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho.webp'"),
     ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-colecao.webp' )"),
     ("'Palestra'", "'Mengo'"),
@@ -132,7 +132,7 @@ CATALOG = """function pm_products_catalog() {
 			'cat'     => 'camisetas',
 			'regular' => '137.00',
 			'sale'    => '',
-			'images'  => array( 'camiseta-preta.webp' ),
+			'images'  => array( 'camiseta-preta-crf-frente.webp', 'camiseta-preta-crf-costas.webp' ),
 			'short'   => 'Camiseta oversized 100% algodão, preta, com o CRF vermelho no peito e a arte 81·19·22·25 nas costas.',
 			'order'   => 4,
 		),
@@ -142,7 +142,7 @@ CATALOG = """function pm_products_catalog() {
 			'cat'     => 'camisetas',
 			'regular' => '137.00',
 			'sale'    => '',
-			'images'  => array( 'camiseta-vermelha.webp' ),
+			'images'  => array( 'camiseta-vermelha-crf-frente.webp', 'camiseta-vermelha-crf-costas.webp' ),
 			'short'   => 'Camiseta oversized 100% algodão, vermelha, com o CRF preto no peito e a arte 81·19·22·25 nas costas.',
 			'order'   => 5,
 		),
@@ -342,6 +342,45 @@ for path in DST.rglob('*'):
         s = re.sub(r"array\( 'PM-CONJUNTO-BRANCO'[^)]*\)", FEATURED, s)
         s = s.replace("$new = array( 'PM-CALCA-BRANCA-FAIXA' );", "$new = array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB', 'MM-CAMISETA-VERMELHA-LIB' );")
     if path.name == 'setup-content.php':
+        # Troca a foto desenhada das camisetas pela foto real em lojas já montadas (uma vez só).
+        s += """
+/**
+ * Camisetas que entraram com a foto desenhada recebem as fotos reais (frente e costas).
+ */
+function pm_mengo_tshirt_photos() {
+	if ( ! class_exists( 'WooCommerce' ) || ! current_user_can( 'manage_woocommerce' ) || wp_doing_ajax() || get_option( 'pm_mengo_tshirt_photos' ) ) {
+		return;
+	}
+	update_option( 'pm_mengo_tshirt_photos', 1, false );
+	$fotos = array(
+		'MM-CAMISETA-PRETA-LIB'    => array( 'camiseta-preta-crf-frente.webp', 'camiseta-preta-crf-costas.webp' ),
+		'MM-CAMISETA-VERMELHA-LIB' => array( 'camiseta-vermelha-crf-frente.webp', 'camiseta-vermelha-crf-costas.webp' ),
+	);
+	foreach ( $fotos as $sku => $files ) {
+		$id      = wc_get_product_id_by_sku( $sku );
+		$product = $id ? wc_get_product( $id ) : null;
+		if ( ! $product ) {
+			continue;
+		}
+		$current = basename( (string) get_attached_file( $product->get_image_id() ) );
+		if ( $current && false === strpos( $current, 'crf-frente' ) ) {
+			$ids = array();
+			foreach ( $files as $file ) {
+				$img = pm_import_theme_image( $file, $product->get_name() );
+				if ( $img ) {
+					$ids[] = $img;
+				}
+			}
+			if ( $ids ) {
+				$product->set_image_id( $ids[0] );
+				$product->set_gallery_image_ids( array_slice( $ids, 1 ) );
+				$product->save();
+			}
+		}
+	}
+}
+add_action( 'admin_init', 'pm_mengo_tshirt_photos', 40 );
+"""
         # Sem avaliações do Instagram para importar na loja nova.
         s = re.sub(r"\t\t\t<p><label><input type=\"checkbox\" name=\"pm_igreviews\".*?</label></p>\n", '', s)
     if path.name == 'reviews.php':
