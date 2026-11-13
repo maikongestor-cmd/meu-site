@@ -185,6 +185,8 @@ html, body { background: var(--pm-bg); color: var(--pm-text); }
 a:hover { color: #ff4d5e; }
 ::placeholder { color: #8a8a8a; opacity: 1; }
 .pm-logo, .pm-logo__text { color: #fff; }
+.pm-logo img { width: 58px !important; margin: -10px 0; }
+@media (max-width: 900px) { .pm-logo img { width: 48px !important; } }
 .pm-logo__text small { color: #e0283c; }
 .pm-header { background: rgba(10,10,10,.96); border-bottom-color: #222; backdrop-filter: blur(6px); }
 .pm-nav a, .pm-actions a, .pm-icon-btn, .pm-menu-toggle { color: #fff; }
@@ -500,7 +502,7 @@ add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.1.8', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.1.9', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
         s += """
@@ -516,7 +518,7 @@ function pm_mengo_preload_hero() {
 }
 add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
 """
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.8' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.9' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 
