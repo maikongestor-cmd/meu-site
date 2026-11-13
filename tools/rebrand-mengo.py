@@ -90,6 +90,7 @@ TEXTS = [
     ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho-preto-crf.webp'"),
     ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-mapas-mengo.webp' )"),
     ("'slide3_button'  => 'Comprar kit'", "'slide3_button'  => 'Comprar camiseta'"),
+    ("echo wp_kses_post( wpautop( $review->post_content ) );", "echo wp_kses_post( wpautop( pm_mengo_review_text( $review ) ) );"),
     ('<img src="<?php echo esc_url( $pm_slide[\'image2\'] ); ?>" alt="" width="600" height="750" loading="lazy">',
      '<img src="<?php echo esc_url( $pm_slide[\'image2\'] ); ?>" alt="" width="600" height="750"<?php echo 0 === $pm_i ? \'\' : \' loading="lazy"\'; ?>>'),
     ("'Palestra'", "'Mengo'"),
@@ -465,10 +466,10 @@ add_action( 'admin_init', 'pm_mengo_trash_demo_products', 45 );
  * Atualiza (uma vez) o texto das avaliações de exemplo que já tinham sido importadas.
  */
 function pm_mengo_update_sample_reviews() {
-	if ( ! current_user_can( 'edit_posts' ) || wp_doing_ajax() || get_option( 'pm_mengo_reviews_v2' ) ) {
+	if ( ! current_user_can( 'edit_posts' ) || wp_doing_ajax() || get_option( 'pm_mengo_reviews_v3' ) ) {
 		return;
 	}
-	update_option( 'pm_mengo_reviews_v2', 1, false );
+	update_option( 'pm_mengo_reviews_v3', 1, false );
 	foreach ( pm_instagram_reviews_data() as $row ) {
 		$ids = get_posts(
 			array(
@@ -486,6 +487,27 @@ function pm_mengo_update_sample_reviews() {
 	}
 }
 add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );
+
+/**
+ * Texto da avaliação na tela: usa o texto da Mengo nas avaliações de exemplo e tira símbolos do Palmeiras.
+ *
+ * @param WP_Post $review Avaliação.
+ * @return string
+ */
+function pm_mengo_review_text( $review ) {
+	$text = $review->post_content;
+	$key  = (string) get_post_meta( $review->ID, '_pm_import_key', true );
+	if ( $key ) {
+		foreach ( pm_instagram_reviews_data() as $row ) {
+			if ( $row[0] === $key ) {
+				$text = $row[4];
+				break;
+			}
+		}
+	}
+	$text = str_replace( array( '🐷', '🐖', '🇮🇹', '💚', 'Palestra Mantos', 'Palestra', 'palmeiras', 'Palmeiras', 'Verdão', 'verdão' ), array( '', '', '', '❤️', 'Mengo Mantos', 'Mengo', 'Mengo', 'Mengo', 'Mengão', 'Mengão' ), $text );
+	return trim( preg_replace( '/[ \t]+$/m', '', $text ) );
+}
 """
     if path.name == 'style.css':
         # Tema escuro: preto com vermelho.
@@ -503,7 +525,7 @@ add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.2.1', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.2.2', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
         s += """
@@ -519,7 +541,7 @@ function pm_mengo_preload_hero() {
 }
 add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
 """
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.1' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.2' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 

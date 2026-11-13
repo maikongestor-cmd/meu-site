@@ -266,7 +266,7 @@ function pm_review_card( $review, $show_prod = true ) {
 		<?php endif; ?>
 		<div class="pm-review__body">
 			<?php echo pm_stars( $rating ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			<div class="pm-review__text"><?php echo wp_kses_post( wpautop( $review->post_content ) ); ?></div>
+			<div class="pm-review__text"><?php echo wp_kses_post( wpautop( pm_mengo_review_text( $review ) ) ); ?></div>
 			<footer class="pm-review__author">
 				<span class="pm-avatar"><?php echo esc_html( mb_strtoupper( mb_substr( $name, 0, 1 ) ) ); ?></span>
 				<span><b><?php echo esc_html( $name ); ?></b><?php if ( 'instagram' === get_post_meta( $review->ID, '_pm_source', true ) ) : ?> <span class="pm-verified">via Instagram</span><?php elseif ( ! get_post_meta( $review->ID, '_pm_from_site', true ) ) : ?> <span class="pm-verified">✓ <?php esc_html_e( 'Compra verificada', 'palestra-mantos' ); ?></span><?php endif; ?><?php echo $city ? '<br>' . esc_html( $city ) : ''; ?>
@@ -517,10 +517,10 @@ add_action( 'init', 'pm_remove_retired_reviews', 20 );
  * Atualiza (uma vez) o texto das avaliações de exemplo que já tinham sido importadas.
  */
 function pm_mengo_update_sample_reviews() {
-	if ( ! current_user_can( 'edit_posts' ) || wp_doing_ajax() || get_option( 'pm_mengo_reviews_v2' ) ) {
+	if ( ! current_user_can( 'edit_posts' ) || wp_doing_ajax() || get_option( 'pm_mengo_reviews_v3' ) ) {
 		return;
 	}
-	update_option( 'pm_mengo_reviews_v2', 1, false );
+	update_option( 'pm_mengo_reviews_v3', 1, false );
 	foreach ( pm_instagram_reviews_data() as $row ) {
 		$ids = get_posts(
 			array(
@@ -538,3 +538,24 @@ function pm_mengo_update_sample_reviews() {
 	}
 }
 add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );
+
+/**
+ * Texto da avaliação na tela: usa o texto da Mengo nas avaliações de exemplo e tira símbolos do Palmeiras.
+ *
+ * @param WP_Post $review Avaliação.
+ * @return string
+ */
+function pm_mengo_review_text( $review ) {
+	$text = $review->post_content;
+	$key  = (string) get_post_meta( $review->ID, '_pm_import_key', true );
+	if ( $key ) {
+		foreach ( pm_instagram_reviews_data() as $row ) {
+			if ( $row[0] === $key ) {
+				$text = $row[4];
+				break;
+			}
+		}
+	}
+	$text = str_replace( array( '🐷', '🐖', '🇮🇹', '💚', 'Palestra Mantos', 'Palestra', 'palmeiras', 'Palmeiras', 'Verdão', 'verdão' ), array( '', '', '', '❤️', 'Mengo Mantos', 'Mengo', 'Mengo', 'Mengo', 'Mengão', 'Mengão' ), $text );
+	return trim( preg_replace( '/[ 	]+$/m', '', $text ) );
+}
