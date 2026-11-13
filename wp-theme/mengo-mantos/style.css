@@ -3,7 +3,7 @@ Theme Name: Mengo Mantos
 Theme URI: https://mengomantos.com.br
 Author: Mengo Mantos
 Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.
-Version: 1.1.9
+Version: 1.2.0
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -642,7 +642,7 @@ form.cart.pm-flash { animation: pm-flash 1.6s ease; border-radius: 14px; }
 .pm-ship__error { margin: 10px 0 0; font-size: .88rem; color: var(--pm-red); }
 .pm-ship__loading { margin: 10px 0 0; font-size: .88rem; color: var(--pm-muted); }
 /* Calculadora do plugin Melhor Envio: a cotação aparece na calculadora do tema. */
-#me-cep-calc { display: none !important; }
+#me-cep-calc, #shipping-simulator, .shipping-simulator, #melhor-envio-shortcode, .containerCalculator, .woocommerce-correios-calculator, .wc-shipping-simulator, .pm-hide-ext-ship { display: none !important; }
 
 /* Calculadora do carrinho: só CEP, sempre aberta */
 .woocommerce-cart .shipping-calculator-form { display: block !important; }
@@ -1224,7 +1224,7 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-pay, .pm-pay-info { background: #0d0d0d !important; }
 .pm-pay b, .pm-pay strong, .pm-pay-info b { color: #ff4d5e !important; }
 .pm-pay svg, .pm-pay-info svg { color: #ff4d5e !important; }
-.pm-size-link, .pm-size-link svg, .pm-size-links a, .pm-size-links a svg, .pm-size-guide, .pm-size-guide svg { color: #fff !important; }
+.pm-size-link, .pm-size-link svg, .pm-size-links a, .pm-size-links a svg, .pm-size-guide, .pm-size-guide svg { color: #000 !important; }
 .pm-swatch { background: #0d0d0d; border-color: #000; color: #fff; }
 .pm-swatch.is-selected, .pm-swatch[aria-pressed="true"] { background: #fff; border-color: #fff; color: #c8102e; }
 .woocommerce div.product form.cart .single_add_to_cart_button { background: #000 !important; color: #fff !important; }

@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 2.0.3
+Version: 2.0.4
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -641,7 +641,7 @@ form.cart.pm-flash { animation: pm-flash 1.6s ease; border-radius: 14px; }
 .pm-ship__error { margin: 10px 0 0; font-size: .88rem; color: var(--pm-red); }
 .pm-ship__loading { margin: 10px 0 0; font-size: .88rem; color: var(--pm-muted); }
 /* Calculadora do plugin Melhor Envio: a cotação aparece na calculadora do tema. */
-#me-cep-calc { display: none !important; }
+#me-cep-calc, #shipping-simulator, .shipping-simulator, #melhor-envio-shortcode, .containerCalculator, .woocommerce-correios-calculator, .wc-shipping-simulator, .pm-hide-ext-ship { display: none !important; }
 
 /* Calculadora do carrinho: só CEP, sempre aberta */
 .woocommerce-cart .shipping-calculator-form { display: block !important; }

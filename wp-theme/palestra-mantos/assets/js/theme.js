@@ -217,6 +217,21 @@
 	}
 	document.querySelectorAll('.pm-fit').forEach(initFit);
 
+	// Esconde calculadoras de frete de plugins na página do produto (fica só a do tema).
+	(function () {
+		var ours = document.querySelector('.pm-ship');
+		if (!ours) { return; }
+		var summary = ours.closest('.summary, .product') || document;
+		summary.querySelectorAll('input').forEach(function (inp) {
+			if (ours.contains(inp)) { return; }
+			var hint = (inp.placeholder || '') + ' ' + (inp.name || '') + ' ' + (inp.id || '');
+			if (!/cep|postcode|zip/i.test(hint) || inp.closest('form.cart .variations')) { return; }
+			var box = inp.parentElement;
+			while (box && box.parentElement && box.parentElement !== summary && !box.parentElement.matches('form.cart, .summary')) { box = box.parentElement; }
+			if (box && !box.contains(ours) && !box.querySelector('.single_add_to_cart_button')) { box.classList.add('pm-hide-ext-ship'); }
+		});
+	})();
+
 	// Calculadora de frete por CEP na página do produto.
 	var ship = document.querySelector('.pm-ship');
 	if (ship && window.pmShip) {
