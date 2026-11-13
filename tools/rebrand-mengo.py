@@ -367,6 +367,16 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-content table:not(.shop_table):not(.variations) tbody tr:nth-child(even) td { background: #1b1b1b; }
 .pm-content a:not(.pm-btn) { color: #fff; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
 .pm-content a:not(.pm-btn):hover { color: #000; }
+/* Opções de frete (PAC / SEDEX) no carrinho e checkout: a escolhida fica preta e destacada */
+.woocommerce ul#shipping_method { display: grid; gap: 8px; margin: 4px 0 0 !important; padding: 0 !important; }
+.woocommerce ul#shipping_method li { position: relative; margin: 0 !important; padding: 0 !important; list-style: none; text-align: left; }
+.woocommerce ul#shipping_method li input.shipping_method { position: absolute; opacity: 0; pointer-events: none; }
+.woocommerce ul#shipping_method li label { display: block; margin: 0; padding: 11px 14px; border-radius: 12px; border: 2px solid rgba(255,255,255,.35); background: rgba(255,255,255,.06); color: #fff; font-weight: 600; cursor: pointer; transition: .15s; }
+.woocommerce ul#shipping_method li label:hover { border-color: #fff; }
+.woocommerce ul#shipping_method li input.shipping_method:checked + label { background: #000; border-color: #e0283c; box-shadow: 0 0 0 1px #e0283c; }
+.woocommerce ul#shipping_method li input.shipping_method:checked + label::after { content: "✓"; float: right; color: #ff4d5e; font-weight: 800; }
+.woocommerce ul#shipping_method li input.shipping_method:focus-visible + label { outline: 2px solid #fff; outline-offset: 2px; }
+.woocommerce ul#shipping_method li input[type="hidden"] + label { background: #000; border-color: #e0283c; }
 .pm-table-wrap table th { background: #000; }
 .pm-table-wrap table td { border-color: rgba(0,0,0,.3); }
 """
@@ -526,7 +536,7 @@ function pm_mengo_review_text( $review ) {
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.2.8', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.2.9', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
         s += """
@@ -542,7 +552,7 @@ function pm_mengo_preload_hero() {
 }
 add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
 """
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.8' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.9' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 
