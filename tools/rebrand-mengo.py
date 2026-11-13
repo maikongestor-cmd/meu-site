@@ -88,7 +88,7 @@ TEXTS = [
     ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' ),", "pm_opt_img( 'slide3_image', 'hero-3a.webp' ),\n\t\t'image2'  => pm_opt( 'slide3_image' ) ? '' : pm_img( 'hero-3b.webp' ),"),
     ("'camisetas' => 'camiseta-logo-p.webp'", "'camisetas' => 'camiseta-vermelha-crf-frente.webp'"),
     ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho-preto-crf.webp'"),
-    ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-mapas-mengo.webp' )"),
+    ("pm_img( 'banner-mapas.webp' )", "pm_img( 'welcome-torcida.webp' )"),
     ("'slide3_button'  => 'Comprar kit'", "'slide3_button'  => 'Comprar camiseta'"),
     ("echo wp_kses_post( wpautop( $review->post_content ) );", "echo wp_kses_post( wpautop( pm_mengo_review_text( $review ) ) );"),
     ('<img src="<?php echo esc_url( $pm_slide[\'image2\'] ); ?>" alt="" width="600" height="750" loading="lazy">',
@@ -217,7 +217,7 @@ input, select, textarea, .input-text { background: #161616 !important; color: #f
 	.pm-slide--light::before { background: linear-gradient(180deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.1) 80%) !important; }
 	.pm-slide--light .pm-slide__inner { min-height: 640px; align-content: start; }
 }
-.pm-welcome__media img { filter: drop-shadow(0 20px 30px rgba(0,0,0,.35)); }
+.pm-welcome__media img { filter: none; border-radius: 22px; object-fit: cover; box-shadow: 0 0 50px rgba(224,40,60,.35), 0 30px 60px rgba(0,0,0,.5); }
 .pm-slider__arrow { background: rgba(255,255,255,.12); color: #fff; box-shadow: none; backdrop-filter: blur(4px); }
 .pm-slider__dot { background: rgba(255,255,255,.35); }
 /* Seções */
@@ -525,7 +525,7 @@ function pm_mengo_review_text( $review ) {
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.2.2', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.2.3', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
         s += """
@@ -541,7 +541,7 @@ function pm_mengo_preload_hero() {
 }
 add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
 """
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.2' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.3' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 
