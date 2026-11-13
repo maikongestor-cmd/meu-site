@@ -76,7 +76,8 @@ TEXTS = [
     # banners e imagens
     ("'slide3_text'    => 'Camisetas oversized 100% algodão, com logo P e escudo histórico.'",
      "'slide3_text'    => 'Camisetas oversized 100% algodão, com o CRF no peito e a arte 81·19·22·25 nas costas.'"),
-    ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' )", "pm_opt_img( 'slide1_image', 'banner-estadio.webp' )"),
+    ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' )", "pm_opt_img( 'slide1_image', 'banner-estadio-tall.webp' )"),
+    ("<?php echo 0 === $pm_i ? ' fetchpriority=\"high\"' : ' loading=\"lazy\"'; ?>>", " loading=\"lazy\">"),
     ("pm_opt_img( 'slide2_image', 'conjunto-branco-masculino.webp' )", "pm_opt_img( 'slide2_image', 'hero-2a.webp' )"),
     ("pm_img( 'conjunto-branco-feminino.webp' )", "pm_img( 'hero-2b.webp' )"),
     ("Mapas de São Paulo, do Brasil e da América do Sul em verde com os símbolos do Palestra", "Estádio iluminado de vermelho à noite"),
@@ -200,7 +201,19 @@ input, select, textarea, .input-text { background: #161616 !important; color: #f
 .pm-slide--light .pm-slide__title em { color: #e0283c; }
 .pm-slide--light .pm-eyebrow { color: #ff4d5e; }
 .pm-slide--light .pm-slide__ship, .pm-slide--light .pm-slide__points li { color: #fff; }
-.pm-slide--light .pm-slide__media img { filter: none; max-height: 460px; border-radius: 22px; border: 1px solid rgba(255,77,94,.35); box-shadow: 0 0 60px rgba(224,40,60,.45), 0 30px 60px rgba(0,0,0,.6); }
+.pm-slide--light { background: #050505 url(assets/img/banner-estadio-wide.webp) right center / auto 100% no-repeat !important; }
+.pm-slide--light::before { background: linear-gradient(90deg, #050505 0%, #050505 30%, rgba(5,5,5,.7) 48%, rgba(5,5,5,0) 70%) !important; }
+.pm-slide--light .pm-slide__media { display: none; }
+.pm-slide--light .pm-slide__inner { grid-template-columns: minmax(0, 620px); min-height: 600px; }
+.pm-slide--light .pm-slide__title { font-size: clamp(3rem, 7vw, 5.6rem); }
+.pm-slide--light .pm-eyebrow { color: #ff4d5e !important; opacity: 1; }
+.pm-slide--light .pm-btn { background: #d0102b; border-color: #d0102b; color: #fff; box-shadow: 0 10px 30px rgba(208,16,43,.45); }
+.pm-slide--light .pm-btn:hover { background: #fff; border-color: #fff; color: #d0102b; }
+@media (max-width: 900px) {
+	.pm-slide--light { background-image: url(assets/img/banner-estadio-tall.webp) !important; background-position: center 70% !important; }
+	.pm-slide--light::before { background: linear-gradient(180deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.1) 80%) !important; }
+	.pm-slide--light .pm-slide__inner { min-height: 640px; align-content: start; }
+}
 .pm-welcome__media img { filter: drop-shadow(0 20px 30px rgba(0,0,0,.35)); }
 .pm-slider__arrow { background: rgba(255,255,255,.12); color: #fff; box-shadow: none; backdrop-filter: blur(4px); }
 .pm-slider__dot { background: rgba(255,255,255,.35); }
@@ -487,10 +500,23 @@ add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.1.6', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.1.8', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.6' );", s)
+        s += """
+/**
+ * Pré-carrega a foto do 1º banner (uma para computador, outra para celular).
+ */
+function pm_mengo_preload_hero() {
+	if ( ! is_front_page() ) {
+		return;
+	}
+	printf( '<link rel="preload" as="image" href="%s" media="(min-width: 901px)" fetchpriority="high">' . "\\n", esc_url( PM_URI . '/assets/img/banner-estadio-wide.webp' ) );
+	printf( '<link rel="preload" as="image" href="%s" media="(max-width: 900px)" fetchpriority="high">' . "\\n", esc_url( PM_URI . '/assets/img/banner-estadio-tall.webp' ) );
+}
+add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
+"""
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.8' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 

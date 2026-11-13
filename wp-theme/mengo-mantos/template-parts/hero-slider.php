@@ -19,7 +19,7 @@ if ( function_exists( 'wc_get_product_id_by_sku' ) ) {
 $pm_slides = array(
 	array(
 		'variant' => 'light',
-		'image'   => pm_opt_img( 'slide1_image', 'banner-estadio.webp' ),
+		'image'   => pm_opt_img( 'slide1_image', 'banner-estadio-tall.webp' ),
 		'link'    => pm_opt( 'slide1_link' ) ? pm_opt( 'slide1_link' ) : $pm_shop_url,
 		'alt'     => __( 'Estádio iluminado de vermelho à noite', 'palestra-mantos' ),
 	),
@@ -75,7 +75,7 @@ $pm_free = (int) pm_opt( 'free_shipping' );
 						</div>
 					</div>
 					<div class="pm-slide__media<?php echo ! empty( $pm_slide['image2'] ) ? ' has-two' : ''; ?>">
-						<img src="<?php echo esc_url( $pm_slide['image'] ); ?>" alt="<?php echo esc_attr( $pm_slide['alt'] ); ?>" width="600" height="750"<?php echo 0 === $pm_i ? ' fetchpriority="high"' : ' loading="lazy"'; ?>>
+						<img src="<?php echo esc_url( $pm_slide['image'] ); ?>" alt="<?php echo esc_attr( $pm_slide['alt'] ); ?>" width="600" height="750" loading="lazy">
 						<?php if ( ! empty( $pm_slide['image2'] ) ) : ?>
 							<img src="<?php echo esc_url( $pm_slide['image2'] ); ?>" alt="" width="600" height="750"<?php echo 0 === $pm_i ? '' : ' loading="lazy"'; ?>>
 						<?php endif; ?>

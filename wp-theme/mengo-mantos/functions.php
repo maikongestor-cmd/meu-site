@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_VERSION', '1.1.6' );
+define( 'PM_VERSION', '1.1.8' );
 define( 'PM_DIR', get_template_directory() );
 define( 'PM_URI', get_template_directory_uri() );
 
@@ -163,3 +163,15 @@ add_filter(
 		return 24;
 	}
 );
+
+/**
+ * Pré-carrega a foto do 1º banner (uma para computador, outra para celular).
+ */
+function pm_mengo_preload_hero() {
+	if ( ! is_front_page() ) {
+		return;
+	}
+	printf( '<link rel="preload" as="image" href="%s" media="(min-width: 901px)" fetchpriority="high">' . "\n", esc_url( PM_URI . '/assets/img/banner-estadio-wide.webp' ) );
+	printf( '<link rel="preload" as="image" href="%s" media="(max-width: 900px)" fetchpriority="high">' . "\n", esc_url( PM_URI . '/assets/img/banner-estadio-tall.webp' ) );
+}
+add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
