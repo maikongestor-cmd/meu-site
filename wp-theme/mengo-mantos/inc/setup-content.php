@@ -566,23 +566,23 @@ function pm_products_catalog() {
 			'order'   => 5,
 		),
 		array(
-			'sku'     => 'MM-CONJUNTO-PRETO',
+			'sku'     => 'MM-CONJUNTO-VERMELHO-PRETO-CRF',
+			'name'    => 'Conjunto Moletom Mengo Vermelho e Preto – Blusão + Calça',
+			'cat'     => 'conjuntos',
+			'regular' => '267.00',
+			'sale'    => '',
+			'images'  => array( 'conjunto-vermelho-preto-crf.webp' ),
+			'short'   => 'Blusão vermelho com capuz e bolso canguru, com CRF e âncora em preto, + calça jogger preta com o CRF em vermelho. Moletom flanelado.',
+			'order'   => 6,
+		),
+		array(
+			'sku'     => 'MM-CONJUNTO-PRETO-CRF',
 			'name'    => 'Conjunto Moletom Mengo Preto – Blusão + Calça',
 			'cat'     => 'conjuntos',
 			'regular' => '267.00',
 			'sale'    => '',
-			'images'  => array( 'conjunto-preto.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado preto.',
-			'order'   => 6,
-		),
-		array(
-			'sku'     => 'MM-CONJUNTO-VERMELHO',
-			'name'    => 'Conjunto Moletom Mengo Vermelho – Blusão + Calça',
-			'cat'     => 'conjuntos',
-			'regular' => '267.00',
-			'sale'    => '',
-			'images'  => array( 'conjunto-vermelho.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado vermelho.',
+			'images'  => array( 'conjunto-preto-crf.webp' ),
+			'short'   => 'Blusão preto com capuz e bolso canguru + calça jogger preta, com CRF e âncora em vermelho. Moletom flanelado.',
 			'order'   => 7,
 		),
 	);
@@ -716,7 +716,7 @@ function pm_auto_add_new_products() {
 	if ( ! class_exists( 'WooCommerce' ) || ! current_user_can( 'manage_woocommerce' ) || wp_doing_ajax() ) {
 		return;
 	}
-	$new = array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB', 'MM-CAMISETA-VERMELHA-LIB' );
+	$new = array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB', 'MM-CAMISETA-VERMELHA-LIB', 'MM-CONJUNTO-VERMELHO-PRETO-CRF', 'MM-CONJUNTO-PRETO-CRF' );
 	$done = (array) get_option( 'pm_auto_products', array() );
 	$todo = array_values( array_diff( $new, $done ) );
 	if ( ! $todo ) {
@@ -1086,3 +1086,20 @@ function pm_mengo_tshirt_photos() {
 	}
 }
 add_action( 'admin_init', 'pm_mengo_tshirt_photos', 40 );
+
+/**
+ * Manda para a lixeira os produtos de exemplo (fotos desenhadas), uma vez só.
+ */
+function pm_mengo_trash_demo_products() {
+	if ( ! class_exists( 'WooCommerce' ) || ! current_user_can( 'manage_woocommerce' ) || wp_doing_ajax() || get_option( 'pm_mengo_demo_trashed' ) ) {
+		return;
+	}
+	update_option( 'pm_mengo_demo_trashed', 1, false );
+	foreach ( array( 'MM-CONJUNTO-PRETO', 'MM-CONJUNTO-VERMELHO', 'MM-CALCA-PRETA', 'MM-CALCA-VERMELHA', 'MM-CAMISETA-PRETA', 'MM-CAMISETA-BRANCA', 'MM-KIT-CAMISETAS' ) as $sku ) {
+		$id = wc_get_product_id_by_sku( $sku );
+		if ( $id ) {
+			wp_trash_post( $id );
+		}
+	}
+}
+add_action( 'admin_init', 'pm_mengo_trash_demo_products', 45 );

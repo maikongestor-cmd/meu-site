@@ -75,8 +75,8 @@ TEXTS = [
     ("'slide3_text'    => 'Camisetas oversized 100% algodão, com logo P e escudo histórico.'",
      "'slide3_text'    => 'Camisetas oversized 100% algodão, com o CRF no peito e a arte 81·19·22·25 nas costas.'"),
     ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' )", "pm_opt_img( 'slide1_image', 'banner-colecao.webp' )"),
-    ("pm_opt_img( 'slide2_image', 'conjunto-branco-masculino.webp' )", "pm_opt_img( 'slide2_image', 'conjunto-preto.webp' )"),
-    ("pm_img( 'conjunto-branco-feminino.webp' )", "pm_img( 'conjunto-vermelho.webp' )"),
+    ("pm_opt_img( 'slide2_image', 'conjunto-branco-masculino.webp' )", "pm_opt_img( 'slide2_image', 'conjunto-vermelho-preto-crf.webp' )"),
+    ("pm_img( 'conjunto-branco-feminino.webp' )", "pm_img( 'conjunto-preto-crf.webp' )"),
     ("Mapas de São Paulo, do Brasil e da América do Sul em verde com os símbolos do Palestra", "Arte rubro-negra com o monograma da Mengo Mantos"),
     ("Conjunto moletom branco Palestra", "Conjunto moletom Mengo"),
     ("'PM-KIT-CAMISETAS'", "'MM-KIT-CAMISETAS'"),
@@ -84,7 +84,7 @@ TEXTS = [
     ("'slide3_title'   => 'Kit 2 camisetas oversized <em>R$ 187</em>'", "'slide3_title'   => 'Camiseta oversized <em>R$ 137</em>'"),
     ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' )", "pm_opt_img( 'slide3_image', 'camiseta-preta-crf-frente.webp' )"),
     ("'camisetas' => 'camiseta-logo-p.webp'", "'camisetas' => 'camiseta-vermelha-crf-frente.webp'"),
-    ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho.webp'"),
+    ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho-preto-crf.webp'"),
     ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-colecao.webp' )"),
     ("'Palestra'", "'Mengo'"),
     ('Palestra', 'Mengo'),
@@ -147,23 +147,23 @@ CATALOG = """function pm_products_catalog() {
 			'order'   => 5,
 		),
 		array(
-			'sku'     => 'MM-CONJUNTO-PRETO',
+			'sku'     => 'MM-CONJUNTO-VERMELHO-PRETO-CRF',
+			'name'    => 'Conjunto Moletom Mengo Vermelho e Preto – Blusão + Calça',
+			'cat'     => 'conjuntos',
+			'regular' => '267.00',
+			'sale'    => '',
+			'images'  => array( 'conjunto-vermelho-preto-crf.webp' ),
+			'short'   => 'Blusão vermelho com capuz e bolso canguru, com CRF e âncora em preto, + calça jogger preta com o CRF em vermelho. Moletom flanelado.',
+			'order'   => 6,
+		),
+		array(
+			'sku'     => 'MM-CONJUNTO-PRETO-CRF',
 			'name'    => 'Conjunto Moletom Mengo Preto – Blusão + Calça',
 			'cat'     => 'conjuntos',
 			'regular' => '267.00',
 			'sale'    => '',
-			'images'  => array( 'conjunto-preto.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado preto.',
-			'order'   => 6,
-		),
-		array(
-			'sku'     => 'MM-CONJUNTO-VERMELHO',
-			'name'    => 'Conjunto Moletom Mengo Vermelho – Blusão + Calça',
-			'cat'     => 'conjuntos',
-			'regular' => '267.00',
-			'sale'    => '',
-			'images'  => array( 'conjunto-vermelho.webp' ),
-			'short'   => 'Blusão com capuz e bolso canguru + calça jogger em moletom flanelado vermelho.',
+			'images'  => array( 'conjunto-preto-crf.webp' ),
+			'short'   => 'Blusão preto com capuz e bolso canguru + calça jogger preta, com CRF e âncora em vermelho. Moletom flanelado.',
 			'order'   => 7,
 		),
 	);
@@ -340,7 +340,7 @@ for path in DST.rglob('*'):
     if path.name == 'setup-content.php':
         s = re.sub(r"function pm_products_catalog\(\) \{.*?\n\}\n", lambda m: CATALOG, s, count=1, flags=re.S)
         s = re.sub(r"array\( 'PM-CONJUNTO-BRANCO'[^)]*\)", FEATURED, s)
-        s = s.replace("$new = array( 'PM-CALCA-BRANCA-FAIXA' );", "$new = array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB', 'MM-CAMISETA-VERMELHA-LIB' );")
+        s = s.replace("$new = array( 'PM-CALCA-BRANCA-FAIXA' );", "$new = array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB', 'MM-CAMISETA-VERMELHA-LIB', 'MM-CONJUNTO-VERMELHO-PRETO-CRF', 'MM-CONJUNTO-PRETO-CRF' );")
     if path.name == 'setup-content.php':
         # Troca a foto desenhada das camisetas pela foto real em lojas já montadas (uma vez só).
         s += """
@@ -380,6 +380,23 @@ function pm_mengo_tshirt_photos() {
 	}
 }
 add_action( 'admin_init', 'pm_mengo_tshirt_photos', 40 );
+
+/**
+ * Manda para a lixeira os produtos de exemplo (fotos desenhadas), uma vez só.
+ */
+function pm_mengo_trash_demo_products() {
+	if ( ! class_exists( 'WooCommerce' ) || ! current_user_can( 'manage_woocommerce' ) || wp_doing_ajax() || get_option( 'pm_mengo_demo_trashed' ) ) {
+		return;
+	}
+	update_option( 'pm_mengo_demo_trashed', 1, false );
+	foreach ( array( 'MM-CONJUNTO-PRETO', 'MM-CONJUNTO-VERMELHO', 'MM-CALCA-PRETA', 'MM-CALCA-VERMELHA', 'MM-CAMISETA-PRETA', 'MM-CAMISETA-BRANCA', 'MM-KIT-CAMISETAS' ) as $sku ) {
+		$id = wc_get_product_id_by_sku( $sku );
+		if ( $id ) {
+			wp_trash_post( $id );
+		}
+	}
+}
+add_action( 'admin_init', 'pm_mengo_trash_demo_products', 45 );
 """
     if path.name == 'style.css':
         # Tema escuro: preto com vermelho.

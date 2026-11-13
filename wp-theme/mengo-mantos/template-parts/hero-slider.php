@@ -25,8 +25,8 @@ $pm_slides = array(
 	),
 	array(
 		'variant' => 'dark',
-		'image'   => pm_opt_img( 'slide2_image', 'conjunto-preto.webp' ),
-		'image2'  => pm_opt( 'slide2_image' ) ? '' : pm_img( 'conjunto-vermelho.webp' ),
+		'image'   => pm_opt_img( 'slide2_image', 'conjunto-vermelho-preto-crf.webp' ),
+		'image2'  => pm_opt( 'slide2_image' ) ? '' : pm_img( 'conjunto-preto-crf.webp' ),
 		'link'    => pm_opt( 'slide2_link' ) ? pm_opt( 'slide2_link' ) : pm_cat_url( 'conjuntos' ),
 		'alt'     => __( 'Conjunto moletom Mengo', 'palestra-mantos' ),
 	),
