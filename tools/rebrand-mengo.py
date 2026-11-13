@@ -334,7 +334,8 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-minicart { background: #0d0d0d; }
 .pm-minicart .pm-btn, .pm-minicart .button.checkout { background: #c8102e !important; border-color: #c8102e !important; color: #fff !important; }
 .pm-minicart .pm-btn:hover { background: #fff !important; color: #c8102e !important; }
-.woocommerce-checkout #payment #place_order, .woocommerce-cart .wc-proceed-to-checkout a.checkout-button { background: #000 !important; color: #fff !important; }
+.woocommerce-checkout #payment #place_order, .woocommerce-cart .wc-proceed-to-checkout a.checkout-button { background: #000 !important; color: #fff !important; border: 2px solid #e0283c !important; box-shadow: 0 0 0 1px rgba(224,40,60,.35), 0 10px 26px rgba(224,40,60,.25); }
+.woocommerce-checkout #payment #place_order:hover, .woocommerce-cart .wc-proceed-to-checkout a.checkout-button:hover { background: #e0283c !important; border-color: #e0283c !important; }
 .woocommerce-checkout #payment ul.payment_methods li:has(input:checked) { border-color: #fff; }
 .pm-steps li.is-current .pm-steps__n { background: #000; border-color: #000; }
 .pm-steps li.is-done, .pm-steps li.is-done .pm-steps__n { color: #fff; border-color: #fff; background: transparent; }
@@ -526,7 +527,7 @@ function pm_mengo_review_text( $review ) {
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.2.5', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.2.6', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
         s += """
@@ -542,7 +543,7 @@ function pm_mengo_preload_hero() {
 }
 add_action( 'wp_head', 'pm_mengo_preload_hero', 1 );
 """
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.5' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.2.6' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 
