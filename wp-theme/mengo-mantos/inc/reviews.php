@@ -430,14 +430,14 @@ add_action( 'admin_menu', 'pm_reviews_pending_badge', 99 );
  */
 function pm_instagram_reviews_data() {
 	return array(
-		array( 'ig-guilherme', 'Guilherme B.', 90, 5, 'Já comprei, em duas ocasiões, no Mengo Mantos e só tenho elogios a fazer. Os produtos chegam muito rápidos e são de excelente qualidade. Parabéns!' ),
-		array( 'ig-rhe', 'Rhe P.', 91, 5, 'Já peguei esse kit... Muito bom, tecido confortável do jeito que eu gosto... Obrigado 👏' ),
-		array( 'ig-raquel', 'Raquel S.', 80, 5, 'Sou de Goiás!! A minha chegou hoje e amei a modelagem dessa feminina 😍 vou comprar mais' ),
-		array( 'ig-adriana', 'Adriana A.', 83, 5, 'Linda calça, amei e chegou direitinho 😉' ),
-		array( 'ig-nanda', 'Nanda L.', 83, 5, 'Chegou!!!!! A tão querida calça. Chegou muito rápido. Comprei uma para mim e uma para meu filho, são lindas! Chegaram no prazo, sem problema algum. Agora já quer uma blusa hahaha. Obrigada pela atenção. 🐷🇮🇹' ),
+		array( 'ig-guilherme', 'Guilherme B.', 90, 5, 'Já comprei duas vezes na Mengo Mantos e só tenho elogios. Chegou rápido e a qualidade é excelente. Parabéns!' ),
+		array( 'ig-rhe', 'Rhe P.', 91, 5, 'Peguei a camiseta oversized preta com o CRF... Tecido confortável do jeito que eu gosto. Obrigado 👏' ),
+		array( 'ig-raquel', 'Raquel S.', 80, 5, 'Sou de Goiás!! A calça branca chegou hoje e amei a modelagem feminina 😍 vou comprar mais' ),
+		array( 'ig-adriana', 'Adriana A.', 83, 5, 'Linda a calça vermelha, amei e chegou direitinho 😉' ),
+		array( 'ig-nanda', 'Nanda L.', 83, 5, 'Chegou a tão esperada calça! Muito rápido. Comprei uma para mim e uma para meu filho, ficaram lindas. Agora ele já quer o conjunto hahaha. Obrigada pela atenção ❤️🖤' ),
 		array( 'ig-sheila', 'Sheila L.', 85, 5, 'Linda calça, confortável!!! Chegou no prazo e sem intercorrências!!!! Recomendo muito!!!!!' ),
 		array( 'ig-alex', 'Alex A.', 86, 5, "Atendimento pós-venda sempre atencioso.\nProduto corresponde à foto.\nEntrega regular.\nRecomendo a compra, entrega garantida." ),
-		array( 'ig-diego', 'Diego S.', 89, 5, 'Chegou certinho, produto tooop!' ),
+		array( 'ig-diego', 'Diego S.', 89, 5, 'Chegou certinho, conjunto rubro-negro tooop!' ),
 	);
 }
 
@@ -467,7 +467,7 @@ function pm_import_instagram_reviews() {
 		$id   = wp_insert_post(
 			array(
 				'post_type'     => 'pm_review',
-				'post_status'   => 'publish',
+				'post_status'   => 'pending',
 				'post_title'    => $name,
 				'post_content'  => $text,
 				'post_date_gmt' => $date,
@@ -512,3 +512,29 @@ function pm_remove_retired_reviews() {
 	update_option( 'pm_retired_reviews_v1', '1', false );
 }
 add_action( 'init', 'pm_remove_retired_reviews', 20 );
+
+/**
+ * Atualiza (uma vez) o texto das avaliações de exemplo que já tinham sido importadas.
+ */
+function pm_mengo_update_sample_reviews() {
+	if ( ! current_user_can( 'edit_posts' ) || wp_doing_ajax() || get_option( 'pm_mengo_reviews_v2' ) ) {
+		return;
+	}
+	update_option( 'pm_mengo_reviews_v2', 1, false );
+	foreach ( pm_instagram_reviews_data() as $row ) {
+		$ids = get_posts(
+			array(
+				'post_type'      => 'pm_review',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'meta_key'       => '_pm_import_key', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'     => $row[0], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			)
+		);
+		if ( $ids ) {
+			wp_update_post( array( 'ID' => $ids[0], 'post_content' => $row[4] ) );
+		}
+	}
+}
+add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );

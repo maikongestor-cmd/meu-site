@@ -19,20 +19,22 @@ if ( function_exists( 'wc_get_product_id_by_sku' ) ) {
 $pm_slides = array(
 	array(
 		'variant' => 'light',
-		'image'   => pm_opt_img( 'slide1_image', 'banner-flamengo.webp' ),
+		'image'   => pm_opt_img( 'slide1_image', 'hero-1a.webp' ),
+		'image2'  => pm_opt( 'slide1_image' ) ? '' : pm_img( 'hero-1b.webp' ),
 		'link'    => pm_opt( 'slide1_link' ) ? pm_opt( 'slide1_link' ) : $pm_shop_url,
-		'alt'     => __( 'Arte rubro-negra com o monograma da Mengo Mantos', 'palestra-mantos' ),
+		'alt'     => __( 'Calça e camiseta da coleção Mengo Mantos', 'palestra-mantos' ),
 	),
 	array(
 		'variant' => 'dark',
-		'image'   => pm_opt_img( 'slide2_image', 'conjunto-vermelho-preto-crf.webp' ),
-		'image2'  => pm_opt( 'slide2_image' ) ? '' : pm_img( 'conjunto-preto-crf.webp' ),
+		'image'   => pm_opt_img( 'slide2_image', 'hero-2a.webp' ),
+		'image2'  => pm_opt( 'slide2_image' ) ? '' : pm_img( 'hero-2b.webp' ),
 		'link'    => pm_opt( 'slide2_link' ) ? pm_opt( 'slide2_link' ) : pm_cat_url( 'conjuntos' ),
 		'alt'     => __( 'Conjunto moletom Mengo', 'palestra-mantos' ),
 	),
 	array(
 		'variant' => 'dark',
-		'image'   => pm_opt_img( 'slide3_image', 'camiseta-preta-crf-frente.webp' ),
+		'image'   => pm_opt_img( 'slide3_image', 'hero-3a.webp' ),
+		'image2'  => pm_opt( 'slide3_image' ) ? '' : pm_img( 'hero-3b.webp' ),
 		'link'    => pm_opt( 'slide3_link' ) ? pm_opt( 'slide3_link' ) : $pm_kit_url,
 		'alt'     => __( 'Kit com duas camisetas oversized Mengo', 'palestra-mantos' ),
 	),
@@ -76,7 +78,7 @@ $pm_free = (int) pm_opt( 'free_shipping' );
 					<div class="pm-slide__media<?php echo ! empty( $pm_slide['image2'] ) ? ' has-two' : ''; ?>">
 						<img src="<?php echo esc_url( $pm_slide['image'] ); ?>" alt="<?php echo esc_attr( $pm_slide['alt'] ); ?>" width="600" height="750"<?php echo 0 === $pm_i ? ' fetchpriority="high"' : ' loading="lazy"'; ?>>
 						<?php if ( ! empty( $pm_slide['image2'] ) ) : ?>
-							<img src="<?php echo esc_url( $pm_slide['image2'] ); ?>" alt="" width="600" height="750" loading="lazy">
+							<img src="<?php echo esc_url( $pm_slide['image2'] ); ?>" alt="" width="600" height="750"<?php echo 0 === $pm_i ? '' : ' loading="lazy"'; ?>>
 						<?php endif; ?>
 					</div>
 				</div>

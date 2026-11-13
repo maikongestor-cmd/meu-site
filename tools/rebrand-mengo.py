@@ -76,18 +76,21 @@ TEXTS = [
     # banners e imagens
     ("'slide3_text'    => 'Camisetas oversized 100% algodão, com logo P e escudo histórico.'",
      "'slide3_text'    => 'Camisetas oversized 100% algodão, com o CRF no peito e a arte 81·19·22·25 nas costas.'"),
-    ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' )", "pm_opt_img( 'slide1_image', 'banner-flamengo.webp' )"),
-    ("pm_opt_img( 'slide2_image', 'conjunto-branco-masculino.webp' )", "pm_opt_img( 'slide2_image', 'conjunto-vermelho-preto-crf.webp' )"),
-    ("pm_img( 'conjunto-branco-feminino.webp' )", "pm_img( 'conjunto-preto-crf.webp' )"),
-    ("Mapas de São Paulo, do Brasil e da América do Sul em verde com os símbolos do Palestra", "Arte rubro-negra com o monograma da Mengo Mantos"),
+    ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' ),", "pm_opt_img( 'slide1_image', 'hero-1a.webp' ),\n\t\t'image2'  => pm_opt( 'slide1_image' ) ? '' : pm_img( 'hero-1b.webp' ),"),
+    ("pm_opt_img( 'slide2_image', 'conjunto-branco-masculino.webp' )", "pm_opt_img( 'slide2_image', 'hero-2a.webp' )"),
+    ("pm_img( 'conjunto-branco-feminino.webp' )", "pm_img( 'hero-2b.webp' )"),
+    ("Mapas de São Paulo, do Brasil e da América do Sul em verde com os símbolos do Palestra", "Calça e camiseta da coleção Mengo Mantos"),
     ("Conjunto moletom branco Palestra", "Conjunto moletom Mengo"),
     ("'PM-KIT-CAMISETAS'", "'MM-KIT-CAMISETAS'"),
     ("'calcas'    => 'calca-verde.webp'", "'calcas'    => 'calca-vermelha-ancora.webp'"),
     ("'slide3_title'   => 'Kit 2 camisetas oversized <em>R$ 187</em>'", "'slide3_title'   => 'Camiseta oversized <em>R$ 137</em>'"),
-    ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' )", "pm_opt_img( 'slide3_image', 'camiseta-preta-crf-frente.webp' )"),
+    ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' ),", "pm_opt_img( 'slide3_image', 'hero-3a.webp' ),\n\t\t'image2'  => pm_opt( 'slide3_image' ) ? '' : pm_img( 'hero-3b.webp' ),"),
     ("'camisetas' => 'camiseta-logo-p.webp'", "'camisetas' => 'camiseta-vermelha-crf-frente.webp'"),
     ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho-preto-crf.webp'"),
-    ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-flamengo.webp' )"),
+    ("pm_img( 'banner-mapas.webp' )", "pm_img( 'hero-welcome.webp' )"),
+    ("'slide3_button'  => 'Comprar kit'", "'slide3_button'  => 'Comprar camiseta'"),
+    ('<img src="<?php echo esc_url( $pm_slide[\'image2\'] ); ?>" alt="" width="600" height="750" loading="lazy">',
+     '<img src="<?php echo esc_url( $pm_slide[\'image2\'] ); ?>" alt="" width="600" height="750"<?php echo 0 === $pm_i ? \'\' : \' loading="lazy"\'; ?>>'),
     ("'Palestra'", "'Mengo'"),
     ('Palestra', 'Mengo'),
     ('Palestrino', 'Rubro-negro'),
@@ -350,6 +353,19 @@ h1, h2, h3, h4, .pm-section__head h2 { color: #fff; }
 .pm-table-wrap table td { border-color: rgba(0,0,0,.3); }
 """
 
+MENGO_REVIEWS = """function pm_instagram_reviews_data() {
+	return array(
+		array( 'ig-guilherme', 'Guilherme B.', 90, 5, 'Já comprei duas vezes na Mengo Mantos e só tenho elogios. Chegou rápido e a qualidade é excelente. Parabéns!' ),
+		array( 'ig-rhe', 'Rhe P.', 91, 5, 'Peguei a camiseta oversized preta com o CRF... Tecido confortável do jeito que eu gosto. Obrigado 👏' ),
+		array( 'ig-raquel', 'Raquel S.', 80, 5, 'Sou de Goiás!! A calça branca chegou hoje e amei a modelagem feminina 😍 vou comprar mais' ),
+		array( 'ig-adriana', 'Adriana A.', 83, 5, 'Linda a calça vermelha, amei e chegou direitinho 😉' ),
+		array( 'ig-nanda', 'Nanda L.', 83, 5, 'Chegou a tão esperada calça! Muito rápido. Comprei uma para mim e uma para meu filho, ficaram lindas. Agora ele já quer o conjunto hahaha. Obrigada pela atenção ❤️🖤' ),
+		array( 'ig-sheila', 'Sheila L.', 85, 5, 'Linda calça, confortável!!! Chegou no prazo e sem intercorrências!!!! Recomendo muito!!!!!' ),
+		array( 'ig-alex', 'Alex A.', 86, 5, "Atendimento pós-venda sempre atencioso.\\nProduto corresponde à foto.\\nEntrega regular.\\nRecomendo a compra, entrega garantida." ),
+		array( 'ig-diego', 'Diego S.', 89, 5, 'Chegou certinho, conjunto rubro-negro tooop!' ),
+	);
+}"""
+
 FEATURED = "array( 'MM-CALCA-VERMELHA-CRF', 'MM-CALCA-PRETA-CRF', 'MM-CALCA-BRANCA-CRF', 'MM-CAMISETA-PRETA-LIB' )"
 
 for path in DST.rglob('*'):
@@ -422,6 +438,39 @@ function pm_mengo_trash_demo_products() {
 }
 add_action( 'admin_init', 'pm_mengo_trash_demo_products', 45 );
 """
+    if path.name == 'reviews.php':
+        # Avaliações de exemplo voltadas para a Mengo (rascunho: entram como "pendentes" para revisão).
+        s = re.sub(r"function pm_instagram_reviews_data\(\) \{\n\treturn array\(.*?\n\t\);\n\}", lambda m: MENGO_REVIEWS, s, count=1, flags=re.S)
+        a = s.index('function pm_import_instagram_reviews')
+        b = s.index('\n}\n', a)
+        s = s[:a] + s[a:b].replace("'post_status'   => 'publish',", "'post_status'   => 'pending',") + s[b:]
+        s += """
+/**
+ * Atualiza (uma vez) o texto das avaliações de exemplo que já tinham sido importadas.
+ */
+function pm_mengo_update_sample_reviews() {
+	if ( ! current_user_can( 'edit_posts' ) || wp_doing_ajax() || get_option( 'pm_mengo_reviews_v2' ) ) {
+		return;
+	}
+	update_option( 'pm_mengo_reviews_v2', 1, false );
+	foreach ( pm_instagram_reviews_data() as $row ) {
+		$ids = get_posts(
+			array(
+				'post_type'      => 'pm_review',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'meta_key'       => '_pm_import_key', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'     => $row[0], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			)
+		);
+		if ( $ids ) {
+			wp_update_post( array( 'ID' => $ids[0], 'post_content' => $row[4] ) );
+		}
+	}
+}
+add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );
+"""
     if path.name == 'style.css':
         # Tema escuro: preto com vermelho.
         s = s.replace('background: #fff', 'background: var(--pm-surface)')
@@ -438,10 +487,10 @@ add_action( 'admin_init', 'pm_mengo_trash_demo_products', 45 );
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.1.1', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.1.4', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.1' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.4' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 

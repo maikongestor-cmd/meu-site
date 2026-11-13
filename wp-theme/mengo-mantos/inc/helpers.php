@@ -152,7 +152,7 @@ function pm_defaults() {
 		'slide3_title'   => 'Camiseta oversized <em>R$ 137</em>',
 		'slide3_text'    => 'Camisetas oversized 100% algodão, com o CRF no peito e a arte 81·19·22·25 nas costas.',
 		'slide3_points'  => "100% algodão\nEstampa que não desbota\nConforto que dura",
-		'slide3_button'  => 'Comprar kit',
+		'slide3_button'  => 'Comprar camiseta',
 		'slide3_link'    => '',
 		'split_title'    => 'Vista o manto no dia a dia',
 		'split_text'     => 'Peças em moletom flanelado e algodão de alta gramatura, estampas que não desbotam e modelagem pensada para o conforto — da arquibancada ao rolê.',
