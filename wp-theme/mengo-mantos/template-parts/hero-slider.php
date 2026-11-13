@@ -19,10 +19,9 @@ if ( function_exists( 'wc_get_product_id_by_sku' ) ) {
 $pm_slides = array(
 	array(
 		'variant' => 'light',
-		'image'   => pm_opt_img( 'slide1_image', 'hero-1a.webp' ),
-		'image2'  => pm_opt( 'slide1_image' ) ? '' : pm_img( 'hero-1b.webp' ),
+		'image'   => pm_opt_img( 'slide1_image', 'banner-mapas-mengo.webp' ),
 		'link'    => pm_opt( 'slide1_link' ) ? pm_opt( 'slide1_link' ) : $pm_shop_url,
-		'alt'     => __( 'Calça e camiseta da coleção Mengo Mantos', 'palestra-mantos' ),
+		'alt'     => __( 'Mapas do Rio de Janeiro, do Brasil e da América do Sul em vermelho com os símbolos do Mengo', 'palestra-mantos' ),
 	),
 	array(
 		'variant' => 'dark',

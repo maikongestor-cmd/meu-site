@@ -76,10 +76,10 @@ TEXTS = [
     # banners e imagens
     ("'slide3_text'    => 'Camisetas oversized 100% algodão, com logo P e escudo histórico.'",
      "'slide3_text'    => 'Camisetas oversized 100% algodão, com o CRF no peito e a arte 81·19·22·25 nas costas.'"),
-    ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' ),", "pm_opt_img( 'slide1_image', 'hero-1a.webp' ),\n\t\t'image2'  => pm_opt( 'slide1_image' ) ? '' : pm_img( 'hero-1b.webp' ),"),
+    ("pm_opt_img( 'slide1_image', 'banner-mapas.webp' )", "pm_opt_img( 'slide1_image', 'banner-mapas-mengo.webp' )"),
     ("pm_opt_img( 'slide2_image', 'conjunto-branco-masculino.webp' )", "pm_opt_img( 'slide2_image', 'hero-2a.webp' )"),
     ("pm_img( 'conjunto-branco-feminino.webp' )", "pm_img( 'hero-2b.webp' )"),
-    ("Mapas de São Paulo, do Brasil e da América do Sul em verde com os símbolos do Palestra", "Calça e camiseta da coleção Mengo Mantos"),
+    ("Mapas de São Paulo, do Brasil e da América do Sul em verde com os símbolos do Palestra", "Mapas do Rio de Janeiro, do Brasil e da América do Sul em vermelho com os símbolos do Mengo"),
     ("Conjunto moletom branco Palestra", "Conjunto moletom Mengo"),
     ("'PM-KIT-CAMISETAS'", "'MM-KIT-CAMISETAS'"),
     ("'calcas'    => 'calca-verde.webp'", "'calcas'    => 'calca-vermelha-ancora.webp'"),
@@ -87,7 +87,7 @@ TEXTS = [
     ("pm_opt_img( 'slide3_image', 'kit-camisetas.webp' ),", "pm_opt_img( 'slide3_image', 'hero-3a.webp' ),\n\t\t'image2'  => pm_opt( 'slide3_image' ) ? '' : pm_img( 'hero-3b.webp' ),"),
     ("'camisetas' => 'camiseta-logo-p.webp'", "'camisetas' => 'camiseta-vermelha-crf-frente.webp'"),
     ("'conjuntos' => 'conjunto-branco-masculino.webp'", "'conjuntos' => 'conjunto-vermelho-preto-crf.webp'"),
-    ("pm_img( 'banner-mapas.webp' )", "pm_img( 'hero-welcome.webp' )"),
+    ("pm_img( 'banner-mapas.webp' )", "pm_img( 'banner-mapas-mengo.webp' )"),
     ("'slide3_button'  => 'Comprar kit'", "'slide3_button'  => 'Comprar camiseta'"),
     ('<img src="<?php echo esc_url( $pm_slide[\'image2\'] ); ?>" alt="" width="600" height="750" loading="lazy">',
      '<img src="<?php echo esc_url( $pm_slide[\'image2\'] ); ?>" alt="" width="600" height="750"<?php echo 0 === $pm_i ? \'\' : \' loading="lazy"\'; ?>>'),
@@ -200,8 +200,8 @@ input, select, textarea, .input-text { background: #161616 !important; color: #f
 .pm-slide--light .pm-slide__title em { color: #e0283c; }
 .pm-slide--light .pm-eyebrow { color: #ff4d5e; }
 .pm-slide--light .pm-slide__ship, .pm-slide--light .pm-slide__points li { color: #fff; }
-.pm-slide--light .pm-slide__media img { filter: none; border-radius: 20px; max-height: 440px; box-shadow: 0 30px 60px rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.08); }
-.pm-welcome__media img { border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,.45); filter: none; }
+.pm-slide--light .pm-slide__media img { filter: drop-shadow(0 25px 40px rgba(0,0,0,.45)); max-height: 480px; }
+.pm-welcome__media img { filter: drop-shadow(0 20px 30px rgba(0,0,0,.35)); }
 .pm-slider__arrow { background: rgba(255,255,255,.12); color: #fff; box-shadow: none; backdrop-filter: blur(4px); }
 .pm-slider__dot { background: rgba(255,255,255,.35); }
 /* Seções */
@@ -487,10 +487,10 @@ add_action( 'admin_init', 'pm_mengo_update_sample_reviews', 50 );
         # Faixa de 3 cores: vermelho, branco e preto.
         s = s.replace('.pm-hero__flag i:nth-child(3) { background: var(--pm-red); }', '.pm-hero__flag i:nth-child(3) { background: #111; }')
         s = re.sub(r'Theme Name:.*', 'Theme Name: Mengo Mantos', s, count=1)
-        s = re.sub(r'Version:.*', 'Version: 1.1.4', s, count=1)
+        s = re.sub(r'Version:.*', 'Version: 1.1.5', s, count=1)
         s = re.sub(r'Description:.*', 'Description: Loja de moletons, calças e camisetas rubro-negras. Baseado no tema Palestra Mantos.', s, count=1)
     if path.name == 'functions.php':
-        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.4' );", s)
+        s = re.sub(r"define\( 'PM_VERSION', '[^']*' \);", "define( 'PM_VERSION', '1.1.5' );", s)
     if s != o:
         path.write_text(s, encoding='utf-8')
 

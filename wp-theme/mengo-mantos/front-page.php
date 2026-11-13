@@ -80,7 +80,7 @@ $pm_times    = (int) pm_opt( 'installments' );
 <section class="pm-section pm-welcome" id="sobre">
 	<div class="pm-container pm-welcome__inner">
 		<div class="pm-welcome__media" aria-hidden="true">
-			<img src="<?php echo esc_url( pm_img( 'hero-welcome.webp' ) ); ?>" alt="" width="368" height="490" loading="lazy">
+			<img src="<?php echo esc_url( pm_img( 'banner-mapas-mengo.webp' ) ); ?>" alt="" width="368" height="490" loading="lazy">
 		</div>
 		<div class="pm-welcome__text">
 			<span class="pm-eyebrow"><?php esc_html_e( 'Nossa história', 'palestra-mantos' ); ?></span>
