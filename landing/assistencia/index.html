@@ -250,6 +250,17 @@ select.q-select:focus-visible { outline: 2px solid var(--cyan); outline-offset: 
 @keyframes bump { 40% { transform: scale(1.06); color: var(--copper); } }
 @media (max-width: 900px) { .quote { grid-template-columns: 1fr; } .q-facts { grid-template-columns: 1fr 1fr 1fr; } }
 
+
+/* ---------- Vídeo da restauração ---------- */
+.reel { position: relative; margin-top: 44px; border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: #000; aspect-ratio: 16 / 9; }
+.reel video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.reel .rtag { position: absolute; left: 18px; bottom: 18px; font: 500 .74rem var(--mono); letter-spacing: .12em; text-transform: uppercase; background: rgba(12,15,20,.8); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; display: flex; gap: 8px; align-items: center; }
+.reel .rtag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #ff4d4d; animation: pulse 1.4s ease-in-out infinite; }
+.reel .rplay { position: absolute; right: 14px; bottom: 14px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(12,15,20,.8); color: var(--text); display: grid; place-items: center; cursor: pointer; }
+.reel .rplay:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.ba-label { margin-top: 56px; }
+@media (max-width: 600px) { .reel { aspect-ratio: 4 / 3; } }
+
 /* ---------- Antes / depois ---------- */
 .ba { position: relative; margin-top: 44px; border-radius: 22px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16 / 9; user-select: none; touch-action: pan-y; background: #000; }
 .ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
@@ -457,8 +468,17 @@ section[id] { scroll-margin-top: 80px; }
 	<!-- ANTES / DEPOIS -->
 	<section class="section" id="antes-depois">
 		<div class="wrap">
-			<span class="eyebrow">Arraste para comparar</span>
+			<span class="eyebrow">Restauração completa</span>
 			<h2>Do estilhaço ao novo.</h2>
+			<div class="reel">
+				<video id="reel" autoplay muted loop playsinline preload="metadata" poster="video/restauracao-poster.webp" aria-label="Vídeo: tela estilhaçada sendo restaurada até ficar nova">
+					<source src="video/restauracao.webm" type="video/webm">
+					<source src="video/restauracao.mp4" type="video/mp4">
+				</video>
+				<span class="rtag">Restauração · 50 min em 8 s</span>
+				<button class="rplay" id="reel-btn" type="button" aria-label="Pausar vídeo"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg></button>
+			</div>
+			<p class="eyebrow ba-label">Arraste para comparar</p>
 			<div class="ba" id="ba">
 				<img src="img/quebrado.webp" alt="Antes: tela do celular estilhaçada">
 				<img class="after" src="img/inteiro.webp" alt="Depois: o mesmo celular com tela nova" loading="lazy">
@@ -768,5 +788,20 @@ section[id] { scroll-margin-top: 80px; }
 	}
 	var bar = document.getElementById('mbar');
 	window.addEventListener('scroll', function () { bar.classList.toggle('show', window.scrollY > window.innerHeight * .8); }, { passive: true });
+})();
+
+// ---------- Vídeo: pausa fora da tela, respeita "reduzir movimento" ----------
+(function () {
+	var v = document.getElementById('reel'), bt = document.getElementById('reel-btn'); if (!v) { return; }
+	var PAUSE = '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>';
+	var PLAY = '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2l9 5-9 5z" fill="currentColor"/></svg>';
+	var userPaused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	function sync() { bt.innerHTML = v.paused ? PLAY : PAUSE; bt.setAttribute('aria-label', v.paused ? 'Reproduzir vídeo' : 'Pausar vídeo'); }
+	if (userPaused) { v.removeAttribute('autoplay'); v.pause(); }
+	bt.addEventListener('click', function () { if (v.paused) { userPaused = false; v.play(); } else { userPaused = true; v.pause(); } });
+	v.addEventListener('play', sync); v.addEventListener('pause', sync); sync();
+	if ('IntersectionObserver' in window) {
+		new IntersectionObserver(function (en) { if (userPaused) { return; } if (en[0].isIntersecting) { v.play().catch(function () {}); } else { v.pause(); } }, { threshold: .25 }).observe(v);
+	}
 })();
 </script>
