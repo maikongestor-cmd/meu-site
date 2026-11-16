@@ -1,0 +1,508 @@
+<title>Núcleo Assistência Técnica</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Conserto de celular em até 1 hora, com diagnóstico gratuito e garantia de 90 dias.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: palco escuro de bancada; o celular é desmontado camada por camada conforme a rolagem. */
+:root {
+	--ink: #0c0f14;        /* fundo: mesa antiestática à noite */
+	--panel: #141922;      /* superfícies */
+	--line: #263040;       /* contornos */
+	--text: #e7ebf2;
+	--muted: #8d98ab;
+	--copper: #e98a4f;     /* solda / cobre da placa */
+	--cyan: #5fd4e8;       /* luz de diagnóstico */
+	--ok: #67d99a;
+	--display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+	--body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+	color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+	margin: 0; background: var(--ink); color: var(--text); font: 16px/1.6 var(--body);
+	-webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--ink); }
+a { color: inherit; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); line-height: 1.02; margin: 0; text-wrap: balance; letter-spacing: -.02em; }
+.eyebrow { display: inline-block; margin-bottom: 14px; font: 500 .78rem/1.5 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 999px; font-weight: 600; text-decoration: none; border: 1.5px solid transparent; transition: transform .2s, background .2s; cursor: pointer; }
+.btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.btn--copper { background: var(--copper); color: #1a0c04; }
+.btn--copper:hover { transform: translateY(-2px); background: #f3a06c; }
+.btn--ghost { border-color: var(--line); color: var(--text); }
+.btn--ghost:hover { border-color: var(--cyan); }
+
+/* ---------- Topo ---------- */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--ink) 78%, transparent); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 800 1.15rem/1 var(--display); text-decoration: none; }
+.brand i { width: 28px; height: 28px; border-radius: 8px; background: conic-gradient(from 200deg, var(--copper), var(--cyan), var(--copper)); display: grid; place-items: center; }
+.brand i::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 3px var(--ink); }
+.top nav { display: flex; gap: 22px; font-size: .92rem; color: var(--muted); }
+.top nav a { text-decoration: none; }
+.top nav a:hover { color: var(--text); }
+@media (max-width: 760px) { .top nav { display: none; } .top .btn { padding: 11px 16px; font-size: .9rem; } }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 32px; align-items: center; padding-block: 72px 56px; }
+.hero h1 { font-size: clamp(2.8rem, 7.4vw, 6.2rem); }
+.hero h1 em { font-style: normal; color: var(--copper); }
+.hero p.lead { color: var(--muted); font-size: 1.15rem; max-width: 34ch; margin: 22px 0 30px; }
+.hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero .facts { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 38px; font: 500 .85rem/1.3 var(--mono); color: var(--muted); }
+.hero .facts b { display: block; font: 700 1.6rem/1 var(--display); color: var(--text); margin-bottom: 6px; }
+.glow { position: absolute; width: 620px; height: 620px; right: -120px; top: -60px; background: radial-gradient(circle, rgba(95,212,232,.22), transparent 62%); pointer-events: none; }
+.glow--b { left: -200px; right: auto; top: 260px; background: radial-gradient(circle, rgba(233,138,79,.16), transparent 60%); }
+
+/* palco do celular do topo (recorte, sem fundo) */
+.stage { position: relative; height: 560px; perspective: 1400px; display: grid; place-items: center; }
+.tilt { transform-style: preserve-3d; transition: transform .15s ease-out; transform: rotateX(8deg) rotateY(-18deg) rotateZ(4deg); }
+.float { animation: float 6s ease-in-out infinite; transform-style: preserve-3d; }
+@keyframes float { 50% { transform: translateY(-14px) rotateZ(-1deg); } }
+.phone { position: relative; width: 250px; height: 520px; transform-style: preserve-3d; }
+.phone .face { position: absolute; inset: 0; border-radius: 42px; }
+.phone .back { background: linear-gradient(140deg, #2b3446, #11151d); transform: translateZ(-10px); box-shadow: 0 60px 90px rgba(0,0,0,.6); }
+.phone .edge { background: linear-gradient(90deg, #3b4558, #1a2029 40%, #3b4558); transform: translateZ(-5px); }
+.phone .screen { background: #05070a; border: 10px solid #0a0d12; overflow: hidden; transform: translateZ(0); }
+.screen .ui { position: absolute; inset: 0; padding: 46px 18px 18px; background: radial-gradient(120% 70% at 30% 0%, #1c3550, #070a10 70%); display: flex; flex-direction: column; gap: 10px; }
+.screen .time { font: 700 3.1rem/1 var(--display); letter-spacing: -.03em; }
+.screen .date { font: 500 .72rem var(--mono); color: var(--muted); }
+.screen .notif { margin-top: auto; background: rgba(255,255,255,.08); border-radius: 16px; padding: 10px 12px; font-size: .74rem; line-height: 1.35; backdrop-filter: blur(6px); }
+.screen .notif b { color: var(--ok); display: block; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; }
+.crack { position: absolute; inset: 0; pointer-events: none; }
+.crack path { fill: none; stroke: rgba(255,255,255,.85); stroke-width: 1.2; stroke-dasharray: 600; stroke-dashoffset: 0; animation: heal 5s ease-in-out 1.2s infinite; }
+@keyframes heal { 0%, 18% { stroke-dashoffset: 0; opacity: 1; } 55%, 85% { stroke-dashoffset: 600; opacity: 0; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+.scan { position: absolute; left: 0; right: 0; height: 60px; background: linear-gradient(transparent, rgba(95,212,232,.35), transparent); animation: scan 5s ease-in-out 1.2s infinite; top: -60px; }
+@keyframes scan { 0%, 18% { top: -60px; } 55% { top: 100%; } 100% { top: 100%; } }
+.chip-tag { position: absolute; font: 500 .72rem var(--mono); color: var(--text); background: rgba(20,25,34,.85); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; display: flex; gap: 8px; align-items: center; white-space: nowrap; transform: translateZ(60px); }
+.chip-tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+.chip-tag--a { top: 70px; left: -70px; }
+.chip-tag--b { bottom: 110px; right: -84px; }
+.chip-tag--b::before { background: var(--copper); box-shadow: 0 0 10px var(--copper); }
+@media (max-width: 900px) {
+	.hero .wrap { grid-template-columns: 1fr; padding-block: 44px 24px; }
+	.stage { height: 470px; }
+	.phone { width: 210px; height: 440px; }
+	.chip-tag--a { left: -30px; } .chip-tag--b { right: -30px; }
+}
+
+/* ---------- Desmontagem (scroll) ---------- */
+.explode { position: relative; height: 340vh; border-top: 1px solid var(--line); }
+.explode .sticky { position: sticky; top: 0; height: 100vh; display: grid; grid-template-columns: .85fr 1.15fr; align-items: center; overflow: hidden; }
+.explode .copy { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: 16px; max-width: 520px; justify-self: end; }
+.explode h2 { font-size: clamp(2rem, 4.6vw, 3.6rem); margin: 14px 0 16px; }
+.explode .copy p { color: var(--muted); max-width: 40ch; }
+.steps-mini { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 10px; }
+.steps-mini li { display: flex; gap: 12px; align-items: baseline; color: var(--muted); font-size: .95rem; transition: color .3s; }
+.steps-mini li span { font: 500 .75rem var(--mono); color: var(--line); min-width: 28px; transition: color .3s; }
+.steps-mini li.on { color: var(--text); } .steps-mini li.on span { color: var(--copper); }
+.rig { position: relative; height: 100%; perspective: 1600px; display: grid; place-items: center; }
+.stack { position: relative; width: 230px; height: 470px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-34deg); }
+.layer { position: absolute; inset: 0; border-radius: 36px; transform-style: preserve-3d; will-change: transform; }
+.layer .lbl { display: none; }
+.callout { position: absolute; right: max(16px, 6%); bottom: 12%; width: 250px; background: rgba(20,25,34,.9); border: 1px solid var(--line); border-left: 3px solid var(--copper); border-radius: 14px; padding: 14px 16px; backdrop-filter: blur(8px); }
+.callout .n { font: 500 .72rem var(--mono); color: var(--cyan); letter-spacing: .1em; }
+.callout b { display: block; font: 700 1.25rem/1.2 var(--display); margin: 4px 0 2px; }
+.callout small { color: var(--muted); font-size: .85rem; }
+.callout.swap { animation: swap .35s ease; }
+@keyframes swap { from { opacity: 0; transform: translateY(8px); } }
+@media (max-width: 900px) { .callout { left: max(16px, env(safe-area-inset-left, 0px)); right: auto; bottom: 24px; width: auto; max-width: 280px; } }
+.layer .lbl-old { position: absolute; left: 100%; top: 18px; margin-left: 26px; font: 500 .78rem var(--mono); white-space: nowrap; color: var(--text); transform: rotateZ(34deg) rotateX(-58deg); transform-origin: left top; opacity: .25; transition: opacity .3s; }
+.layer .lbl::before { content: ""; position: absolute; right: 100%; top: 9px; width: 22px; border-top: 1px dashed var(--muted); margin-right: 4px; }
+.layer .lbl small { display: block; color: var(--muted); font-size: .68rem; }
+.layer.on .lbl { opacity: 1; }
+.layer.on { outline: 2px solid var(--copper); outline-offset: 4px; }
+.l-back { background: linear-gradient(140deg, #323c50, #141922); box-shadow: 0 50px 80px rgba(0,0,0,.55); }
+.l-back::after { content: ""; position: absolute; top: 22px; left: 22px; width: 84px; height: 84px; border-radius: 24px; background: #0b0e13; box-shadow: inset 0 0 0 2px #3a4559; }
+.l-batt { inset: 70px 34px 120px; border-radius: 18px; background: linear-gradient(160deg, #2a2f39, #191d24); border: 1px solid #3a4250; }
+.l-batt::after { content: "4.500 mAh · Li-ion"; position: absolute; inset: auto 0 18px; text-align: center; font: 500 .7rem var(--mono); color: var(--muted); }
+.l-batt i { position: absolute; left: 18px; right: 18px; top: 22px; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--ok) var(--charge, 30%), #2e3440 var(--charge, 30%)); }
+.l-board { inset: 14px 20px auto; height: 190px; border-radius: 20px; background: #0f3a2c; border: 1px solid #1f5c46; overflow: hidden; }
+.l-board svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.l-frame { border: 12px solid #222a37; background: transparent; }
+.l-screen { background: radial-gradient(120% 70% at 30% 0%, #1c3550, #070a10 70%); border: 8px solid #06080b; }
+.l-glass { background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.04) 40%, rgba(255,255,255,.12)); border: 1px solid rgba(255,255,255,.28); }
+@media (max-width: 900px) {
+	.explode { height: 300vh; }
+	.explode .sticky { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding-top: 100px; }
+	.explode .copy { justify-self: start; max-width: none; }
+	.explode .copy p, .steps-mini { display: none; }
+	.stack { width: 160px; height: 330px; }
+	.l-batt { inset: 50px 24px 84px; } .l-board { height: 130px; }
+	.layer .lbl { display: none; }
+.callout { position: absolute; right: max(16px, 6%); bottom: 12%; width: 250px; background: rgba(20,25,34,.9); border: 1px solid var(--line); border-left: 3px solid var(--copper); border-radius: 14px; padding: 14px 16px; backdrop-filter: blur(8px); }
+.callout .n { font: 500 .72rem var(--mono); color: var(--cyan); letter-spacing: .1em; }
+.callout b { display: block; font: 700 1.25rem/1.2 var(--display); margin: 4px 0 2px; }
+.callout small { color: var(--muted); font-size: .85rem; }
+.callout.swap { animation: swap .35s ease; }
+@keyframes swap { from { opacity: 0; transform: translateY(8px); } }
+@media (max-width: 900px) { .callout { left: max(16px, env(safe-area-inset-left, 0px)); right: auto; bottom: 24px; width: auto; max-width: 280px; } }
+.layer .lbl-old { font-size: .68rem; margin-left: 14px; }
+}
+
+/* ---------- Serviços com ícones animados ---------- */
+.section { padding-block: 110px; border-top: 1px solid var(--line); }
+.section h2 { font-size: clamp(2rem, 4.6vw, 3.6rem); margin: 14px 0 0; max-width: 18ch; }
+.services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; perspective: 1200px; }
+.svc { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 26px; transform-style: preserve-3d; transition: transform .25s ease-out, border-color .25s; min-width: 0; }
+.svc:hover { border-color: #3c4a60; }
+.svc svg { width: 64px; height: 64px; display: block; margin-bottom: 22px; transform: translateZ(40px); overflow: visible; }
+.svc h3 { font-size: 1.35rem; margin-bottom: 8px; transform: translateZ(26px); }
+.svc p { color: var(--muted); margin: 0 0 18px; font-size: .95rem; }
+.svc .meta { display: flex; justify-content: space-between; gap: 10px; font: 500 .78rem var(--mono); color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+.svc .meta b { color: var(--copper); font-weight: 500; }
+.ico-stroke { fill: none; stroke: var(--text); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ico-acc { fill: none; stroke: var(--copper); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.a-fill { animation: fillbat 2.6s ease-in-out infinite; transform-origin: left center; transform-box: fill-box; fill: var(--ok); }
+@keyframes fillbat { 0% { transform: scaleX(.12); fill: var(--copper); } 70%, 100% { transform: scaleX(1); fill: var(--ok); } }
+.a-crack { stroke-dasharray: 60; animation: crack 3s ease-in-out infinite; }
+@keyframes crack { 0%, 20% { stroke-dashoffset: 0; } 60%, 100% { stroke-dashoffset: 60; } }
+.a-drop { animation: drop 2.2s ease-in infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes drop { 0% { transform: translateY(-14px); opacity: 0; } 30% { opacity: 1; } 80% { transform: translateY(8px); opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
+.a-bolt { animation: bolt 1.6s steps(2) infinite; }
+@keyframes bolt { 50% { stroke: var(--cyan); } }
+.a-spin { animation: spin 6s linear infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.a-pulse { animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+@media (max-width: 900px) { .services { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .services { grid-template-columns: 1fr; } }
+
+/* ---------- Processo ---------- */
+.process { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 48px; counter-reset: p; }
+.step { position: relative; padding: 24px 0 0; border-top: 2px solid var(--line); min-width: 0; }
+.step::before { content: ""; position: absolute; top: -2px; left: 0; height: 2px; width: var(--p, 0%); background: var(--copper); transition: width .8s ease; }
+.step .n { font: 500 .78rem var(--mono); color: var(--copper); }
+.step h3 { font-size: 1.3rem; margin: 10px 0 8px; }
+.step p { color: var(--muted); font-size: .95rem; margin: 0; }
+.step .t { display: inline-block; margin-top: 14px; font: 500 .74rem var(--mono); color: var(--cyan); background: rgba(95,212,232,.08); border-radius: 999px; padding: 5px 10px; }
+@media (max-width: 900px) { .process { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .process { grid-template-columns: 1fr; } }
+
+/* ---------- Tabela de preços ---------- */
+.price-wrap { margin-top: 44px; overflow-x: auto; border: 1px solid var(--line); border-radius: 18px; }
+table { width: 100%; border-collapse: collapse; min-width: 560px; font-size: .95rem; }
+th, td { text-align: left; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+th { font: 500 .74rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--panel); }
+td.num { font-variant-numeric: tabular-nums; color: var(--copper); font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.note { color: var(--muted); font-size: .85rem; margin-top: 14px; }
+
+/* ---------- Garantia / CTA ---------- */
+.cta { display: grid; grid-template-columns: 1.2fr .8fr; gap: 32px; align-items: center; background: linear-gradient(135deg, #1a2230, #121722); border: 1px solid var(--line); border-radius: 28px; padding: 48px; position: relative; overflow: hidden; }
+.cta h2 { font-size: clamp(2rem, 4.4vw, 3.4rem); }
+.cta p { color: var(--muted); max-width: 44ch; }
+.seal { justify-self: center; width: 200px; height: 200px; position: relative; display: grid; place-items: center; }
+.seal svg { position: absolute; inset: 0; animation: spin 18s linear infinite; }
+.seal text { font: 500 11px var(--mono); letter-spacing: 3px; fill: var(--muted); }
+.seal b { font: 800 3.2rem/1 var(--display); color: var(--copper); text-align: center; }
+.seal b small { display: block; font: 500 .72rem var(--mono); color: var(--text); letter-spacing: .1em; margin-top: 6px; }
+.contact { display: grid; gap: 6px; margin-top: 22px; font: 500 .9rem var(--mono); color: var(--muted); }
+.contact span { color: var(--text); user-select: all; }
+@media (max-width: 760px) { .cta { grid-template-columns: 1fr; padding: 30px 22px; } }
+
+footer { padding-block: 40px; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); margin-top: 110px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+
+<header class="top">
+	<div class="wrap">
+		<a class="brand" href="#inicio"><i aria-hidden="true"></i>Núcleo</a>
+		<nav aria-label="Seções">
+			<a href="#por-dentro">Por dentro</a>
+			<a href="#servicos">Serviços</a>
+			<a href="#como">Como funciona</a>
+			<a href="#precos">Preços</a>
+		</nav>
+		<a class="btn btn--copper" href="https://wa.me/5511900000000" target="_blank" rel="noopener">Orçamento grátis</a>
+	</div>
+</header>
+
+<main id="inicio">
+	<!-- HERO -->
+	<section class="hero">
+		<div class="glow" aria-hidden="true"></div>
+		<div class="glow glow--b" aria-hidden="true"></div>
+		<div class="wrap">
+			<div>
+				<span class="eyebrow">Assistência técnica de celulares · Pinheiros, SP</span>
+				<h1>Tela trincada hoje. <em>Nova em 1 hora.</em></h1>
+				<p class="lead">Troca de tela, bateria e conector com peças testadas, diagnóstico gratuito na hora e 90 dias de garantia.</p>
+				<div class="ctas">
+					<a class="btn btn--copper" href="https://wa.me/5511900000000" target="_blank" rel="noopener">Chamar no WhatsApp →</a>
+					<a class="btn btn--ghost" href="#por-dentro">Ver o celular por dentro</a>
+				</div>
+				<div class="facts">
+					<div><b>15 min</b>diagnóstico</div>
+					<div><b>90 dias</b>garantia</div>
+					<div><b>4,9 ★</b>no Google</div>
+				</div>
+			</div>
+			<div class="stage" id="stage" aria-hidden="true">
+				<div class="tilt" id="tilt">
+					<div class="float">
+						<div class="phone">
+							<div class="face back"></div>
+							<div class="face edge"></div>
+							<div class="face screen">
+								<div class="ui">
+									<span class="date">QUA, 18 DE NOVEMBRO</span>
+									<span class="time">10:42</span>
+									<div class="notif"><b>Núcleo · pronto</b>Seu iPhone 13 está pronto para retirada. Tela nova, garantia de 90 dias.</div>
+								</div>
+								<div class="scan"></div>
+								<svg class="crack" viewBox="0 0 230 500" preserveAspectRatio="none">
+									<path d="M150 120 L128 168 L141 210 L112 262 L120 318 L96 380"/>
+									<path d="M128 168 L86 190 L60 176"/>
+									<path d="M141 210 L182 236 L205 228"/>
+									<path d="M112 262 L72 286 L40 278"/>
+									<path d="M120 318 L160 340"/>
+								</svg>
+							</div>
+						</div>
+						<span class="chip-tag chip-tag--a">Diagnóstico concluído</span>
+						<span class="chip-tag chip-tag--b">Tela OLED original</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- DESMONTAGEM -->
+	<section class="explode" id="por-dentro">
+		<div class="sticky">
+			<div class="copy">
+				<span class="eyebrow">Role para desmontar</span>
+				<h2>Abrimos o aparelho na sua frente.</h2>
+				<p>Cada peça é testada antes e depois do reparo. Você acompanha pela bancada de vidro ou recebe fotos de cada etapa no WhatsApp.</p>
+				<ol class="steps-mini" id="steps">
+					<li><span>01</span>Vidro e tela OLED</li>
+					<li><span>02</span>Moldura e flex</li>
+					<li><span>03</span>Placa-mãe</li>
+					<li><span>04</span>Bateria</li>
+					<li><span>05</span>Carcaça e câmeras</li>
+				</ol>
+			</div>
+			<div class="rig" aria-hidden="true">
+				<div class="stack" id="stack">
+					<div class="layer l-back" data-z="-1"><span class="lbl">Carcaça traseira<small>câmeras · vedação</small></span></div>
+					<div class="layer l-batt" data-z="0"><i id="charge"></i><span class="lbl">Bateria<small>saúde testada</small></span></div>
+					<div class="layer l-board" data-z="1">
+						<svg viewBox="0 0 190 190" preserveAspectRatio="none">
+							<g stroke="#e98a4f" stroke-width="1.4" fill="none" opacity=".85">
+								<path d="M10 40 H70 V90 H120"/><path d="M10 120 H50 V160 H150"/><path d="M180 30 H140 V70"/><path d="M180 140 H130 V110 H90"/>
+							</g>
+							<rect x="70" y="60" width="54" height="54" rx="6" fill="#0b0e13" stroke="#5fd4e8"/>
+							<rect x="80" y="70" width="34" height="34" rx="3" fill="#1a222e" class="a-pulse"/>
+							<g fill="#e98a4f"><circle cx="70" cy="40" r="3"/><circle cx="50" cy="160" r="3"/><circle cx="140" cy="70" r="3"/><circle cx="130" cy="110" r="3"/></g>
+						</svg>
+						<span class="lbl">Placa-mãe<small>microssolda em bancada</small></span>
+					</div>
+					<div class="layer l-frame" data-z="2"><span class="lbl">Moldura e flex<small>conector de carga</small></span></div>
+					<div class="layer l-screen" data-z="3"><span class="lbl">Tela OLED<small>toque e cores calibrados</small></span></div>
+					<div class="layer l-glass" data-z="4"><span class="lbl">Vidro<small>película 3D inclusa</small></span></div>
+				</div>
+				<div class="callout" id="callout" aria-live="polite"><span class="n">PEÇA 1 / 6</span><b>Vidro</b><small>película 3D inclusa</small></div>
+			</div>
+		</div>
+	</section>
+
+	<!-- SERVIÇOS -->
+	<section class="section" id="servicos">
+		<div class="wrap">
+			<span class="eyebrow">O que consertamos</span>
+			<h2>Seis problemas que resolvemos no mesmo dia.</h2>
+			<div class="services">
+				<article class="svc">
+					<svg viewBox="0 0 64 64" aria-hidden="true"><rect class="ico-stroke" x="14" y="4" width="36" height="56" rx="7"/><path class="ico-acc a-crack" d="M38 14 L30 26 L36 34 L26 48"/></svg>
+					<h3>Troca de tela</h3>
+					<p>Vidro trincado, manchas, toque falhando ou tela preta. Telas originais e premium.</p>
+					<div class="meta"><span>a partir de</span><b>R$ 249</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 64 64" aria-hidden="true"><rect class="ico-stroke" x="6" y="18" width="46" height="28" rx="5"/><rect x="11" y="23" width="36" height="18" rx="2" class="a-fill"/><path class="ico-stroke" d="M56 27 V37"/></svg>
+					<h3>Bateria</h3>
+					<p>Descarrega rápido, desliga sozinho ou estufou. Troca com teste de saúde antes e depois.</p>
+					<div class="meta"><span>a partir de</span><b>R$ 189</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 64 64" aria-hidden="true"><path class="ico-stroke" d="M32 8 C22 22 16 30 16 38 a16 16 0 0 0 32 0 C48 30 42 22 32 8 Z"/><circle cx="32" cy="10" r="3" fill="#5fd4e8" class="a-drop"/></svg>
+					<h3>Contato com água</h3>
+					<p>Limpeza química da placa em até 24 h. Quanto antes chegar, maior a chance de salvar.</p>
+					<div class="meta"><span>diagnóstico</span><b>grátis</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 64 64" aria-hidden="true"><rect class="ico-stroke" x="18" y="10" width="28" height="30" rx="6"/><path class="ico-stroke" d="M26 40 V50 M38 40 V50 M22 54 H42"/><path class="ico-acc a-bolt" d="M34 16 L27 27 H35 L30 36"/></svg>
+					<h3>Conector de carga</h3>
+					<p>Não carrega, só carrega de lado ou cabo frouxo. Limpeza ou troca do conector.</p>
+					<div class="meta"><span>a partir de</span><b>R$ 129</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 64 64" aria-hidden="true"><circle class="ico-stroke" cx="32" cy="32" r="22"/><g class="a-spin"><path class="ico-acc" d="M32 14 L40 28 M50 32 L36 38 M32 50 L24 36 M14 32 L28 26"/></g><circle cx="32" cy="32" r="6" fill="#5fd4e8"/></svg>
+					<h3>Câmera</h3>
+					<p>Foto borrada, tremendo ou lente trincada. Troca de módulo e de lente traseira.</p>
+					<div class="meta"><span>a partir de</span><b>R$ 159</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 64 64" aria-hidden="true"><rect class="ico-stroke" x="16" y="16" width="32" height="32" rx="5"/><rect x="24" y="24" width="16" height="16" rx="2" fill="#e98a4f" class="a-pulse"/><path class="ico-stroke" d="M22 8 V16 M32 8 V16 M42 8 V16 M22 48 V56 M32 48 V56 M42 48 V56 M8 22 H16 M8 32 H16 M8 42 H16 M48 22 H56 M48 32 H56 M48 42 H56"/></svg>
+					<h3>Placa e microssolda</h3>
+					<p>Não liga, reinicia sozinho ou sem sinal. Reparo de componentes em bancada com microscópio.</p>
+					<div class="meta"><span>orçamento</span><b>em 15 min</b></div>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<!-- PROCESSO -->
+	<section class="section" id="como">
+		<div class="wrap">
+			<span class="eyebrow">Como funciona</span>
+			<h2>Do balcão à retirada, em quatro etapas.</h2>
+			<div class="process" id="process">
+				<div class="step"><span class="n">01</span><h3>Diagnóstico</h3><p>Testamos tela, bateria, câmeras, áudio e sinal na sua frente.</p><span class="t">15 min · grátis</span></div>
+				<div class="step"><span class="n">02</span><h3>Orçamento</h3><p>Preço fechado por escrito antes de começar. Sem surpresa no final.</p><span class="t">na hora</span></div>
+				<div class="step"><span class="n">03</span><h3>Reparo</h3><p>Peça testada, montagem com vedação nova e fotos no WhatsApp.</p><span class="t">40 a 60 min</span></div>
+				<div class="step"><span class="n">04</span><h3>Retirada</h3><p>Novo teste completo com você e garantia por escrito.</p><span class="t">90 dias</span></div>
+			</div>
+		</div>
+	</section>
+
+	<!-- PREÇOS -->
+	<section class="section" id="precos">
+		<div class="wrap">
+			<span class="eyebrow">Preços de referência</span>
+			<h2>Troca de tela por modelo.</h2>
+			<div class="price-wrap">
+				<table>
+					<thead><tr><th>Modelo</th><th>Tela premium</th><th>Tela original</th><th>Tempo</th></tr></thead>
+					<tbody>
+						<tr><td>iPhone 11</td><td class="num">R$ 289</td><td class="num">R$ 449</td><td>45 min</td></tr>
+						<tr><td>iPhone 13</td><td class="num">R$ 449</td><td class="num">R$ 899</td><td>50 min</td></tr>
+						<tr><td>iPhone 15</td><td class="num">R$ 749</td><td class="num">R$ 1.390</td><td>60 min</td></tr>
+						<tr><td>Galaxy A54</td><td class="num">R$ 329</td><td class="num">R$ 589</td><td>50 min</td></tr>
+						<tr><td>Galaxy S23</td><td class="num">R$ 689</td><td class="num">R$ 1.190</td><td>60 min</td></tr>
+						<tr><td>Moto G84</td><td class="num">R$ 249</td><td class="num">R$ 399</td><td>40 min</td></tr>
+					</tbody>
+				</table>
+			</div>
+			<p class="note">Valores de exemplo, em até 10x no cartão ou 5% de desconto no Pix. Confirme o preço do seu modelo no WhatsApp.</p>
+		</div>
+	</section>
+
+	<!-- GARANTIA / CTA -->
+	<section class="section">
+		<div class="wrap">
+			<div class="cta">
+				<div>
+					<span class="eyebrow">Garantia por escrito</span>
+					<h2>Se a peça falhar em 90 dias, trocamos de novo.</h2>
+					<p>Mande o modelo e o problema no WhatsApp e receba o orçamento antes de sair de casa.</p>
+					<p style="margin-top:22px"><a class="btn btn--copper" href="https://wa.me/5511900000000" target="_blank" rel="noopener">Pedir orçamento →</a></p>
+					<div class="contact">
+						<div>WhatsApp <span>(11) 90000-0000</span></div>
+						<div>Endereço <span>Rua dos Pinheiros, 1000 · São Paulo</span></div>
+						<div>Horário <span>Seg a sáb, 9h às 19h</span></div>
+					</div>
+				</div>
+				<div class="seal" aria-hidden="true">
+					<svg viewBox="0 0 200 200"><defs><path id="circ" d="M100 100 m-80 0 a80 80 0 1 1 160 0 a80 80 0 1 1 -160 0"/></defs><text><textPath href="#circ">GARANTIA · PEÇA TESTADA · NOTA FISCAL · GARANTIA · PEÇA TESTADA ·</textPath></text></svg>
+					<b>90<small>DIAS</small></b>
+				</div>
+			</div>
+		</div>
+	</section>
+</main>
+
+<footer>
+	<div class="wrap">
+		<span>Núcleo Assistência Técnica · CNPJ 00.000.000/0001-00</span>
+		<span>Página de demonstração · dados de exemplo</span>
+	</div>
+</footer>
+
+<script>
+(function () {
+	var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	// Hero: o celular acompanha o mouse (perspectiva 3D).
+	var stage = document.getElementById('stage'), tilt = document.getElementById('tilt');
+	if (stage && !reduce) {
+		stage.addEventListener('pointermove', function (e) {
+			var r = stage.getBoundingClientRect();
+			var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+			tilt.style.transform = 'rotateX(' + (8 - y * 18) + 'deg) rotateY(' + (-18 + x * 30) + 'deg) rotateZ(4deg)';
+		});
+		stage.addEventListener('pointerleave', function () { tilt.style.transform = ''; });
+	}
+
+	// Desmontagem: as camadas se afastam conforme a rolagem.
+	var sec = document.getElementById('por-dentro'), layers = [].slice.call(document.querySelectorAll('#stack .layer'));
+	var steps = [].slice.call(document.querySelectorAll('#steps li')), charge = document.getElementById('charge');
+	var callout = document.getElementById('callout'), lastActive = -1;
+	var order = ['l-glass', 'l-screen', 'l-frame', 'l-board', 'l-batt', 'l-back'];
+	function explode() {
+		var r = sec.getBoundingClientRect(), total = sec.offsetHeight - window.innerHeight;
+		var p = Math.min(1, Math.max(0, -r.top / total));
+		if (reduce) { p = .85; }
+		var gap = window.innerWidth < 900 ? 46 : 70;
+		var spread = .25 + p * .75; // nunca totalmente fechado: as peças ficam visíveis em repouso
+		layers.forEach(function (el) {
+			var z = parseFloat(el.dataset.z);
+			el.style.transform = 'translateZ(' + (z * gap * spread) + 'px)';
+		});
+		var active = Math.min(order.length - 1, Math.floor(p * order.length));
+		layers.forEach(function (el) { el.classList.toggle('on', el.classList.contains(order[active])); });
+		if (callout && active !== lastActive) {
+			lastActive = active;
+			var lbl = sec.querySelector('.' + order[active] + ' .lbl');
+			callout.querySelector('.n').textContent = 'PEÇA ' + (active + 1) + ' / ' + order.length;
+			callout.querySelector('b').textContent = lbl.firstChild.textContent;
+			callout.querySelector('small').textContent = lbl.querySelector('small').textContent;
+			callout.classList.remove('swap'); void callout.offsetWidth; callout.classList.add('swap');
+		}
+		steps.forEach(function (li, i) { li.classList.toggle('on', i <= Math.min(steps.length - 1, Math.floor(p * steps.length))); });
+		if (charge) { charge.style.setProperty('--charge', Math.round(20 + p * 80) + '%'); }
+	}
+
+	// Serviços: cartões inclinam em 3D sob o ponteiro.
+	if (!reduce) {
+		document.querySelectorAll('.svc').forEach(function (card) {
+			card.addEventListener('pointermove', function (e) {
+				var r = card.getBoundingClientRect();
+				var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+				card.style.transform = 'rotateX(' + (-y * 10) + 'deg) rotateY(' + (x * 12) + 'deg)';
+			});
+			card.addEventListener('pointerleave', function () { card.style.transform = ''; });
+		});
+	}
+
+	// Processo: a linha de cobre avança etapa por etapa.
+	var proc = document.getElementById('process');
+	function progress() {
+		if (!proc) { return; }
+		var r = proc.getBoundingClientRect(), vh = window.innerHeight;
+		var p = Math.min(1, Math.max(0, (vh - r.top) / (vh * .9)));
+		[].forEach.call(proc.children, function (s, i) {
+			var local = Math.min(1, Math.max(0, p * 4 - i));
+			s.style.setProperty('--p', (reduce ? 100 : Math.round(local * 100)) + '%');
+		});
+	}
+
+	var ticking = false;
+	function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { explode(); progress(); ticking = false; }); } }
+	window.addEventListener('scroll', onScroll, { passive: true });
+	window.addEventListener('resize', onScroll);
+	explode(); progress();
+})();
+</script>
