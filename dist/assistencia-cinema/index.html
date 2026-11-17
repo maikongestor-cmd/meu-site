@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07090b">
+<title>Núcleo Assistência Técnica</title>
+<meta name="description" content="Conserto de celular em até 1 hora, com diagnóstico gratuito e garantia de 90 dias.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="preload" as="image" href="img/quebrado.webp">
+<style>
+/* Layout: cada cena é um "plano" de cinema fixo na tela; a rolagem controla a câmera (zoom), a troca de imagem e o texto. */
+:root {
+	--ink: #07090b;
+	--panel: #101418;
+	--line: #222a31;
+	--text: #f1f3f0;
+	--muted: #98a19c;
+	--lime: #d4f45a;
+	--display: "Archivo", "Arial Black", system-ui, sans-serif;
+	--body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+	--gut: max(20px, env(safe-area-inset-left, 0px));
+	--gut-r: max(20px, env(safe-area-inset-right, 0px));
+	color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ink); color: var(--text); font: 16px/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+.eyebrow { font: 500 .74rem/1.5 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--lime); }
+.btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 18px; padding: 16px 22px; border-radius: 6px; font-weight: 600; text-decoration: none; background: var(--lime); color: #0b0f04; transition: transform .2s, box-shadow .2s; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212,244,90,.25); }
+.btn:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+.btn svg { width: 16px; height: 16px; }
+
+/* ---------- Topo + barra de progresso ---------- */
+.top { position: fixed; inset: 0 0 auto; z-index: 30; padding: calc(env(safe-area-inset-top, 0px) + 16px) var(--gut-r) 16px var(--gut); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(rgba(7,9,11,.85), transparent); }
+.brand { font: 900 1.05rem/1 var(--display); letter-spacing: .02em; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.brand i { width: 10px; height: 10px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 14px var(--lime); }
+.top .btn { padding: 11px 16px; font-size: .88rem; }
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 100%; transform-origin: left; transform: scaleX(0); background: var(--lime); z-index: 31; }
+
+/* ---------- Cena cinematográfica ---------- */
+.scene { position: relative; height: 260vh; }
+.scene--hero { height: 320vh; }
+.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: transform, opacity; }
+.stage::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+	background: linear-gradient(180deg, rgba(7,9,11,.75) 0%, rgba(7,9,11,0) 30%, rgba(7,9,11,0) 55%, rgba(7,9,11,.92) 100%), radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.55)); }
+.grain { position: absolute; inset: -50%; z-index: 2; pointer-events: none; opacity: .07; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: grain 1s steps(4) infinite; }
+@keyframes grain { 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } }
+
+.copy { position: absolute; z-index: 3; left: var(--gut); right: var(--gut-r); top: calc(env(safe-area-inset-top, 0px) + 96px); max-width: 1100px; }
+.lines { position: relative; min-height: 3.2em; font: 900 clamp(2.4rem, 7.2vw, 6.4rem)/.92 var(--display); text-transform: uppercase; letter-spacing: -.02em; }
+.line { position: absolute; left: 0; top: 0; margin: 0; font: inherit; opacity: 0; transform: translateY(24px); filter: blur(8px); transition: opacity .5s, transform .5s, filter .5s; text-wrap: balance; }
+.line.on { opacity: 1; transform: none; filter: none; }
+.line em { font-style: normal; color: var(--lime); }
+.chapter { font: 500 .74rem var(--mono); letter-spacing: .16em; color: var(--muted); margin-bottom: 16px; display: flex; gap: 14px; align-items: center; }
+.chapter b { color: var(--lime); font-weight: 500; }
+.chapter::after { content: ""; width: 60px; height: 1px; background: var(--line); }
+
+/* legenda estilo "reels": palavras acendem conforme a rolagem */
+.caption { position: absolute; z-index: 3; left: var(--gut); right: var(--gut-r); bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); text-align: center; font: 700 clamp(1.1rem, 2.4vw, 1.6rem)/1.35 var(--display); max-width: 760px; margin: 0 auto; }
+.caption span { opacity: .28; transition: opacity .25s, color .25s; }
+.caption span.on { opacity: 1; }
+.caption span.hl.on { color: var(--lime); }
+.foot { position: absolute; z-index: 3; left: var(--gut); right: var(--gut-r); bottom: calc(env(safe-area-inset-bottom, 0px) + 28px); display: flex; justify-content: space-between; gap: 16px; font: 500 .7rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border-top: 1px solid rgba(255,255,255,.12); padding-top: 14px; }
+.foot b { color: var(--lime); font-weight: 500; }
+.hint { display: inline-flex; gap: 8px; align-items: center; }
+.hint i { width: 14px; height: 22px; border: 1.5px solid var(--muted); border-radius: 8px; position: relative; }
+.hint i::after { content: ""; position: absolute; left: 50%; top: 4px; width: 2px; height: 5px; margin-left: -1px; background: var(--lime); border-radius: 2px; animation: wheel 1.6s ease-in-out infinite; }
+@keyframes wheel { 60% { transform: translateY(7px); opacity: 0; } 61% { transform: none; opacity: 0; } 100% { opacity: 1; } }
+
+/* chip de dado técnico flutuante */
+.spec { position: absolute; z-index: 3; right: var(--gut-r); top: 50%; display: grid; gap: 8px; font: 500 .74rem var(--mono); }
+.spec div { background: rgba(10,13,15,.7); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.12); border-radius: 6px; padding: 9px 12px; display: flex; gap: 10px; align-items: center; opacity: 0; transform: translateX(16px); transition: .5s; }
+.spec div::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 10px var(--lime); }
+.spec div.on { opacity: 1; transform: none; }
+@media (max-width: 760px) {
+	.spec { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 190px); right: auto; left: var(--gut); }
+	.caption { text-align: left; bottom: calc(env(safe-area-inset-bottom, 0px) + 86px); }
+	.foot .hide-m { display: none; }
+	.stage img { object-position: var(--pos, 50% 50%); }
+}
+
+/* ---------- Seções de conteúdo ---------- */
+.section { position: relative; z-index: 4; background: var(--ink); padding: 110px var(--gut-r) 110px var(--gut); }
+.wrap { max-width: 1140px; margin: 0 auto; }
+.section h2 { font: 900 clamp(2.2rem, 5.4vw, 4.4rem)/.95 var(--display); text-transform: uppercase; letter-spacing: -.02em; margin: 14px 0 0; max-width: 16ch; }
+.section h2 em { font-style: normal; color: var(--lime); }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-top: 52px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.svc { background: var(--ink); padding: 28px; min-width: 0; transition: background .3s; position: relative; }
+.svc:hover { background: var(--panel); }
+.svc svg { width: 52px; height: 52px; overflow: visible; margin-bottom: 26px; }
+.svc h3 { font: 800 1.3rem/1.1 var(--display); text-transform: uppercase; margin: 0 0 8px; }
+.svc p { color: var(--muted); margin: 0 0 20px; font-size: .95rem; }
+.svc .price { font: 500 .8rem var(--mono); color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.svc .price b { color: var(--lime); font-weight: 500; }
+.st { fill: none; stroke: var(--text); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.sa { fill: none; stroke: var(--lime); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.a-crack { stroke-dasharray: 60; animation: crack 3s ease-in-out infinite; }
+@keyframes crack { 0%, 20% { stroke-dashoffset: 0; } 60%, 100% { stroke-dashoffset: 60; } }
+.a-fill { fill: var(--lime); transform-box: fill-box; transform-origin: left center; animation: fill 2.6s ease-in-out infinite; }
+@keyframes fill { 0% { transform: scaleX(.12); } 70%, 100% { transform: scaleX(1); } }
+.a-drop { fill: var(--lime); transform-box: fill-box; animation: drop 2.2s ease-in infinite; }
+@keyframes drop { 0% { transform: translateY(-12px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
+.a-blink { animation: blink 1.4s steps(2) infinite; }
+@keyframes blink { 50% { stroke: var(--text); } }
+.a-spin { transform-box: fill-box; transform-origin: center; animation: spin 6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.a-pulse { animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .2; } }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 52px; }
+.step { border-top: 1px solid var(--line); padding-top: 22px; position: relative; min-width: 0; }
+.step::before { content: ""; position: absolute; top: -1px; left: 0; height: 2px; width: var(--p, 0%); background: var(--lime); transition: width .7s ease; }
+.step .n { font: 500 .74rem var(--mono); color: var(--lime); }
+.step h3 { font: 800 1.25rem/1.1 var(--display); text-transform: uppercase; margin: 10px 0 8px; }
+.step p { margin: 0; color: var(--muted); font-size: .95rem; }
+.step .t { display: inline-block; margin-top: 14px; font: 500 .72rem var(--mono); color: var(--ink); background: var(--lime); border-radius: 4px; padding: 4px 8px; }
+@media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+
+.table { margin-top: 48px; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+table { width: 100%; min-width: 540px; border-collapse: collapse; font-size: .95rem; }
+th, td { text-align: left; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+th { font: 500 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); background: var(--panel); }
+td.num { color: var(--lime); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.note { color: var(--muted); font-size: .85rem; margin-top: 14px; }
+
+/* ---------- Final com imagem ---------- */
+.final { position: relative; z-index: 4; min-height: 100vh; min-height: 100svh; display: grid; align-items: end; padding: 120px var(--gut-r) calc(env(safe-area-inset-bottom, 0px) + 40px) var(--gut); overflow: hidden; }
+.final img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .45; }
+.final::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, var(--ink) 0%, rgba(7,9,11,.4) 40%, var(--ink) 100%); }
+.final .wrap { position: relative; z-index: 2; width: 100%; }
+.final h2 { font: 900 clamp(2.6rem, 8vw, 7rem)/.9 var(--display); text-transform: uppercase; letter-spacing: -.02em; margin: 14px 0 22px; }
+.final h2 em { font-style: normal; color: var(--lime); }
+.final p { color: #c9cfca; max-width: 42ch; }
+.final .btn { margin: 26px 0 30px; min-width: min(100%, 340px); }
+.info { display: flex; flex-wrap: wrap; gap: 10px 36px; font: 500 .82rem var(--mono); color: var(--muted); }
+.info span { color: var(--text); }
+footer { position: relative; z-index: 4; background: var(--ink); border-top: 1px solid var(--line); padding: 26px var(--gut-r) calc(env(safe-area-inset-bottom, 0px) + 26px) var(--gut); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font: 500 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+footer b { color: var(--lime); font-weight: 500; }
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after { animation: none !important; transition: none !important; }
+	.scene, .scene--hero { height: auto; }
+	.stage { position: relative; }
+	.line { position: relative; opacity: 1; transform: none; filter: none; display: none; }
+	.line:first-child { display: block; }
+	.lines { min-height: 0; }
+	.caption span, .spec div { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<header class="top">
+	<a class="brand" href="#inicio"><i aria-hidden="true"></i>Núcleo</a>
+	<a class="btn" href="https://wa.me/5511900000000" target="_blank" rel="noopener">Orçamento grátis</a>
+</header>
+
+<main id="inicio">
+	<!-- CENA 1: quebrado → consertado -->
+	<section class="scene scene--hero" data-scene>
+		<div class="stage">
+			<img src="img/quebrado.webp" alt="Celular com a tela estilhaçando em câmera lenta" data-cam fetchpriority="high" style="--pos: 42% 50%">
+			<img src="img/inteiro.webp" alt="O mesmo celular com a tela nova, intacta" data-cam data-fade="0.38,0.62" style="--pos: 30% 50%; opacity: 0">
+			<div class="grain" aria-hidden="true"></div>
+			<div class="copy">
+				<div class="chapter"><b>01</b> Assistência técnica</div>
+				<div class="lines">
+					<h1 class="line" data-range="0,0.36">Caiu.<br>Trincou.<br><em>Respira.</em></h1>
+					<p class="line" data-range="0.36,0.7">A gente <em>conserta</em><br>na sua frente.</p>
+					<p class="line" data-range="0.7,1.01">Tela nova<br>em <em>1 hora.</em></p>
+				</div>
+			</div>
+			<p class="caption" data-caption>Diagnóstico grátis em 15 minutos, peça testada e *garantia* de *90* *dias* por escrito.</p>
+			<div class="foot"><span class="hint"><i aria-hidden="true"></i>Role para consertar</span><span class="hide-m">Diagnóstico · Reparo · <b>Garantia</b></span></div>
+		</div>
+	</section>
+
+	<!-- CENA 2: microssolda -->
+	<section class="scene" data-scene>
+		<div class="stage">
+			<img src="img/microssolda.webp" alt="Mãos de técnico com pinça sobre a placa de um celular no microscópio" data-cam loading="lazy" style="--pos: 70% 50%">
+			<div class="grain" aria-hidden="true"></div>
+			<div class="copy">
+				<div class="chapter"><b>02</b> Bancada</div>
+				<div class="lines">
+					<h2 class="line" data-range="0,0.5">Cada peça tem<br>um <em>diagnóstico.</em></h2>
+					<p class="line" data-range="0.5,1.01">Não é troca.<br>É <em>precisão.</em></p>
+				</div>
+			</div>
+			<div class="spec" aria-hidden="true">
+				<div data-at="0.2">Microscópio 45x</div>
+				<div data-at="0.4">Estação de solda</div>
+				<div data-at="0.6">Teste de 32 pontos</div>
+			</div>
+			<p class="caption" data-caption>Placa, *microssolda* e componentes: reparamos o que outras lojas mandam *trocar*.</p>
+			<div class="foot"><span>Capítulo 02</span><span class="hide-m">Reparo de <b>placa</b></span></div>
+		</div>
+	</section>
+
+	<!-- CENA 3: celular explodido -->
+	<section class="scene" data-scene>
+		<div class="stage">
+			<img src="img/explodido.webp" alt="Peças de um celular separadas em camadas: vidro, placa e tela" data-cam loading="lazy" style="--pos: 25% 50%">
+			<div class="grain" aria-hidden="true"></div>
+			<div class="copy">
+				<div class="chapter"><b>03</b> Por dentro</div>
+				<div class="lines">
+					<h2 class="line" data-range="0,0.5">Abrimos o seu<br>celular <em>camada</em><br>por camada.</h2>
+					<p class="line" data-range="0.5,1.01">Você vê <em>tudo.</em><br>Foto de cada etapa.</p>
+				</div>
+			</div>
+			<div class="spec" aria-hidden="true">
+				<div data-at="0.15">Vidro</div>
+				<div data-at="0.3">Tela OLED</div>
+				<div data-at="0.45">Placa-mãe</div>
+				<div data-at="0.6">Vedação nova</div>
+			</div>
+			<p class="caption" data-caption>Bancada de vidro no balcão ou *fotos* no seu *WhatsApp* durante o reparo.</p>
+			<div class="foot"><span>Capítulo 03</span><span class="hide-m">Transparência <b>total</b></span></div>
+		</div>
+	</section>
+
+	<!-- CENA 4: bateria -->
+	<section class="scene" data-scene>
+		<div class="stage">
+			<img src="img/bateria.webp" alt="Bateria nova sendo encaixada no celular com pinça" data-cam loading="lazy" style="--pos: 62% 50%">
+			<div class="grain" aria-hidden="true"></div>
+			<div class="copy">
+				<div class="chapter"><b>04</b> Bateria</div>
+				<div class="lines">
+					<h2 class="line" data-range="0,0.5">Bateria nova.<br><em>Dia inteiro.</em></h2>
+					<p class="line" data-range="0.5,1.01">De 71%<br>para <em>100%</em> de saúde.</p>
+				</div>
+			</div>
+			<p class="caption" data-caption>Troca em *40* *minutos* com teste de saúde antes e depois, na sua frente.</p>
+			<div class="foot"><span>Capítulo 04</span><span class="hide-m">Saúde <b>100%</b></span></div>
+		</div>
+	</section>
+
+	<!-- SERVIÇOS -->
+	<section class="section" id="servicos">
+		<div class="wrap">
+			<span class="eyebrow">O que consertamos</span>
+			<h2>Seis problemas.<br><em>Mesmo dia.</em></h2>
+			<div class="grid">
+				<article class="svc">
+					<svg viewBox="0 0 52 52" aria-hidden="true"><rect class="st" x="12" y="3" width="28" height="46" rx="6"/><path class="sa a-crack" d="M31 11 L24 21 L29 28 L21 40"/></svg>
+					<h3>Tela</h3><p>Trincada, manchada, toque falhando ou tela preta.</p>
+					<div class="price"><span>a partir de</span><b>R$ 249</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 52 52" aria-hidden="true"><rect class="st" x="4" y="15" width="38" height="22" rx="4"/><rect x="8" y="19" width="30" height="14" rx="2" class="a-fill"/><path class="st" d="M46 22 V30"/></svg>
+					<h3>Bateria</h3><p>Descarrega rápido, desliga sozinho ou estufou.</p>
+					<div class="price"><span>a partir de</span><b>R$ 189</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 52 52" aria-hidden="true"><path class="st" d="M26 6 C18 18 13 24 13 31 a13 13 0 0 0 26 0 C39 24 34 18 26 6 Z"/><circle cx="26" cy="8" r="2.6" class="a-drop"/></svg>
+					<h3>Água</h3><p>Limpeza química da placa em até 24 h.</p>
+					<div class="price"><span>diagnóstico</span><b>grátis</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 52 52" aria-hidden="true"><rect class="st" x="14" y="7" width="24" height="26" rx="5"/><path class="st" d="M21 33 V42 M31 33 V42 M17 46 H35"/><path class="sa a-blink" d="M28 12 L22 21 H29 L25 29"/></svg>
+					<h3>Conector</h3><p>Não carrega ou só carrega de lado.</p>
+					<div class="price"><span>a partir de</span><b>R$ 129</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 52 52" aria-hidden="true"><circle class="st" cx="26" cy="26" r="19"/><g class="a-spin"><path class="sa" d="M26 10 L33 22 M42 26 L30 31 M26 42 L19 30 M10 26 L22 21"/></g></svg>
+					<h3>Câmera</h3><p>Foto borrada, tremendo ou lente trincada.</p>
+					<div class="price"><span>a partir de</span><b>R$ 159</b></div>
+				</article>
+				<article class="svc">
+					<svg viewBox="0 0 52 52" aria-hidden="true"><rect class="st" x="13" y="13" width="26" height="26" rx="4"/><rect x="20" y="20" width="12" height="12" rx="2" fill="#d4f45a" class="a-pulse"/><path class="st" d="M19 6 V13 M26 6 V13 M33 6 V13 M19 39 V46 M26 39 V46 M33 39 V46 M6 19 H13 M6 26 H13 M6 33 H13 M39 19 H46 M39 26 H46 M39 33 H46"/></svg>
+					<h3>Placa</h3><p>Não liga, reinicia ou sem sinal. Microssolda.</p>
+					<div class="price"><span>orçamento</span><b>15 min</b></div>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<!-- PROCESSO -->
+	<section class="section">
+		<div class="wrap">
+			<span class="eyebrow">Como funciona</span>
+			<h2>Do balcão à <em>retirada.</em></h2>
+			<div class="steps" id="steps">
+				<div class="step"><span class="n">01</span><h3>Diagnóstico</h3><p>Testamos tudo na sua frente.</p><span class="t">15 min · grátis</span></div>
+				<div class="step"><span class="n">02</span><h3>Orçamento</h3><p>Preço fechado antes de começar.</p><span class="t">na hora</span></div>
+				<div class="step"><span class="n">03</span><h3>Reparo</h3><p>Peça testada e fotos no WhatsApp.</p><span class="t">40 a 60 min</span></div>
+				<div class="step"><span class="n">04</span><h3>Retirada</h3><p>Novo teste e garantia por escrito.</p><span class="t">90 dias</span></div>
+			</div>
+		</div>
+	</section>
+
+	<!-- PREÇOS -->
+	<section class="section">
+		<div class="wrap">
+			<span class="eyebrow">Preços de referência</span>
+			<h2>Troca de tela<br><em>por modelo.</em></h2>
+			<div class="table">
+				<table>
+					<thead><tr><th>Modelo</th><th>Premium</th><th>Original</th><th>Tempo</th></tr></thead>
+					<tbody>
+						<tr><td>iPhone 11</td><td class="num">R$ 289</td><td class="num">R$ 449</td><td>45 min</td></tr>
+						<tr><td>iPhone 13</td><td class="num">R$ 449</td><td class="num">R$ 899</td><td>50 min</td></tr>
+						<tr><td>iPhone 15</td><td class="num">R$ 749</td><td class="num">R$ 1.390</td><td>60 min</td></tr>
+						<tr><td>Galaxy A54</td><td class="num">R$ 329</td><td class="num">R$ 589</td><td>50 min</td></tr>
+						<tr><td>Galaxy S23</td><td class="num">R$ 689</td><td class="num">R$ 1.190</td><td>60 min</td></tr>
+						<tr><td>Moto G84</td><td class="num">R$ 249</td><td class="num">R$ 399</td><td>40 min</td></tr>
+					</tbody>
+				</table>
+			</div>
+			<p class="note">Valores de exemplo. Até 10x no cartão ou 5% de desconto no Pix.</p>
+		</div>
+	</section>
+
+	<!-- FINAL -->
+	<section class="final">
+		<img src="img/entrega.webp" alt="Celular consertado, com a tela acesa, na mão do cliente" loading="lazy">
+		<div class="wrap">
+			<span class="eyebrow">Garantia de 90 dias por escrito</span>
+			<h2>De volta<br>na sua <em>mão.</em></h2>
+			<p>Mande o modelo e o problema no WhatsApp e receba o orçamento antes de sair de casa.</p>
+			<a class="btn" href="https://wa.me/5511900000000" target="_blank" rel="noopener">Pedir orçamento no WhatsApp <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 L12 4 M6 4 H12 V10" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+			<div class="info">
+				<div>WhatsApp <span>(11) 90000-0000</span></div>
+				<div>Endereço <span>Rua dos Pinheiros, 1000 · SP</span></div>
+				<div>Horário <span>Seg a sáb, 9h às 19h</span></div>
+			</div>
+		</div>
+	</section>
+</main>
+
+<footer>
+	<span>Núcleo Assistência Técnica</span>
+	<span>Diagnosticar. Consertar. <b>Devolver.</b></span>
+	<span>Página de demonstração · dados de exemplo</span>
+</footer>
+
+<script>
+(function () {
+	var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	var scenes = [].slice.call(document.querySelectorAll('[data-scene]'));
+	var bar = document.getElementById('progress');
+	var steps = document.getElementById('steps');
+
+	// Legendas: cada palavra vira um <span>; *palavra* ganha destaque verde.
+	document.querySelectorAll('[data-caption]').forEach(function (c) {
+		c.innerHTML = c.textContent.trim().split(/\s+/).map(function (w) {
+			var hl = /^\*.*\*[.,:]?$/.test(w);
+			return '<span' + (hl ? ' class="hl"' : '') + '>' + w.replace(/\*/g, '') + '</span>';
+		}).join(' ');
+	});
+
+	function clamp(v) { return Math.max(0, Math.min(1, v)); }
+
+	function update() {
+		var vh = window.innerHeight;
+		var doc = document.documentElement;
+		bar.style.transform = 'scaleX(' + clamp(window.scrollY / (doc.scrollHeight - vh)) + ')';
+
+		scenes.forEach(function (s) {
+			var r = s.getBoundingClientRect();
+			if (r.bottom < -vh || r.top > vh * 2) { return; }
+			var p = reduce ? 0 : clamp(-r.top / (s.offsetHeight - vh));
+
+			// Câmera: aproximação lenta + leve deriva, como um travelling.
+			s.querySelectorAll('[data-cam]').forEach(function (img) {
+				img.style.transform = reduce ? '' : 'scale(' + (1.18 - p * 0.18) + ') translateY(' + (p * -2) + '%)';
+				if (img.dataset.fade) {
+					var f = img.dataset.fade.split(',');
+					img.style.opacity = reduce ? 1 : clamp((p - f[0]) / (f[1] - f[0]));
+				}
+			});
+			s.querySelectorAll('.line').forEach(function (l) {
+				var rg = l.dataset.range.split(',');
+				l.classList.toggle('on', p >= +rg[0] && p < +rg[1]);
+			});
+			s.querySelectorAll('.spec [data-at]').forEach(function (d) {
+				d.classList.toggle('on', reduce || p >= +d.dataset.at);
+			});
+			var words = s.querySelectorAll('[data-caption] span');
+			var lit = Math.round(clamp(p * 1.4) * words.length);
+			for (var i = 0; i < words.length; i++) { words[i].classList.toggle('on', reduce || i < lit); }
+		});
+
+		if (steps) {
+			var sr = steps.getBoundingClientRect();
+			var sp = clamp((vh - sr.top) / (vh * 0.9));
+			[].forEach.call(steps.children, function (st, i) {
+				st.style.setProperty('--p', (reduce ? 100 : Math.round(clamp(sp * 4 - i) * 100)) + '%');
+			});
+		}
+	}
+
+	var ticking = false;
+	function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { update(); ticking = false; }); } }
+	window.addEventListener('scroll', onScroll, { passive: true });
+	window.addEventListener('resize', onScroll);
+	update();
+})();
+</script>
+</body>
+</html>
