@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 2.0.4
+Version: 2.0.5
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -1085,3 +1085,57 @@ body.pm-exit-open { overflow: hidden; }
 .pm-contact__msg { padding: 14px 16px; border-radius: var(--pm-radius-sm); font-weight: 600; margin: 0 0 18px; }
 .pm-contact__msg--ok { background: var(--pm-green-100); color: var(--pm-green-800); }
 .pm-contact__msg--error { background: #fdecef; color: var(--pm-red); }
+
+/* =========================================================================
+   Entrega no metrô/trem (página do produto, carrinho e checkout)
+   ========================================================================= */
+.pm-metro { margin: 18px 0 16px; padding: 16px; border: 1px solid var(--pm-line); border-radius: var(--pm-radius); background: var(--pm-bg-soft); }
+.pm-metro.is-error { border-color: var(--pm-red); box-shadow: 0 0 0 3px rgba(200,16,46,.12); }
+.pm-metro__title { margin: 0 0 10px; font-weight: 700; color: var(--pm-ink); }
+.pm-metro__modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pm-metro__mode { position: relative; display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1.5px solid var(--pm-line); border-radius: var(--pm-radius-sm); background: #fff; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+.pm-metro__mode input { margin: 3px 0 0; accent-color: var(--pm-green-600); }
+.pm-metro__mode b { display: block; font-size: .93rem; color: var(--pm-ink); line-height: 1.25; }
+.pm-metro__mode small { color: var(--pm-muted); font-size: .8rem; }
+.pm-metro__mode:has(input:checked) { border-color: var(--pm-green-600); box-shadow: 0 0 0 3px var(--pm-green-100); }
+.pm-metro__panel { margin-top: 14px; }
+.pm-metro__note { font-size: .85rem; background: var(--pm-green-100); color: var(--pm-green-800); border-radius: var(--pm-radius-sm); padding: 8px 10px; margin: 0 0 12px; }
+.pm-metro__step + .pm-metro__step { margin-top: 14px; }
+.pm-metro__label { display: flex; align-items: center; gap: 8px; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--pm-muted); margin-bottom: 8px; }
+.pm-metro__label b { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--pm-green-700); color: #fff; font-size: .7rem; letter-spacing: 0; }
+.pm-metro__lines { display: flex; flex-wrap: wrap; gap: 6px; }
+.pm-metro__line { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border: 1.5px solid var(--pm-line); border-radius: 999px; background: #fff; font: 600 .78rem var(--pm-font-body); color: var(--pm-text); cursor: pointer; transition: border-color .2s, background .2s; }
+.pm-metro__line i { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: var(--t); font-style: normal; font-size: .72rem; font-weight: 800; }
+.pm-metro__line:hover { border-color: var(--c); }
+.pm-metro__line[aria-pressed="true"] { border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, #fff); color: var(--pm-ink); }
+.pm-metro__station { width: 100%; padding: 11px 12px; border: 1.5px solid var(--pm-line); border-left: 6px solid var(--c, var(--pm-line)); border-radius: var(--pm-radius-sm); background: #fff; font: 500 .95rem var(--pm-font-body); color: var(--pm-ink); }
+.pm-metro__station:disabled { opacity: .6; }
+.pm-metro__cal { background: #fff; border: 1px solid var(--pm-line); border-radius: var(--pm-radius-sm); padding: 10px; max-width: 340px; }
+.pm-cal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.pm-cal__head b { text-transform: capitalize; color: var(--pm-ink); font-size: .95rem; }
+.pm-cal__nav { width: 32px; height: 32px; border: 1px solid var(--pm-line); border-radius: 50%; background: #fff; font-size: 1.1rem; line-height: 1; cursor: pointer; color: var(--pm-ink); }
+.pm-cal__nav:disabled { opacity: .3; cursor: default; }
+.pm-cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
+.pm-cal__wk { font-size: .7rem; font-weight: 700; color: var(--pm-muted); padding: 4px 0; }
+.pm-cal__day { aspect-ratio: 1; border: 0; border-radius: 8px; background: var(--pm-green-100); color: var(--pm-green-800); font: 600 .88rem var(--pm-font-body); cursor: pointer; transition: background .15s, color .15s; }
+.pm-cal__day:hover { background: #cfe9da; }
+.pm-cal__day:disabled { background: transparent; color: #c3cbc6; cursor: default; font-weight: 400; }
+.pm-cal__day[aria-pressed="true"] { background: var(--pm-green-700); color: #fff; }
+.pm-metro__slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 6px; }
+.pm-metro__slot { padding: 10px 8px; border: 1.5px solid var(--pm-line); border-radius: var(--pm-radius-sm); background: #fff; font: 600 .85rem var(--pm-font-body); color: var(--pm-ink); cursor: pointer; }
+.pm-metro__slot small { display: block; font-weight: 500; color: var(--pm-red); }
+.pm-metro__slot:disabled { opacity: .45; cursor: not-allowed; text-decoration: line-through; }
+.pm-metro__slot[aria-pressed="true"] { border-color: var(--pm-green-700); background: var(--pm-green-700); color: #fff; }
+.pm-metro__hint { margin: 0; color: var(--pm-muted); font-size: .85rem; grid-column: 1 / -1; }
+.pm-metro__sum { margin-top: 14px; font-size: .9rem; }
+.pm-metro__sum:empty { display: none; }
+.pm-metro__sum.is-ok { padding: 10px 12px; border-radius: var(--pm-radius-sm); background: #fff; border: 1px solid var(--pm-green-500); color: var(--pm-ink); }
+.pm-metro.is-error .pm-metro__sum { color: var(--pm-red); font-weight: 600; }
+.pm-metro__dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+.pm-metro__rules { margin: 12px 0 0; font-size: .8rem; color: var(--pm-muted); }
+.pm-metro-box { display: flex; gap: 12px; align-items: flex-start; margin: 0 0 16px; padding: 14px; border: 1px solid var(--pm-green-500); border-radius: var(--pm-radius-sm); background: var(--pm-green-100); }
+.pm-metro-box__ic { flex: none; width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; background: var(--pm-green-700); color: #fff; font-weight: 800; }
+.pm-metro-box b { display: block; color: var(--pm-ink); }
+.pm-metro-box div > span { display: block; font-size: .9rem; color: var(--pm-text); }
+.pm-metro-box a { font-size: .82rem; font-weight: 600; }
+@media (max-width: 420px) { .pm-metro__modes { grid-template-columns: 1fr; } }

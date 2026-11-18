@@ -43,6 +43,9 @@ function pm_freeship_suggestion( $missing ) {
  */
 function pm_freeship_bar_html() {
 	$min = (float) pm_opt( 'free_shipping' );
+	if ( function_exists( 'pm_metro_current' ) && ( $m = pm_metro_current() ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found
+		return '<div class="pm-freebar pm-freebar--mini"><p>' . pm_icon( 'truck' ) . ' <strong>' . esc_html__( 'Retirada no metrô:', 'palestra-mantos' ) . '</strong> ' . esc_html( pm_metro_summary( $m ) ) . '</p></div>';
+	}
 	if ( $min <= 0 || ! WC()->cart ) {
 		return '';
 	}

@@ -516,6 +516,11 @@
 			var body = new URLSearchParams();
 			body.append('product_id', pid);
 			body.append('quantity', qty ? qty.value : '1');
+			// Campos extras do tema (ex.: retirada no metrô).
+			singleForm.querySelectorAll('[name^="pm_"]').forEach(function (f) {
+				if ((f.type === 'radio' || f.type === 'checkbox') && !f.checked) { return; }
+				body.append(f.name, f.value);
+			});
 			if (btn) { btn.classList.add('loading'); btn.disabled = true; }
 			fetch(window.pmCart.add, { method: 'POST', body: body, credentials: 'same-origin' })
 				.then(function (r) { return r.json(); })

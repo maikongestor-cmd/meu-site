@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PM_VERSION', '2.0.4' );
+define( 'PM_VERSION', '2.0.5' );
 define( 'PM_DIR', get_template_directory() );
 define( 'PM_URI', get_template_directory_uri() );
 
@@ -28,6 +28,7 @@ if ( class_exists( 'WooCommerce' ) ) {
 	require PM_DIR . '/inc/product-extras.php';
 	require PM_DIR . '/inc/minicart.php';
 	require PM_DIR . '/inc/exit-survey.php';
+	require PM_DIR . '/inc/metro-delivery.php';
 }
 
 /**
