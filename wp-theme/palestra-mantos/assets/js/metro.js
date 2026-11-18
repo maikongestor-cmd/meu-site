@@ -169,5 +169,33 @@
 		}, true);
 	}
 
+	// ---- Sem tamanho escolhido: avisa logo abaixo dos tamanhos ----
+	var sizeMsg = null;
+	function sizeChosen() { var v = form && form.querySelector('input[name="variation_id"]'); return !v || (v.value && v.value !== '0'); }
+	function clearSize() { if (form) { form.classList.remove('pm-need-size'); } if (sizeMsg) { sizeMsg.remove(); sizeMsg = null; } }
+	function askSize() {
+		var vars = form.querySelector('table.variations, .variations');
+		form.classList.remove('pm-need-size'); void form.offsetWidth; form.classList.add('pm-need-size');
+		if (!sizeMsg) {
+			sizeMsg = document.createElement('p');
+			sizeMsg.className = 'pm-size-alert';
+			sizeMsg.setAttribute('role', 'alert');
+			sizeMsg.textContent = D.msgSize;
+			if (vars) { vars.insertAdjacentElement('afterend', sizeMsg); } else { box.insertAdjacentElement('beforebegin', sizeMsg); }
+		}
+		showError(D.msgSize);
+		(vars || sizeMsg).scrollIntoView({ behavior: 'smooth', block: 'center' });
+	}
+	if (form && btn) {
+		// Captura antes do WooCommerce (que só mostraria um alerta genérico ou nada).
+		form.addEventListener('click', function (e) {
+			if (mode() !== 'metro' || !e.target.closest('.single_add_to_cart_button') || sizeChosen()) { return; }
+			e.preventDefault(); e.stopImmediatePropagation();
+			askSize();
+		}, true);
+		form.addEventListener('change', function (e) { if (e.target.name && e.target.name.indexOf('attribute_') === 0) { setTimeout(function () { if (sizeChosen()) { clearSize(); update(); } }, 50); } });
+		if (window.jQuery) { window.jQuery(form).on('found_variation', function () { clearSize(); update(); }); }
+	}
+
 	drawCal(); drawSlots(); update(); syncMode();
 })();

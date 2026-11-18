@@ -364,7 +364,7 @@ function pm_metro_assets() {
 			'full'     => array_keys( pm_metro_taken() ),
 			'btn'      => __( 'Reservar e combinar no WhatsApp', 'palestra-mantos' ),
 			'msgFill'  => __( 'Para reservar, escolha linha, estação, data, horário e informe nome e WhatsApp.', 'palestra-mantos' ),
-			'msgSize'  => __( 'Escolha o tamanho antes de reservar.', 'palestra-mantos' ),
+			'msgSize'  => __( 'Selecione um tamanho para reservar a retirada no metrô.', 'palestra-mantos' ),
 			'msgPhone' => __( 'Digite um WhatsApp válido com DDD.', 'palestra-mantos' ),
 			'msgFull'  => __( 'reservado', 'palestra-mantos' ),
 			'msgSum'   => __( 'Retirada: %s', 'palestra-mantos' ),
