@@ -370,7 +370,7 @@ function pm_checkout_steps() {
  */
 function pm_free_shipping_bar() {
 	$min = (float) pm_opt( 'free_shipping' );
-	if ( $min <= 0 || ! WC()->cart || ( function_exists( 'pm_metro_current' ) && pm_metro_current() ) ) {
+	if ( $min <= 0 || ! WC()->cart ) {
 		return;
 	}
 	$total = (float) WC()->cart->get_displayed_subtotal() - (float) WC()->cart->get_discount_total();
