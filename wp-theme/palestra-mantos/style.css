@@ -3,7 +3,7 @@ Theme Name: Palestra Mantos
 Theme URI: https://palestraa.com.br
 Author: Palestra Mantos
 Description: Tema da loja Palestra Mantos — moda streetwear verde e branco, pronto para WooCommerce (Appmax e Mercado Pago), com desconto no Pix, botão de WhatsApp e instalação de conteúdo inicial em um clique.
-Version: 2.0.7
+Version: 2.0.8
 Requires at least: 6.4
 Requires PHP: 7.4
 WC requires at least: 8.0
@@ -1149,9 +1149,17 @@ body.pm-exit-open { overflow: hidden; }
 .single_add_to_cart_button.pm-btn-wa { background: #1fa855 !important; border-color: #1fa855 !important; }
 .single_add_to_cart_button.pm-btn-wa:hover { background: #178a45 !important; }
 @media (max-width: 480px) { .pm-metro__you { grid-template-columns: 1fr; } }
-.pm-size-alert { margin: 8px 0 12px; padding: 10px 12px; border-radius: var(--pm-radius-sm); background: #fdecee; border: 1px solid var(--pm-red); color: var(--pm-red); font-weight: 600; font-size: .9rem; }
-.pm-size-alert::before { content: "↑ "; }
-form.pm-need-size .variations { animation: pm-shake .45s ease; }
-form.pm-need-size .variations td, form.pm-need-size .variations .value { border-radius: var(--pm-radius-sm); box-shadow: 0 0 0 2px rgba(200,16,46,.35); }
+.pm-metro__size { padding: 12px; margin: -2px -2px 14px; border-radius: var(--pm-radius-sm); border: 1.5px dashed transparent; transition: border-color .2s, background .2s; }
+.pm-metro__size .pm-metro__label b { background: var(--pm-muted); }
+.pm-metro__size.is-ok .pm-metro__label b { background: var(--pm-green-600); }
+.pm-metro__sizes { display: flex; flex-wrap: wrap; gap: 6px; }
+.pm-metro__size-btn { min-width: 48px; padding: 10px 14px; border: 1.5px solid var(--pm-line); border-radius: var(--pm-radius-sm); background: #fff; font: 700 .95rem var(--pm-font-body); color: var(--pm-ink); cursor: pointer; }
+.pm-metro__size-btn[aria-pressed="true"] { background: var(--pm-green-700); border-color: var(--pm-green-700); color: #fff; }
+.pm-metro__size-warn { display: none; margin: 10px 0 0; color: var(--pm-red); font-weight: 700; font-size: .9rem; }
+.pm-metro__size.is-missing { border-color: var(--pm-red); background: #fdecee; animation: pm-shake .45s ease; }
+.pm-metro__size.is-missing .pm-metro__size-warn { display: block; }
+.pm-metro__size.is-missing .pm-metro__label b { background: var(--pm-red); }
 @keyframes pm-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
-@media (prefers-reduced-motion: reduce) { form.pm-need-size .variations { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .pm-metro__size.is-missing { animation: none; } }
+.pm-metro__size .pm-metro__label b::after { content: "!"; }
+.pm-metro__size.is-ok .pm-metro__label b::after { content: "✓"; }

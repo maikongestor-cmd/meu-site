@@ -139,7 +139,7 @@
 			e.preventDefault(); e.stopImmediatePropagation();
 			if (busy) { return; }
 			var vid = form.querySelector('input[name="variation_id"]');
-			if (vid && (!vid.value || vid.value === '0')) { showError(D.msgSize); return; }
+			if (vid && (!vid.value || vid.value === '0')) { askSize(); return; }
 			if (!pickupDone() || nameIn.value.trim().length < 2) { showError(D.msgFill); return; }
 			if (!/^[1-9]{2}9?\d{8}$/.test(phoneDigits())) { showError(D.msgPhone); phoneIn.focus(); return; }
 			var body = new FormData(form);
@@ -169,22 +169,47 @@
 		}, true);
 	}
 
-	// ---- Sem tamanho escolhido: avisa logo abaixo dos tamanhos ----
-	var sizeMsg = null;
+	// ---- Tamanho dentro da retirada no metrô (o cliente pode esquecer lá em cima) ----
+	var sizeSelects = form ? [].slice.call(form.querySelectorAll('table.variations select, .variations select')) : [];
+	var sizeBlock = null;
 	function sizeChosen() { var v = form && form.querySelector('input[name="variation_id"]'); return !v || (v.value && v.value !== '0'); }
-	function clearSize() { if (form) { form.classList.remove('pm-need-size'); } if (sizeMsg) { sizeMsg.remove(); sizeMsg = null; } }
+	function syncSize() {
+		if (!sizeBlock) { return; }
+		sizeBlock.querySelectorAll('.pm-metro__size-btn').forEach(function (b) {
+			var s = sizeSelects[+b.dataset.i];
+			b.setAttribute('aria-pressed', s && s.value === b.dataset.v ? 'true' : 'false');
+		});
+		var ok = sizeSelects.every(function (s) { return !!s.value; });
+		sizeBlock.classList.toggle('is-ok', ok);
+		if (ok) { sizeBlock.classList.remove('is-missing'); }
+	}
+	if (sizeSelects.length) {
+		sizeBlock = document.createElement('div');
+		sizeBlock.className = 'pm-metro__step pm-metro__size';
+		sizeBlock.innerHTML = sizeSelects.map(function (s, i) {
+			var row = form.querySelector('label[for="' + s.id + '"]');
+			var label = row ? row.textContent.trim() : 'Tamanho';
+			var opts = [].slice.call(s.options).filter(function (o) { return o.value; });
+			return '<span class="pm-metro__label"><b></b>' + esc(label) + '</span><div class="pm-metro__sizes" role="group" aria-label="' + esc(label) + '">' +
+				opts.map(function (o) { return '<button type="button" class="pm-metro__size-btn" data-i="' + i + '" data-v="' + esc(o.value) + '" aria-pressed="false">' + esc(o.textContent.trim()) + '</button>'; }).join('') + '</div>';
+		}).join('') + '<p class="pm-metro__size-warn" role="alert">' + esc(D.msgSize) + '</p>';
+		panel.insertBefore(sizeBlock, panel.firstChild);
+		sizeBlock.addEventListener('click', function (e) {
+			var b = e.target.closest('.pm-metro__size-btn'); if (!b) { return; }
+			var s = sizeSelects[+b.dataset.i];
+			s.value = b.dataset.v;
+			if (window.jQuery) { window.jQuery(s).trigger('change'); } else { s.dispatchEvent(new Event('change', { bubbles: true })); }
+			syncSize(); update();
+		});
+		sizeSelects.forEach(function (s) { s.addEventListener('change', function () { setTimeout(syncSize, 30); }); });
+		if (window.jQuery) { window.jQuery(form).on('found_variation reset_data woocommerce_variation_has_changed', function () { setTimeout(syncSize, 30); }); }
+		syncSize();
+	}
 	function askSize() {
-		var vars = form.querySelector('table.variations, .variations');
-		form.classList.remove('pm-need-size'); void form.offsetWidth; form.classList.add('pm-need-size');
-		if (!sizeMsg) {
-			sizeMsg = document.createElement('p');
-			sizeMsg.className = 'pm-size-alert';
-			sizeMsg.setAttribute('role', 'alert');
-			sizeMsg.textContent = D.msgSize;
-			if (vars) { vars.insertAdjacentElement('afterend', sizeMsg); } else { box.insertAdjacentElement('beforebegin', sizeMsg); }
-		}
-		showError(D.msgSize);
-		(vars || sizeMsg).scrollIntoView({ behavior: 'smooth', block: 'center' });
+		if (sizeBlock) {
+			sizeBlock.classList.remove('is-missing'); void sizeBlock.offsetWidth; sizeBlock.classList.add('is-missing');
+			sizeBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		} else { showError(D.msgSize); }
 	}
 	if (form && btn) {
 		// Captura antes do WooCommerce (que só mostraria um alerta genérico ou nada).
@@ -193,8 +218,6 @@
 			e.preventDefault(); e.stopImmediatePropagation();
 			askSize();
 		}, true);
-		form.addEventListener('change', function (e) { if (e.target.name && e.target.name.indexOf('attribute_') === 0) { setTimeout(function () { if (sizeChosen()) { clearSize(); update(); } }, 50); } });
-		if (window.jQuery) { window.jQuery(form).on('found_variation', function () { clearSize(); update(); }); }
 	}
 
 	drawCal(); drawSlots(); update(); syncMode();
